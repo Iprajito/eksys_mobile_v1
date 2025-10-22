@@ -35,8 +35,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     LocalNotification.showBackgroundNotification(message);
   }
 
-  // Get.to(() => HomePage);
-
   print("Handling a background message: ${message.messageId}");
 }
 
@@ -123,7 +121,8 @@ void showBackgroundNotification(RemoteMessage message) async {
 }
 
 // HANDLE BEHAVIOUR IF NOTIFICATION TAPPED WHEN APP ON FOREGROUND STATE
-void notificationTapForeground(NotificationResponse notificationResponse) async {
+void notificationTapForeground(
+    NotificationResponse notificationResponse) async {
   NavigationService.navigateTo('/profil');
   //TODO: Routing notif after tap notification, get from notificationResponse field routing
   print('notification(${notificationResponse.id}) action tapped: '
@@ -165,7 +164,8 @@ void notificationTapForeground(NotificationResponse notificationResponse) async 
 }
 
 //* HANDLE BEHAVIOUR IF NOTIFICATION TAPPED WHEN APP ON BACKGROUND STATE
-void notificationTapBackground(NotificationResponse notificationResponse) async {
+void notificationTapBackground(
+    NotificationResponse notificationResponse) async {
   NavigationService.navigateTo('/profil');
   // ignore: avoid_print
 
@@ -218,7 +218,7 @@ class ReceivedNotification {
 List<CameraDescription> cameras = [];
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  LocalNotification.initialize();
   await initializeDateFormatting('id_ID', null);
   cameras = await availableCameras();
   await Firebase.initializeApp(

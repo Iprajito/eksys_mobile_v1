@@ -17,6 +17,11 @@ class NavigationService {
     router.go(route);
   }
   
+  // Navigate to a route while preserving the back stack
+  static void navigatePush(String route) {
+    router.push(route);
+  }
+  
   // Navigate and replace current route
   static void navigateReplace(String route) {
     router.replace(route);

@@ -37,6 +37,30 @@ class _MainPusatPageState extends State<MainPusatPage> {
   Future<void> setupInteractedMessage() async {
     LocalNotification.initialize();
 
+    // 1️⃣ Handle notification opened from TERMINATED state (if it’s a local notification)
+    final details = await LocalNotification.getLaunchDetails();
+    if (details?.didNotificationLaunchApp ?? false) {
+      final payload = details!.notificationResponse?.payload;
+      print("payload: $payload");
+      print("testting");
+      
+      try {
+        // Convert the payload string to a Map
+        final Map<String, dynamic> payloadMap =
+            LocalNotification.parsePayload(payload!);
+
+        // Original navigation logic
+        if (payloadMap['type'] == 'chat') {
+          print('howww chat');
+          _navigateToProfile();
+        }
+      } catch (e) {
+        print('Error parsing payload: $e');
+      }
+      // if (payload == 'chat') {
+      //   _navigateToProfile();
+      // }
+    }
 
     // Foreground notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
