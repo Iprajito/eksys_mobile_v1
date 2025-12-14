@@ -6,7 +6,7 @@ import 'package:eahmindonesia/functions/global_functions.dart';
 import 'package:eahmindonesia/models/kegiatan_model.dart';
 import 'package:eahmindonesia/models/master_model.dart';
 import 'package:eahmindonesia/models/meeting_model.dart';
-import 'package:eahmindonesia/nofitication/getFcm.dart';
+import 'package:eahmindonesia/nofitication/get_fcm.dart';
 import 'package:eahmindonesia/services/api_service.dart';
 import 'package:eahmindonesia/services/localstorage_service.dart';
 import 'package:eahmindonesia/views/page/kegiatan/detail.dart';
