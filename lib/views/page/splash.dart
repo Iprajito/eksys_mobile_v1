@@ -21,32 +21,6 @@ class _SplashPageState extends State<SplashPage> {
   final storageService = StorageService();
   final userController = UserController(StorageService());
 
-  // Handle if app opened from notification from terminated state
-  Future<void> setupTerminatedMessage() async {
-    // Get any messages which caused the application to open from
-    // a terminated state.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-
-    // If the message also contains a data property with a "type" of "chat",
-    // navigate to a profile screen
-    if (initialMessage != null) {
-      // Use Future.delayed to ensure context is available
-      Future.delayed(Duration.zero, () {
-        _handleMessage(initialMessage);
-      });
-    }
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    if (message.data['type'] == 'chat') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ProfilPage()),
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -56,7 +30,6 @@ class _SplashPageState extends State<SplashPage> {
         _checkLoginStatus();
       },
     );
-    // setupTerminatedMessage();
   }
 
   @override
