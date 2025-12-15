@@ -1,6 +1,7 @@
 import 'package:eahmindonesia/nofitication/localNotification.dart';
 import 'package:eahmindonesia/views/auth/login.dart';
 import 'package:eahmindonesia/views/page/dasboard_pusat.dart';
+import 'package:eahmindonesia/views/page/purchaseorder/pembelian/pembelian.dart';
 import 'package:eahmindonesia/views/page/salesorder/salesorder.dart';
 import 'package:eahmindonesia/views/page/profil.dart';
 import 'package:eahmindonesia/views/page/purchaseorder/purchaseorder.dart';
@@ -32,6 +33,12 @@ class _MainPusatPageState extends State<MainPusatPage> {
       MaterialPageRoute(builder: (context) => const ProfilPage()),
     );
   }
+  void _navigateToPembelian() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PembelianPage()),
+    );
+  }
 
   // It is assumed that all messages contain a data field with the key 'type'
   Future<void> setupInteractedMessage() async {
@@ -46,8 +53,7 @@ class _MainPusatPageState extends State<MainPusatPage> {
       
       try {
         // Convert the payload string to a Map
-        final Map<String, dynamic> payloadMap =
-            LocalNotification.parsePayload(payload!);
+        final Map<String, dynamic> payloadMap = LocalNotification.parsePayload(payload!);
 
         // Original navigation logic
         if (payloadMap['type'] == 'chat') {
@@ -72,7 +78,7 @@ class _MainPusatPageState extends State<MainPusatPage> {
     if (message.data['type'] == 'chat') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfilPage()),
+        MaterialPageRoute(builder: (context) => const PembelianPage()),
       );
     }
   }

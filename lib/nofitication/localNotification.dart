@@ -81,7 +81,12 @@ class LocalNotification {
       // Original navigation logic
       if (payloadMap['type'] == 'chat') {
         print('howww chat');
-        NavigationService.navigatePush('/profil');
+        final token = (payloadMap['token'] ?? payloadMap['userToken'] ?? '').toString();
+        final userid = (payloadMap['userid'] ?? '').toString();
+        final idencrypt = (payloadMap['idencrypt'] ?? '').toString();
+        final route =
+            '/pembelian_detail?token=${Uri.encodeComponent(token)}&userid=${Uri.encodeComponent(userid)}&idencrypt=${Uri.encodeComponent(idencrypt)}';
+        NavigationService.navigatePush(route);
       }
     } catch (e) {
       print('Error parsing payload: $e');

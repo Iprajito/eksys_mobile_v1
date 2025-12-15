@@ -3,6 +3,7 @@ import 'package:eahmindonesia/views/page/dasboard.dart';
 import 'package:eahmindonesia/views/page/profil.dart';
 import 'package:eahmindonesia/views/page/old/setor/setor.dart';
 import 'package:eahmindonesia/views/page/old/inventory/inventory.dart';
+import 'package:eahmindonesia/views/page/purchaseorder/pembelian/pembelian.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +35,7 @@ class _MainPageState extends State<MainPage> {
       if (!mounted) return; // ✅ Ensure context still valid
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const ProfilPage()),
+        MaterialPageRoute(builder: (context) => const PembelianPage()),
       );
     });
   }

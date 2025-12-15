@@ -8,6 +8,7 @@ import 'package:eahmindonesia/views/page/dasboard.dart';
 import 'package:eahmindonesia/views/page/main.dart';
 import 'package:eahmindonesia/views/page/main_pusat.dart';
 import 'package:eahmindonesia/views/page/profil.dart';
+import 'package:eahmindonesia/views/page/purchaseorder/pembelian/detail.dart';
 import 'package:eahmindonesia/views/page/splash.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -98,5 +99,15 @@ class MainApp extends StatelessWidget {
         GoRoute(path: '/main_pusat',builder: (context, state) => const MainPusatPage(currIndex: 0)),
         GoRoute(path: '/dashboard',builder: (context, state) => const DashboardPage()),
         GoRoute(path: '/profil', builder: (context, state) => const ProfilPage()),
+        GoRoute(
+            path: '/pembelian_detail',
+            builder: (context, state) {
+              final params = state.uri.queryParameters;
+              final token = params['token'] ?? '';
+              final userid = params['userid'] ?? '';
+              final idencrypt = params['idencrypt'] ?? '';
+              return PembelianDetailPage(
+                  token: token, userid: userid, idencrypt: idencrypt);
+            }),
       ]);
 }

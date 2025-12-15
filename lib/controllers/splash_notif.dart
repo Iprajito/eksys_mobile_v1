@@ -1,5 +1,7 @@
 import 'package:eahmindonesia/views/page/main.dart';
 import 'package:eahmindonesia/views/page/profil.dart';
+import 'package:eahmindonesia/views/page/purchaseorder/pembelian/detail.dart';
+import 'package:eahmindonesia/views/page/purchaseorder/pembelian/pembelian.dart';
 import 'package:flutter/material.dart';
 import 'package:eahmindonesia/models/text_globals.dart' as globals;
 
@@ -26,7 +28,7 @@ class _SplashNotifState extends State<SplashNotif> {
       Future.delayed(Duration.zero, () {
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) {
-          return const ProfilPage();
+          return const PembelianPage();
         }));
       });
     }
