@@ -12,16 +12,16 @@ import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PembelianPage extends StatefulWidget {
+class PembelianBatalPage extends StatefulWidget {
   final String? token;
   final String? userid;
-  const PembelianPage({super.key, this.token, this.userid});
+  const PembelianBatalPage({super.key, this.token, this.userid});
 
   @override
-  State<PembelianPage> createState() => _PembelianPageState();
+  State<PembelianBatalPage> createState() => _PembelianBatalPageState();
 }
 
-class _PembelianPageState extends State<PembelianPage> {
+class _PembelianBatalPageState extends State<PembelianBatalPage> {
   late PurchaseorderController purchaseorderController;
   PembelianModel? _pembelianModel;
 
@@ -75,40 +75,6 @@ class _PembelianPageState extends State<PembelianPage> {
     }
   }
 
-  Future<void> toTambahPesananPage() async {
-    // Use await so that we can run code after the child page is closed
-    var nota = "TEst123"; // You can generate or pass the nota as needed
-    final result = await Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation,
-                  secondaryAnimation) => //DrawerExample(),
-              TambahPembelianPage(token: widget.token, userid: widget.userid),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0); // Slide from right
-            const end = Offset.zero;
-            const curve = Curves.ease;
-
-            final tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            final offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(
-              position: offsetAnimation,
-              child: child,
-            );
-          },
-        ));
-
-    // Run this code after the child page is closed
-    if (result == 'refresh') {
-      setState(() {
-        purchaseorderController = PurchaseorderController();
-        _dataPesanan(widget.token, widget.userid);
-      });
-    }
-  }
-
   Future<void> toDetailPesananPage(
       String token, String userid, String idencrypt) async {
     // Use await so that we can run code after the child page is closed
@@ -145,41 +111,9 @@ class _PembelianPageState extends State<PembelianPage> {
     }
   }
 
-  Future<void> navigateToPembayaranPage(String token, String userid, String idencrypt) async {
-    final result = await Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder:
-              (context, animation, secondaryAnimation) => //DrawerExample(),
-                  PembelianPembayaranPage(token: token, userid: userid, idencrypt: idencrypt),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0); // Slide from right
-            const end = Offset.zero;
-            const curve = Curves.ease;
-
-            final tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            final offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(
-              position: offsetAnimation,
-              child: child,
-            );
-          },
-        ));
-
-    // Run this code after the child page is closed
-    if (result == 'refresh') {
-      setState(() {
-        purchaseorderController = PurchaseorderController();
-        _dataPesanan(widget.token, widget.userid);
-      });
-    }
-  }
-
   void _dataPesanan(token, userid) async {
     PembelianModel? dataPembelian =
-        await purchaseorderController.getpembelian(token, userid, 'Tunggu Pembayaran');
+        await purchaseorderController.getpembelian(token, userid, 'Batal');
     if (mounted) {
       setState(() {
         _pembelianModel = dataPembelian;
@@ -248,10 +182,7 @@ class _PembelianPageState extends State<PembelianPage> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: const Color.fromARGB(255, 0, 48, 47),
-            onPressed: toTambahPesananPage,
-            child: const Icon(Icons.add_outlined, color: Colors.white)));
+    );
   }
 
   Widget orderItem(
@@ -297,7 +228,7 @@ class _PembelianPageState extends State<PembelianPage> {
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
-                        'Belum Bayar',
+                        'Batal',
                         style: TextStyle(fontSize: 14, color: Colors.amber[900]),
                       )
                       // Text(
@@ -347,11 +278,7 @@ class _PembelianPageState extends State<PembelianPage> {
               ),
             )),
         onTap: () {
-          if (status == 'Tunggu Pembayaran') {
-            navigateToPembayaranPage(widget.token.toString(), widget.userid.toString(), idencrypt);
-          } else {
-            toDetailPesananPage(widget.token.toString(), widget.userid.toString(), idencrypt);
-          }
+          toDetailPesananPage(widget.token.toString(), widget.userid.toString(), idencrypt);
         });
   }
 }

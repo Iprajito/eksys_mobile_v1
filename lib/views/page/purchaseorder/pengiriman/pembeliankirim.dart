@@ -8,20 +8,22 @@ import 'package:Eksys/services/localstorage_service.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaran.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/tambah.dart';
+import 'package:Eksys/views/page/purchaseorder/penerimaan/tambah.dart';
+import 'package:Eksys/views/page/purchaseorder/pengiriman/detail.dart';
 import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class PembelianPage extends StatefulWidget {
+class PembelianKirimPage extends StatefulWidget {
   final String? token;
   final String? userid;
-  const PembelianPage({super.key, this.token, this.userid});
+  const PembelianKirimPage({super.key, this.token, this.userid});
 
   @override
-  State<PembelianPage> createState() => _PembelianPageState();
+  State<PembelianKirimPage> createState() => _PembelianKirimPageState();
 }
 
-class _PembelianPageState extends State<PembelianPage> {
+class _PembelianKirimPageState extends State<PembelianKirimPage> {
   late PurchaseorderController purchaseorderController;
   PembelianModel? _pembelianModel;
 
@@ -75,40 +77,16 @@ class _PembelianPageState extends State<PembelianPage> {
     }
   }
 
-  Future<void> toTambahPesananPage() async {
-    // Use await so that we can run code after the child page is closed
-    var nota = "TEst123"; // You can generate or pass the nota as needed
-    final result = await Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation,
-                  secondaryAnimation) => //DrawerExample(),
-              TambahPembelianPage(token: widget.token, userid: widget.userid),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0); // Slide from right
-            const end = Offset.zero;
-            const curve = Curves.ease;
-
-            final tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            final offsetAnimation = animation.drive(tween);
-
-            return SlideTransition(
-              position: offsetAnimation,
-              child: child,
-            );
-          },
-        ));
-
-    // Run this code after the child page is closed
-    if (result == 'refresh') {
+  void _dataPesanan(token, userid) async {
+    PembelianModel? dataPembelian =
+        await purchaseorderController.getpengiriman(token, userid, 'Kirim');
+    if (mounted) {
       setState(() {
-        purchaseorderController = PurchaseorderController();
-        _dataPesanan(widget.token, widget.userid);
+        _pembelianModel = dataPembelian;
       });
     }
   }
-
+  
   Future<void> toDetailPesananPage(
       String token, String userid, String idencrypt) async {
     // Use await so that we can run code after the child page is closed
@@ -118,7 +96,7 @@ class _PembelianPageState extends State<PembelianPage> {
         PageRouteBuilder(
           pageBuilder:
               (context, animation, secondaryAnimation) => //DrawerExample(),
-                  PembelianDetailPage(
+                  PengirimanDetailPage(
                       token: token, userid: userid, idencrypt: idencrypt),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0); // Slide from right
@@ -145,13 +123,14 @@ class _PembelianPageState extends State<PembelianPage> {
     }
   }
 
-  Future<void> navigateToPembayaranPage(String token, String userid, String idencrypt) async {
+  Future<void> toTambahPenerimaanPage(String idencrypt) async {
+    // Use await so that we can run code after the child page is closed
     final result = await Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder:
-              (context, animation, secondaryAnimation) => //DrawerExample(),
-                  PembelianPembayaranPage(token: token, userid: userid, idencrypt: idencrypt),
+          pageBuilder: (context, animation,
+                  secondaryAnimation) => //DrawerExample(),
+              TambahPenerimaanPage(token: widget.token, userid: widget.userid, idencrypt: idencrypt),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0); // Slide from right
             const end = Offset.zero;
@@ -173,16 +152,6 @@ class _PembelianPageState extends State<PembelianPage> {
       setState(() {
         purchaseorderController = PurchaseorderController();
         _dataPesanan(widget.token, widget.userid);
-      });
-    }
-  }
-
-  void _dataPesanan(token, userid) async {
-    PembelianModel? dataPembelian =
-        await purchaseorderController.getpembelian(token, userid, 'Tunggu Pembayaran');
-    if (mounted) {
-      setState(() {
-        _pembelianModel = dataPembelian;
       });
     }
   }
@@ -248,10 +217,7 @@ class _PembelianPageState extends State<PembelianPage> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: const Color.fromARGB(255, 0, 48, 47),
-            onPressed: toTambahPesananPage,
-            child: const Icon(Icons.add_outlined, color: Colors.white)));
+    );
   }
 
   Widget orderItem(
@@ -297,7 +263,7 @@ class _PembelianPageState extends State<PembelianPage> {
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
-                        'Belum Bayar',
+                        'Dikirim',
                         style: TextStyle(fontSize: 14, color: Colors.amber[900]),
                       )
                       // Text(
@@ -334,24 +300,44 @@ class _PembelianPageState extends State<PembelianPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        'Total ${CurrencyFormat.convertNumber(int.parse(item), 0)} Produk : ',
+                        'Total ${CurrencyFormat.convertNumber(int.parse(item), 0)} Produk',
                         style: const TextStyle(fontSize: 16),
                       ),
-                      Text(
-                        CurrencyFormat.convertToIdr(grandtotal, 0),
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
+                      // Text(
+                      //   CurrencyFormat.convertToIdr(grandtotal, 0),
+                      //   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      // ),
                     ],
                   ),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: GestureDetector(
+                      onTap: () => toTambahPenerimaanPage(idencrypt),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFB902),
+                          border: Border.all(
+                              color:
+                                  const Color(0xFFFFB902)),
+                          borderRadius:
+                              BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            top: 8,
+                            bottom: 8),
+                        child: const Text('Terima Pembelian',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  )
                 ],
               ),
             )),
         onTap: () {
-          if (status == 'Tunggu Pembayaran') {
-            navigateToPembayaranPage(widget.token.toString(), widget.userid.toString(), idencrypt);
-          } else {
-            toDetailPesananPage(widget.token.toString(), widget.userid.toString(), idencrypt);
-          }
+          toDetailPesananPage(widget.token.toString(), widget.userid.toString(), idencrypt);
         });
   }
 }
@@ -382,7 +368,6 @@ Widget productItem(image,namaproduk,satuan,qty,harga) {
           ),
         ),
         const SizedBox(width: 10),
-
         // Detail produk
         Expanded(
           child: Column(

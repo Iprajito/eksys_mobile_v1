@@ -54,7 +54,19 @@ class PenjualanModel {
   }
 }
 
+class PenjualanDetailModel {
+  final List<PenjualanDetail> data;
 
+  PenjualanDetailModel({required this.data});
+
+  factory PenjualanDetailModel.fromJson(Map<String, dynamic> json) {
+    var datas = json['data'] as List;
+
+    List<PenjualanDetail> data =
+        datas.map((i) => PenjualanDetail.fromJsson(i)).toList();
+    return PenjualanDetailModel(data: data);
+  }
+}
 // =============== //
 class PenjualanNoso {
   String? noso;
@@ -181,6 +193,9 @@ class Penjualan {
   String? grandtotal;
   String? keterangan;
   String? status;
+  String? transaksi_fee;
+  String? item;
+  String? qty;
 
   Penjualan({
     this.id,
@@ -197,6 +212,9 @@ class Penjualan {
     this.grandtotal,
     this.keterangan,
     this.status,
+    this.transaksi_fee,
+    this.item,
+    this.qty,
   });
 
   factory Penjualan.fromJsson(Map<String, dynamic> json) {
@@ -215,6 +233,37 @@ class Penjualan {
       grandtotal: json['grandtotal'],
       keterangan: json['keterangan'],
       status: json['status'],
+      transaksi_fee: json['transaksi_fee'],
+      item: json['item'],
+      qty: json['qty'],
+    );
+  }
+}
+
+class PenjualanDetail {
+  String? id;
+  String? namaproduk;
+  String? qty;
+  String? satuanproduk;
+  String? hrgjualSatuan;
+  String? jumlah;
+
+  PenjualanDetail(
+      {this.id,
+      this.namaproduk,
+      this.qty,
+      this.satuanproduk,
+      this.hrgjualSatuan,
+      this.jumlah});
+
+  factory PenjualanDetail.fromJsson(Map<String, dynamic> json) {
+    return PenjualanDetail(
+      id: json['id'],
+      namaproduk: json['namaproduk'],
+      qty: json['qty'],
+      satuanproduk: json['satuan_produk'],
+      hrgjualSatuan: json['hrgjualSatuan'],
+      jumlah: json['jumlah'],
     );
   }
 }
@@ -274,6 +323,7 @@ class TempPenjualanDetail {
   String? harga;
   String? jumlah;
   String? fee;
+  String? image;
 
   TempPenjualanDetail(
       {this.id,
@@ -284,6 +334,7 @@ class TempPenjualanDetail {
       this.harga,
       this.jumlah,
       this.fee,
+      this.image,
     });
 
   factory TempPenjualanDetail.fromJsson(Map<String, dynamic> json) {
@@ -296,6 +347,7 @@ class TempPenjualanDetail {
       harga: json['harga'],
       jumlah: json['jumlah'],
       fee: json['fee'],
+      image: json['image'],
     );
   }
 }

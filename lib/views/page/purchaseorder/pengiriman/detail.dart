@@ -17,18 +17,18 @@ import 'package:flutter_bootstrap/flutter_bootstrap.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-class PembelianDetailPage extends StatefulWidget {
+class PengirimanDetailPage extends StatefulWidget {
   final String? token;
   final String? userid;
   final String? idencrypt;
   
-  const PembelianDetailPage({super.key, this.token, this.userid, this.idencrypt});
+  const PengirimanDetailPage({super.key, this.token, this.userid, this.idencrypt});
 
   @override
-  State<PembelianDetailPage> createState() => _PembelianDetailPageState();
+  State<PengirimanDetailPage> createState() => _PengirimanDetailPageState();
 }
 
-class _PembelianDetailPageState extends State<PembelianDetailPage> {
+class _PengirimanDetailPageState extends State<PengirimanDetailPage> {
   late PurchaseorderController purchaseorderController;
   PembelianModel? _pembelianModel;
   PembelianDetailModel? _pembelianDetailModel;
@@ -101,7 +101,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
 
   void _dataPembelian(String token, String userid, String idencrypt) async {
     PembelianModel? data =
-        await purchaseorderController.getpembelianbyid(token, userid, idencrypt);
+        await purchaseorderController.getpengirimanbyid(token, userid, idencrypt);
     if (mounted) {
       setState(() {
         _pembelianModel = data;
@@ -111,7 +111,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
 
   void _dataPembelianDetail(String token, String idencrypt) async {
     PembelianDetailModel? data =
-        await purchaseorderController.getpembeliandetailbyid(token, idencrypt);
+        await purchaseorderController.getpengirimandetailbyid(token, idencrypt);
     if (mounted) {
       setState(() {
         _pembelianDetailModel = data;
@@ -442,12 +442,32 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                                           ),
                                         ],
                                       ),
+                                      BootstrapRow(
+                                        height: 25,
+                                        children: [
+                                          BootstrapCol(
+                                            sizes: 'col-6',
+                                            child: Text("Tgl. Pengiriman",
+                                                style: TextStyle(
+                                                    color: Colors.grey[800],fontSize: 16)),
+                                          ),
+                                          BootstrapCol(
+                                            sizes: 'col-6',
+                                            child: Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: _pembelianModel == null
+                                              ? const ListMenuShimmer(total: 1, circular: 4, height: 16)
+                                              : Text(formatDate(_pembelianModel!.data[0].tgl_sj.toString()), style: TextStyle(color: Colors.grey[800],fontSize: 16)),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                       // BootstrapRow(
                                       //   height: 25,
                                       //   children: [
                                       //     BootstrapCol(
                                       //       sizes: 'col-6',
-                                      //       child: Text("Tgl. Pelunasan",
+                                      //       child: Text("Tgl. Pesanan Diterima",
                                       //           style: TextStyle(
                                       //               color: Colors.grey[800],fontSize: 16)),
                                       //     ),
@@ -465,27 +485,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                                       //   children: [
                                       //     BootstrapCol(
                                       //       sizes: 'col-6',
-                                      //       child: Text("Tgl. Pengiriman",
-                                      //           style: TextStyle(
-                                      //               color: Colors.grey[800],fontSize: 16)),
-                                      //     ),
-                                      //     BootstrapCol(
-                                      //       sizes: 'col-6',
-                                      //       child: Align(
-                                      //         alignment: Alignment.bottomRight,
-                                      //         child: _pembelianModel == null
-                                      //         ? const ListMenuShimmer(total: 1, circular: 4, height: 16)
-                                      //         : Text(formatDate(_pembelianModel!.data[0].tgl_sj.toString()), style: TextStyle(color: Colors.grey[800],fontSize: 16)),
-                                      //       ),
-                                      //     ),
-                                      //   ],
-                                      // ),
-                                      // BootstrapRow(
-                                      //   height: 25,
-                                      //   children: [
-                                      //     BootstrapCol(
-                                      //       sizes: 'col-6',
-                                      //       child: Text("Tgl. Pesanan Diterima",
+                                      //       child: Text("Tgl. Pelunasan",
                                       //           style: TextStyle(
                                       //               color: Colors.grey[800],fontSize: 16)),
                                       //     ),
@@ -574,102 +574,102 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                             }).toList() ?? []
                           ),
                         ),
-                        BootstrapCol(
-                          fit: FlexFit.tight,
-                          sizes: 'col-md-12',
-                          child: Column(
-                            children: [
-                              Divider(color: Colors.grey[200]),
-                              // ANIMASI
-                              ExpandableSection(
-                                expand: showAll2,
-                                child: BootstrapContainer(
-                                fluid: true, 
-                                children: [
-                                  BootstrapRow(
-                                    // height: 60,
-                                    children: [
-                                      BootstrapCol(
-                                        fit: FlexFit.tight,
-                                        sizes: 'col-md-12',
-                                        child: Column(
-                                          mainAxisAlignment:MainAxisAlignment.start,
-                                          crossAxisAlignment:CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                const Text('Subtotal Pembelian'),
-                                                _pembelianModel == null ? const Text('Rp 0')
-                                                : Text(CurrencyFormat.convertToIdr((int.parse(_pembelianModel!.data[0].subtotal.toString())),0)),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Visibility(
-                                              visible: _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  const Text('Nominal DP 30%'),
-                                                  _pembelianModel == null ? const Text('Rp 0') :
-                                                  Text(CurrencyFormat.convertToIdr((int.parse(_pembelianModel!.data[0].jumlahdp.toString())),0)),
-                                                ],
-                                              ),
-                                            ),
-                                            Visibility(
-                                              visible: _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
-                                              child: const SizedBox(height: 8)
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                const Text('Biaya Layanan'),
-                                                _pembelianModel == null ? const Text('Rp 0') :
-                                                Text(CurrencyFormat.convertToIdr((int.parse(_pembelianModel!.data[0].transaksifee.toString())),0)),
-                                              ],
-                                            ),
-                                          ]
-                                        )
-                                      ),
-                                    ]
-                                  ),
-                                  Divider(color: Colors.grey[200]),
-                                ]),
-                              ),
-                              GestureDetector(
-                              onTap: () => setState(() => showAll2 = !showAll2),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    _pembelianModel == null ? const Text('Total 0 Produk, 0 Karton')
-                                    : Text('Total ${CurrencyFormat.convertNumber((int.parse(_pembelianModel!.data[0].item.toString())),0)} Produk, ${CurrencyFormat.convertNumber((int.parse(_pembelianModel!.data[0].qty.toString())),0)} Karton'),
+                        // BootstrapCol(
+                        //   fit: FlexFit.tight,
+                        //   sizes: 'col-md-12',
+                        //   child: Column(
+                        //     children: [
+                        //       Divider(color: Colors.grey[200]),
+                        //       // ANIMASI
+                        //       ExpandableSection(
+                        //         expand: showAll2,
+                        //         child: BootstrapContainer(
+                        //         fluid: true, 
+                        //         children: [
+                        //           BootstrapRow(
+                        //             // height: 60,
+                        //             children: [
+                        //               BootstrapCol(
+                        //                 fit: FlexFit.tight,
+                        //                 sizes: 'col-md-12',
+                        //                 child: Column(
+                        //                   mainAxisAlignment:MainAxisAlignment.start,
+                        //                   crossAxisAlignment:CrossAxisAlignment.start,
+                        //                   children: [
+                        //                     Row(
+                        //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //                       children: [
+                        //                         const Text('Subtotal Pembelian'),
+                        //                         _pembelianModel == null ? const Text('Rp 0')
+                        //                         : Text(CurrencyFormat.convertToIdr((int.parse(_pembelianModel!.data[0].subtotal.toString())),0)),
+                        //                       ],
+                        //                     ),
+                        //                     const SizedBox(height: 8),
+                        //                     Visibility(
+                        //                       visible: _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
+                        //                       child: Row(
+                        //                         mainAxisAlignment:
+                        //                             MainAxisAlignment
+                        //                                 .spaceBetween,
+                        //                         children: [
+                        //                           const Text('Nominal DP 30%'),
+                        //                           _pembelianModel == null ? const Text('Rp 0') :
+                        //                           Text(CurrencyFormat.convertToIdr((int.parse(_pembelianModel!.data[0].jumlahdp.toString())),0)),
+                        //                         ],
+                        //                       ),
+                        //                     ),
+                        //                     Visibility(
+                        //                       visible: _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
+                        //                       child: const SizedBox(height: 8)
+                        //                     ),
+                        //                     Row(
+                        //                       mainAxisAlignment:
+                        //                           MainAxisAlignment
+                        //                               .spaceBetween,
+                        //                       children: [
+                        //                         const Text('Biaya Layanan'),
+                        //                         _pembelianModel == null ? const Text('Rp 0') :
+                        //                         Text(CurrencyFormat.convertToIdr((int.parse(_pembelianModel!.data[0].transaksifee.toString())),0)),
+                        //                       ],
+                        //                     ),
+                        //                   ]
+                        //                 )
+                        //               ),
+                        //             ]
+                        //           ),
+                        //           Divider(color: Colors.grey[200]),
+                        //         ]),
+                        //       ),
+                        //       GestureDetector(
+                        //       onTap: () => setState(() => showAll2 = !showAll2),
+                        //       child: Row(
+                        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //           children: [
+                        //             _pembelianModel == null ? const Text('Total 0 Produk, 0 Karton')
+                        //             : Text('Total ${CurrencyFormat.convertNumber((int.parse(_pembelianModel!.data[0].item.toString())),0)} Produk, ${CurrencyFormat.convertNumber((int.parse(_pembelianModel!.data[0].qty.toString())),0)} Karton'),
                                     
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        _pembelianModel == null ? const Text('Rp 0')
-                                        : Text(
-                                            CurrencyFormat.convertToIdr((int.parse(_pembelianModel!.data[0].subtotal.toString())),0),
-                                            style: TextStyle(
-                                                color: Colors.grey[800],
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
-                                        Icon(
-                                          showAll2 ? Icons.expand_less : Icons.expand_more, size: 17,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ]
-                          )
-                        )
+                        //             Row(
+                        //               mainAxisAlignment:
+                        //                   MainAxisAlignment.spaceBetween,
+                        //               children: [
+                        //                 _pembelianModel == null ? const Text('Rp 0')
+                        //                 : Text(
+                        //                     CurrencyFormat.convertToIdr((int.parse(_pembelianModel!.data[0].subtotal.toString())),0),
+                        //                     style: TextStyle(
+                        //                         color: Colors.grey[800],
+                        //                         fontSize: 16,
+                        //                         fontWeight: FontWeight.bold)),
+                        //                 Icon(
+                        //                   showAll2 ? Icons.expand_less : Icons.expand_more, size: 17,
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       )
+                        //     ]
+                        //   )
+                        // )
                       ],
                     ),
                   ],

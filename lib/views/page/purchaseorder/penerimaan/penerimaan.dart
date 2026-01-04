@@ -1,13 +1,14 @@
-import 'package:eahmindonesia/controllers/auth_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/controllers/purchaseorder_controller.dart';
-import 'package:eahmindonesia/models/penerimaan_model.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/penerimaan/detail.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/penerimaan/tambah.dart';
-import 'package:eahmindonesia/widgets/global_widget.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/controllers/purchaseorder_controller.dart';
+import 'package:Eksys/models/pembelian_model.dart';
+import 'package:Eksys/models/penerimaan_model.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/purchaseorder/penerimaan/detail.dart';
+import 'package:Eksys/views/page/purchaseorder/penerimaan/tambah.dart';
+import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -22,13 +23,13 @@ class PenerimaanPage extends StatefulWidget {
 
 class _PenerimaanPageState extends State<PenerimaanPage> {
   late PurchaseorderController purchaseorderController;
-  PenerimaanModel? _penerimaanModel;
+  PembelianModel? _pembelianModel;
 
   final storageService = StorageService();
   final userController = UserController(StorageService());
   String userId = "", userName = "", userEmail = "", userToken = "", userGroup = "";
   bool isLoading = true;
-
+  bool showAll = false;
   @override
   void initState() {
     super.initState();
@@ -144,10 +145,10 @@ class _PenerimaanPageState extends State<PenerimaanPage> {
   }
 
   void _dataPenerimaan(token, userid) async {
-    PenerimaanModel? data = await purchaseorderController.getpenerimaan(token, userid);
+    PembelianModel? data = await purchaseorderController.getpengiriman(token, userid, 'Diterima');
     if (mounted) {
       setState(() {
-        _penerimaanModel = data;
+        _pembelianModel = data;
       });
     }
   }
@@ -163,29 +164,72 @@ class _PenerimaanPageState extends State<PenerimaanPage> {
           child: Column(
             children: [
               Expanded(
-                  child: Padding(
+                child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: _penerimaanModel == null
+                child: _pembelianModel == null
                     ? const ListMenuShimmer(total: 5)
-                    : _penerimaanModel!.data.length == 0
+                    : _pembelianModel!.data.length == 0
                         ? const Center(child: Text('Belum ada pesanan'))
                         : ListView.builder(
                             scrollDirection: Axis.vertical,
-                            itemCount: _penerimaanModel!.data.length,
+                            itemCount: _pembelianModel!.data.length,
                             itemBuilder: (context, index) {
-                              return orderItem(_penerimaanModel!.data[index]);
+                              var id = _pembelianModel!.data[index].id.toString();
+                              var idencrypt = _pembelianModel!
+                                  .data[index].idencrypt
+                                  .toString();
+                              var nopo =
+                                  _pembelianModel!.data[index].nopo.toString();
+                              var tglpo =
+                                  _pembelianModel!.data[index].tglpo.toString();
+                              var supplier = _pembelianModel!.data[index].supplier
+                                  .toString();
+                              var subtotal = _pembelianModel!.data[index].subtotal
+                                  .toString();
+                              var status =
+                                  _pembelianModel!.data[index].status.toString();
+                              var grandtotal = _pembelianModel!
+                                  .data[index].grandtotal
+                                  .toString();
+                              var keterangan = _pembelianModel!
+                                  .data[index].keterangan
+                                  .toString();
+                              var ispu = _pembelianModel!.data[index].ispu.toString();
+                              var item = _pembelianModel!.data[index].item.toString();
+                              var qty = _pembelianModel!.data[index].qty.toString();
+                              var product = _pembelianModel!.data[index].product;
+                              return orderItem(id,
+                                  idencrypt,
+                                  nopo,
+                                  tglpo,
+                                  supplier,
+                                  int.parse(subtotal),
+                                  status,
+                                  int.parse(grandtotal),
+                                  keterangan,
+                                  ispu,item,qty,product!);
                             }),
               ))
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: const Color.fromARGB(255, 0, 48, 47),
-            onPressed: toTambahPenerimaanPage,
-            child: const Icon(Icons.add_outlined, color: Colors.white)));
+        // floatingActionButton: FloatingActionButton(
+        //     backgroundColor: const Color.fromARGB(255, 0, 48, 47),
+        //     onPressed: toTambahPenerimaanPage,
+        //     child: const Icon(Icons.add_outlined, color: Colors.white))
+    );
   }
 
-  Widget orderItem(Penerimaan data) {
+  Widget orderItem(String id,
+      String idencrypt,
+      String nopo,
+      String tglpo,
+      String supplier,
+      int subtotal,
+      String status,
+      int grandtotal,
+      String keterangan,
+      String ispu, String item, String qty, List product) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     String formatDate(String dateStr) {
@@ -193,7 +237,7 @@ class _PenerimaanPageState extends State<PenerimaanPage> {
       final df = DateFormat('dd MMM yyyy', 'id_ID');
       return df.format(date);
     }
-
+    final displayedProducts = showAll ? product : product.take(1).toList();
     return GestureDetector(
         child: Container(
             // height: screenHeight * 0.085,
@@ -212,62 +256,130 @@ class _PenerimaanPageState extends State<PenerimaanPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        data.nopu.toString(),
+                        supplier,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
-                        formatDate(data.tgl_pu.toString()),
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        data.nopo.toString(),
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                      Text(
-                        formatDate(data.tgl_po.toString()),
-                        style: TextStyle(color: Colors.grey[600]),
+                        'Diterima',
+                        style: TextStyle(fontSize: 14, color: Colors.amber[900]),
                       )
                     ],
                   ),
+                  
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: displayedProducts.map((prod) {
+                      return productItem(prod.image,prod.namaproduk,prod.satuan_produk,prod.qty,prod.harga);
+                    }).toList(),
+                  ),
+                  // Tombol toggle jika produk lebih dari 1
+                  const SizedBox(height: 8),
+                  if (product.length > 1)
+                    GestureDetector(
+                      onTap: () => setState(() => showAll = !showAll),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(showAll ? "Sembunyikan" : "Lihat Semua"
+                          ),
+                          Icon(
+                            showAll ? Icons.expand_less : Icons.expand_more, size: 17,
+                          ),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 8),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        data.supplier.toString(),
-                        style: const TextStyle(fontSize: 14),
+                        'Total ${CurrencyFormat.convertNumber(int.parse(item), 0)} Produk',
+                        style: const TextStyle(fontSize: 16),
                       ),
+                      // Text(
+                      //   CurrencyFormat.convertToIdr(grandtotal, 0),
+                      //   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      // ),
                     ],
                   ),
-                  // Divider(height: 16, color: Colors.grey[300]),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     // _labelValue('Subtotal', CurrencyFormat.convertToIdr(subtotal, 0)),
-                  //     // _labelValue('Total Item', CurrencyFormat.convertNumber(ppn, 0)),
-                  //     Text(
-                  //       'Total ${CurrencyFormat.convertNumber(int.parse(item), 0)} Produk, ${CurrencyFormat.convertNumber(int.parse(qty), 0)} Karton',
-                  //       style: const TextStyle(fontSize: 14),
-                  //     ),
-                  //     _labelValue('Grand Total',
-                  //         CurrencyFormat.convertToIdr(grandtotal, 0),
-                  //         isBold: true),
-                  //   ],
-                  // ),
                 ],
               ),
             )),
         onTap: () {
           toDetailPenerimaanPage(
-              widget.token.toString(), widget.userid.toString(), data.id_encrypt.toString());
+              widget.token.toString(), widget.userid.toString(), idencrypt);
         });
   }
+}
+
+Widget productItem(image,namaproduk,satuan,qty,harga) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 10),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Gambar produk dengan border
+        Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFFFFF),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              image,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.broken_image),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        // Detail produk
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                namaproduk,
+                style: const TextStyle(fontSize: 16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              // const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    satuan,
+                    style: const TextStyle(
+                        color: Colors.grey, fontSize: 13),
+                  ),
+                  Text(
+                    'x${qty}',
+                    style: const TextStyle(
+                        color: Colors.grey, fontSize: 13),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  CurrencyFormat.convertToIdr(int.parse(harga), 0),
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 Widget _labelValue(String label, String value, {bool isBold = false}) {

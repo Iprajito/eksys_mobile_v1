@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 
-import 'package:eahmindonesia/models/kegiatan_model.dart';
+import 'package:Eksys/models/kegiatan_model.dart';
 
 class KegiatanController {
   final String baseUrl = 'https://erp.eahm-indonesia.co.id/api';

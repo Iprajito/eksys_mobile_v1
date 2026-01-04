@@ -1,20 +1,20 @@
 import 'dart:collection';
 import 'dart:developer';
 
-import 'package:eahmindonesia/controllers/auth_controller.dart';
-import 'package:eahmindonesia/controllers/master_controller.dart';
-import 'package:eahmindonesia/controllers/old/setorsaldo_controller.dart';
-import 'package:eahmindonesia/controllers/purchaseorder_controller.dart';
-import 'package:eahmindonesia/controllers/salesorder_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/models/master_model.dart';
-import 'package:eahmindonesia/models/pembelian_model.dart';
-import 'package:eahmindonesia/models/penjualan_model.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/detail.dart';
-import 'package:eahmindonesia/widgets/global_widget.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/master_controller.dart';
+import 'package:Eksys/controllers/old/setorsaldo_controller.dart';
+import 'package:Eksys/controllers/purchaseorder_controller.dart';
+import 'package:Eksys/controllers/salesorder_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/models/master_model.dart';
+import 'package:Eksys/models/pembelian_model.dart';
+import 'package:Eksys/models/penjualan_model.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
+import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -128,7 +128,7 @@ class _TambahPenjualanPageState extends State<TambahPenjualanPage> {
   String? customer_syaratbayar;
   String? customer_tipepelanggan;
 
-  int? _selectedMetodeBayar = 2;
+  int? _selectedMetodeBayar = 3;
 
   String? metode_id;
   String? metode_channel;
@@ -332,62 +332,6 @@ class _TambahPenjualanPageState extends State<TambahPenjualanPage> {
                       fontSize: 16.0);
                 }
           }
-          // if (_selectedMetodeBayar == '1') {
-          //   print('Cek Saldo');
-          // } else {
-          //   if (metode_id == null) {
-          //     shoMyBadDialog(
-          //         context: context,
-          //         title: "Pembelian",
-          //         message: "Metode Pembayaran tidak boleh kosong!");
-          //   } else {
-          //     String grandtotal = (isSwitched == true) ? smGrandtotalNonDp.toString() : smGrandtotal.toString();
-          //     String jumlah_dp = (isSwitched == true) ? smNominalDp.toString() : '0';
-          //     print(
-          //         "$nopo - $customer_id - $tanggal - $keterangan - $smSubtotal - $smBiayaLayanan - $grandtotal - $jumlah_dp");
-          //     showLoadingDialog(context: context);
-          //     purchaseorderController = PurchaseorderController();
-          //     var response = await purchaseorderController.savePembelian(
-          //       widget.token.toString(),
-          //       widget.userid.toString(),
-          //       nopo,
-          //       customer_id!,
-          //       tanggal,
-          //       keterangan,
-          //       smSubtotal.toString(),
-          //       smBiayaLayanan.toString(),
-          //       grandtotal,
-          //       jumlah_dp,
-          //       metode_tipe.toString(),
-          //       metode_channel.toString()
-          //     );
-          //     if (response.toString() != '0') {
-          //       hideLoadingDialog(context);
-          //       // Navigator.pop(context, 'refresh');
-          //       Navigator.pushReplacement(
-          //         context,
-          //         PageRouteBuilder(
-          //           pageBuilder:
-          //               (context, animation, secondaryAnimation) => //DrawerExample(),
-          //                   PembelianDetailPage(token: widget.token.toString(), userid: widget.userid.toString(), idencrypt: response.toString()),
-          //           transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          //             const begin = Offset(1.0, 0.0); // Slide from right
-          //             const end = Offset.zero;
-          //             const curve = Curves.ease;
-
-          //             final tween =
-          //                 Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-          //             final offsetAnimation = animation.drive(tween);
-
-          //             return SlideTransition(
-          //               position: offsetAnimation,
-          //               child: child,
-          //             );
-          //           },
-          //         ));
-          //     }
-          //   }
-          // }
         }
       }
     }
@@ -753,71 +697,42 @@ class _TambahPenjualanPageState extends State<TambahPenjualanPage> {
                             ),
                           ],
                         ),
-                        BootstrapRow(
-                          height: 60,
-                          children: [
-                            BootstrapCol(
-                              sizes: 'col-12',
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 4),
-                                child: TextFormField(
-                                  readOnly: true,
-                                  controller:
-                                      TextEditingController(text: customer_po),
-                                  decoration: InputDecoration(
-                                    labelText: 'PO Customer',
-                                    labelStyle:
-                                        const TextStyle(color: Colors.grey),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide:
-                                          const BorderSide(color: Colors.grey),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          const BorderSide(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: const Icon(Icons.arrow_drop_down),
-                                      onPressed: () => navigateToCustomerPOPage(),
-                                    ),
-                                  ),
-                                  onTap: () => navigateToCustomerPOPage(),
-                                ),
-                              ),
-                            ),
-                            // BootstrapCol(
-                            //   fit: FlexFit.tight,
-                            //   sizes: 'col-md-6',
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.only(left: 4),
-                            //     child: TextFormField(
-                            //       controller: TextEditingController(text: ''),
-                            //       decoration: InputDecoration(
-                            //           labelText: 'Tanggal PO',
-                            //           labelStyle:
-                            //               const TextStyle(color: Colors.grey),
-                            //           border: OutlineInputBorder(
-                            //             borderRadius: BorderRadius.circular(10),
-                            //             borderSide: const BorderSide(
-                            //                 color: Colors.grey),
-                            //           ),
-                            //           focusedBorder: OutlineInputBorder(
-                            //             borderSide: const BorderSide(
-                            //                 color: Colors.grey),
-                            //             borderRadius:
-                            //                 BorderRadius.circular(10.0),
-                            //           )),
-                            //       enabled: false,
-                            //       onSaved: (value) {
-                            //         nopo = value!;
-                            //       },
-                            //     ),
-                            //   ),
-                            // )
-                          ]
-                        ),
+                        // BootstrapRow(
+                        //   height: 60,
+                        //   children: [
+                        //     BootstrapCol(
+                        //       sizes: 'col-12',
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.only(right: 0),
+                        //         child: TextFormField(
+                        //           readOnly: true,
+                        //           controller:
+                        //               TextEditingController(text: customer_po),
+                        //           decoration: InputDecoration(
+                        //             labelText: 'PO Customer',
+                        //             labelStyle:
+                        //                 const TextStyle(color: Colors.grey),
+                        //             border: OutlineInputBorder(
+                        //               borderRadius: BorderRadius.circular(10),
+                        //               borderSide:
+                        //                   const BorderSide(color: Colors.grey),
+                        //             ),
+                        //             focusedBorder: OutlineInputBorder(
+                        //               borderSide:
+                        //                   const BorderSide(color: Colors.grey),
+                        //               borderRadius: BorderRadius.circular(10.0),
+                        //             ),
+                        //             suffixIcon: IconButton(
+                        //               icon: const Icon(Icons.arrow_drop_down),
+                        //               onPressed: () => navigateToCustomerPOPage(),
+                        //             ),
+                        //           ),
+                        //           onTap: () => navigateToCustomerPOPage(),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ]
+                        // ),
                         BootstrapRow(
                           height: 60,
                           children: [
@@ -983,6 +898,11 @@ class _TambahPenjualanPageState extends State<TambahPenjualanPage> {
                                                         _tempPenjualanDetailModel!
                                                             .data[index].jumlah
                                                             .toString());
+                                                    var image =
+                                                        _tempPenjualanDetailModel!
+                                                            .data[index]
+                                                            .image
+                                                            .toString();
                                                     return orderItemDetail(
                                                         index,
                                                         id,
@@ -990,7 +910,7 @@ class _TambahPenjualanPageState extends State<TambahPenjualanPage> {
                                                         qty,
                                                         satuanproduk,
                                                         harga,
-                                                        jumlah);
+                                                        jumlah,image);
                                                   },
                                                 ),
                                     )),
@@ -1024,12 +944,12 @@ class _TambahPenjualanPageState extends State<TambahPenjualanPage> {
                       ],
                     ),
                   ),
-                  Visibility(
-                    visible: (customer_po == '') ? true : false,
-                    child: const SizedBox(height: 16),
+                  const Visibility(
+                    visible: false, // (customer_po == '') ? true : false,
+                    child: SizedBox(height: 16),
                   ),
                   Visibility(
-                    visible: (customer_po == '') ? true : false,
+                    visible: false,// (customer_po == '') ? true : false,
                     child: Container(
                         decoration: BoxDecoration(
                             color: Colors.white,
@@ -1326,7 +1246,7 @@ class _TambahPenjualanPageState extends State<TambahPenjualanPage> {
   }
 
   Widget orderItemDetail(int index, String id, String namaproduk, int qty,
-      String satuanproduk, int harga, int jumlah) {
+      String satuanproduk, int harga, int jumlah, String image) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     var no = index + 1;
@@ -1340,45 +1260,113 @@ class _TambahPenjualanPageState extends State<TambahPenjualanPage> {
     return GestureDetector(
       onTap: () => _delTempProduk(
           id, namaproduk, satuanproduk, int.parse(harga.toString()), qty),
-      child: Column(
-        children: [
-          Container(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 90,
+              height: 90,
               decoration: BoxDecoration(
-                color: color,
-                // borderRadius: BorderRadius.circular(0),
+                color: const Color(0xFFFFFFFF),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
               ),
-              width: screenWidth,
-              padding: const EdgeInsets.all(16),
-              child: Row(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.broken_image),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: screenWidth * 0.76,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(namaproduk,
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.grey[800])),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('@ ${CurrencyFormat.convertToIdr(harga, 0)}',
-                                style: TextStyle(color: Colors.grey[800])),
-                            Text('x $qty $satuanproduk',
-                                style: TextStyle(color: Colors.grey[800])),
-                            Text(CurrencyFormat.convertToIdr(jumlah, 0),
-                                style: TextStyle(color: Colors.grey[800]))
-                          ],
-                        )
-                      ],
+                  Text(
+                    namaproduk,
+                    style: const TextStyle(fontSize: 16),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    satuanproduk,
+                    style: const TextStyle(
+                        color: Colors.grey, fontSize: 16),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        CurrencyFormat.convertToIdr(harga, 0),
+                        style: const TextStyle(
+                            color: Colors.grey, fontSize: 16),
+                      ),
+                      Text(
+                        'x${qty}',
+                        style: const TextStyle(
+                            color: Colors.grey, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      CurrencyFormat.convertToIdr(jumlah, 0),
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                  )
+                  ),
                 ],
-              )),
-          // Divider(color: Colors.grey[200])
-        ],
-      ),
+              ),
+            ),
+          ]
+        )
+      )
+      // Column(
+      //   children: [
+      //     Container(
+      //         decoration: BoxDecoration(
+      //           color: color,
+      //           // borderRadius: BorderRadius.circular(0),
+      //         ),
+      //         width: screenWidth,
+      //         padding: const EdgeInsets.all(16),
+      //         child: Row(
+      //           children: [
+      //             SizedBox(
+      //               width: screenWidth * 0.76,
+      //               child: Column(
+      //                 mainAxisAlignment: MainAxisAlignment.start,
+      //                 crossAxisAlignment: CrossAxisAlignment.start,
+      //                 children: [
+      //                   Text(namaproduk,
+      //                       style: TextStyle(
+      //                           fontSize: 14, color: Colors.grey[800])),
+      //                   Row(
+      //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                     children: [
+      //                       Text('@ ${CurrencyFormat.convertToIdr(harga, 0)}',
+      //                           style: TextStyle(color: Colors.grey[800])),
+      //                       Text('x $qty $satuanproduk',
+      //                           style: TextStyle(color: Colors.grey[800])),
+      //                       Text(CurrencyFormat.convertToIdr(jumlah, 0),
+      //                           style: TextStyle(color: Colors.grey[800]))
+      //                     ],
+      //                   )
+      //                 ],
+      //               ),
+      //             )
+      //           ],
+      //         )),
+      //     // Divider(color: Colors.grey[200])
+      //   ],
+      // ),
     );
   }
 
@@ -2580,6 +2568,9 @@ class _ProdukPageState extends State<ProdukPage> {
                               var fee = _produkModel!
                                   .data[index].transaksi_fee
                                   .toString();
+                              var image = _produkModel!
+                                  .data[index].image
+                                  .toString();
                               return listProduk(
                                   id,
                                   nama,
@@ -2590,7 +2581,8 @@ class _ProdukPageState extends State<ProdukPage> {
                                   hrgreseller,
                                   hrgnonmember,
                                   int.parse(qty),
-                                  int.parse(fee)
+                                  int.parse(fee),
+                                  image
                                 );
                             }),
               ),
@@ -2610,7 +2602,7 @@ class _ProdukPageState extends State<ProdukPage> {
       String hrgagen,
       String hrgreseller,
       String hrgnonmember,
-      int qty, int fee) {
+      int qty, int fee, String image) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     var usergroup = widget.tipe_pelanggan;
@@ -2639,85 +2631,115 @@ class _ProdukPageState extends State<ProdukPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(nama,
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold)),
-                  Text(
-                      '${CurrencyFormat.convertToIdr(int.parse(harga), 0)} / $satuan',
-                      style: TextStyle(color: Colors.grey[800], fontSize: 14)),
-                ],
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    image,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.broken_image),
+                  ),
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: IconButton(
-                      onPressed: () => _removeEntry(id, harga, satuan, fee),
-                      icon: const Icon(Icons.remove, color: Colors.white),
-                      padding: const EdgeInsets.all(0),
-                      constraints: const BoxConstraints(),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: SizedBox(
-                        width: 50,
-                        height: 30,
-                        child: TextField(
-                          keyboardType: TextInputType.none,
-                          showCursor: false,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.grey),
-                          decoration: InputDecoration(
-                              hintText: qty.toString(),
-                              isDense: true, // biar padding lebih rapat
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 8),
-                              border: const UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.grey), // garis tipis abu-abu
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(nama,
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold)),
+                    Text(satuan,style: TextStyle(color: Colors.grey[800], fontSize: 16)),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          CurrencyFormat.convertToIdr(int.parse(harga), 0),
+                          style: TextStyle(
+                              color: Colors.amber[900], fontSize: 18),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: 25,
+                              width: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[800],
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
+                              child: IconButton(
+                                onPressed: () => _removeEntry(id, harga, satuan, fee),
+                                icon: const Icon(Icons.remove, color: Colors.white),
+                                padding: const EdgeInsets.all(0),
+                                constraints: const BoxConstraints(),
                               ),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.grey), // saat fokus jadi biru
-                              )),
-                          onTap: () => _showAction(id, nama, satuan,
-                              int.parse(harga.toString()), qty, fee),
-                        )),
-                  ),
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: IconButton(
-                      onPressed: () => _addEntry(id, harga, satuan, fee),
-                      icon: const Icon(Icons.add, color: Colors.white),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ),
-                ],
-              )
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5, right: 5),
+                              child: SizedBox(
+                                  width: 50,
+                                  height: 30,
+                                  child: TextField(
+                                    keyboardType: TextInputType.none,
+                                    showCursor: false,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(color: Colors.grey),
+                                    decoration: InputDecoration(
+                                        hintText: qty.toString(),
+                                        isDense: true, // biar padding lebih rapat
+                                        contentPadding: const EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 8),
+                                        border: const UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.grey), // garis tipis abu-abu
+                                        ),
+                                        enabledBorder: const UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.grey),
+                                        ),
+                                        focusedBorder: const UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.grey), // saat fokus jadi biru
+                                        )),
+                                    onTap: () => _showAction(id, nama, satuan,
+                                        int.parse(harga.toString()), qty, fee),
+                                  )),
+                            ),
+                            Container(
+                              height: 25,
+                              width: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[800],
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: IconButton(
+                                onPressed: () => _addEntry(id, harga, satuan, fee),
+                                icon: const Icon(Icons.add, color: Colors.white),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ],

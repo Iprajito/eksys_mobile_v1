@@ -1,14 +1,14 @@
-import 'package:eahmindonesia/controllers/auth_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/controllers/purchaseorder_controller.dart';
-import 'package:eahmindonesia/models/penerimaan_model.dart';
-import 'package:eahmindonesia/models/stokbarang_model.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/penerimaan/detail.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/penerimaan/tambah.dart';
-import 'package:eahmindonesia/widgets/global_widget.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/controllers/purchaseorder_controller.dart';
+import 'package:Eksys/models/penerimaan_model.dart';
+import 'package:Eksys/models/stokbarang_model.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/purchaseorder/penerimaan/detail.dart';
+import 'package:Eksys/views/page/purchaseorder/penerimaan/tambah.dart';
+import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -170,28 +170,53 @@ class _StokBarangPageState extends State<StokBarangPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(0.0),
-              child: Column(
+              child:  Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    data.namaproduk.toString(),
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Divider(height: 16, color: Colors.grey[300]),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // _labelValue('Subtotal', CurrencyFormat.convertToIdr(subtotal, 0)),
-                      // _labelValue('Total Item', CurrencyFormat.convertNumber(ppn, 0)),
-                      Text(data.stok.toString(),
-                        style: const TextStyle(fontSize: 14),
+                  // Gambar produk dengan border
+                  Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFFFFF),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        data.image.toString(),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.broken_image),
                       ),
-                    ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  // Detail produk
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data.namaproduk.toString(),
+                          style: const TextStyle(fontSize: 16),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        // const SizedBox(height: 4),
+                        Text(
+                          'Stok : ${data.stok.toString()}',
+                          style: const TextStyle(
+                              color: Colors.grey, fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-              ),
-            )),
+              )
+            )
+        ),
         onTap: () {
           // toDetailStokBarangPage(widget.token.toString(), widget.userid.toString(), data.id_encrypt.toString());
         });

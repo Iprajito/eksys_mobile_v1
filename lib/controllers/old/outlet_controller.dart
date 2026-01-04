@@ -1,4 +1,4 @@
-import 'package:eahmindonesia/models/old/outlet_model.dart';
+import 'package:Eksys/models/old/outlet_model.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 // import 'package:arumdalu/services/localstorage_service.dart';

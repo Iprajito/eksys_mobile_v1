@@ -1,17 +1,15 @@
-import 'package:eahmindonesia/controllers/dashboard_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/models/dashboard_model.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/views/page/old/inventory/tambahrequest.dart';
-import 'package:eahmindonesia/views/page/main.dart';
-import 'package:eahmindonesia/views/page/old/setor/tambah.dart';
-import 'package:eahmindonesia/widgets/global_widget.dart';
+import 'package:Eksys/controllers/dashboard_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/models/dashboard_model.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/main.dart';
+import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 // import 'package:geolocator/geolocator.dart';
-import 'package:eahmindonesia/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -410,11 +408,11 @@ class _DashboardPageState extends State<DashboardPage> {
                                       //                     .posts[0]
                                       //                     .notapesanan)));
 
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MainPage(currIndex: 1)));
+                                      // Navigator.push(
+                                      //     context,
+                                      //     MaterialPageRoute(
+                                      //         builder: (context) =>
+                                      //             MainPage(currIndex: 1)));
                                     },
                                   ),
                                 ],
@@ -455,14 +453,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ],
                                   ),
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              RequestStockPage(
-                                                  token: userToken,
-                                                  outletId: userOutletId)),
-                                    );
+                                    
                                   },
                                 ),
                               ],
@@ -502,15 +493,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ],
                                   ),
                                   onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                TambahSetorSaldoPage(
-                                                    token: userToken,
-                                                    outletId: userOutletId,
-                                                    newnota: _dashboardModel!
-                                                        .posts[0].notasetor)));
+                                    
                                   },
                                 ),
                               ],

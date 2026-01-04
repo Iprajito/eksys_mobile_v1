@@ -1,12 +1,13 @@
-import 'package:eahmindonesia/nofitication/localNotification.dart';
-import 'package:eahmindonesia/views/page/profil.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:developer';
+
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/nofitication/get_fcm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
 import 'package:go_router/go_router.dart';
 
 class SplashPage extends StatefulWidget {
@@ -25,8 +26,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     Future.delayed(
-      const Duration(seconds: 4, milliseconds: 5),
-      () {
+      const Duration(seconds: 4, milliseconds: 5), () {
         _checkLoginStatus();
       },
     );
@@ -40,7 +40,11 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _checkLoginStatus() async {
     final user = await userController.getUserFromStorage();
-    final outlet_id = await storageService.getOutletId();
+    // final outlet_id = await storageService.getOutletId();
+    String? fcmKey = await getFcmToken();
+    print('fcmKey: $fcmKey');
+    // print(inspect(user));
+    await AuthController(apiService, storageService).saveTokenApps(user?.token ?? '', user?.uid ?? '', fcmKey ?? '1');
     if (user != null) {
       GoRouter.of(context).go('/main_pusat');
     } else {
@@ -72,18 +76,17 @@ class _SplashPageState extends State<SplashPage> {
           children: [
             // Tagline muncul di tengah, lalu hilang
             Text(
-              "Ekonomi Tumbuh \nHasanah Menyatu",
-              style: GoogleFonts.playfairDisplay(
-                // pake font elegan
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                fontStyle: FontStyle.italic,
-                color: Colors.white,
-                letterSpacing: 1.2,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            )
+            "Ekonomi Tumbuh \nHasanah Menyatu",
+            style: GoogleFonts.playfairDisplay(   // pake font elegan
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              fontStyle: FontStyle.italic,
+              color: Colors.white,
+              letterSpacing: 1.2,
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          )
                 .animate()
                 // fade in + naik dari bawah (slideY positif -> ke 0)
                 .fadeIn(duration: 0.5.seconds, delay: 0.6.seconds)
@@ -101,7 +104,9 @@ class _SplashPageState extends State<SplashPage> {
                 // "assets/images/logo-horizontal.png",
                 "assets/images/logo-mob-apps.png",
                 width: 200,
-              ).animate().moveY(
+              )
+                  .animate()
+                  .moveY(
                     begin: 0, // tetap di bawah dulu
                     end: -(screenHeight / 2 - 90), // geser naik ke tengah
                     delay: 2.5.seconds, // mulai geser setelah tagline hilang

@@ -1,5 +1,5 @@
-import 'package:eahmindonesia/models/dashboard_model.dart';
-import 'package:eahmindonesia/models/old/inventory_model.dart';
+import 'package:Eksys/models/dashboard_model.dart';
+import 'package:Eksys/models/old/inventory_model.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
 

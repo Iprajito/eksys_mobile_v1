@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'dart:convert';
-import 'package:eahmindonesia/models/meeting_model.dart';
+import 'package:Eksys/models/meeting_model.dart';
 
 class MeetingController {
   final String baseUrl = 'https://erp.eahm-indonesia.co.id/api';

@@ -1,6 +1,8 @@
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
+import 'dart:convert';
+
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
 
 import 'dart:developer';
 
@@ -27,6 +29,31 @@ class AuthController {
         return false;
       }
     } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> saveTokenApps(String token, String user_id, String tokenApps) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+
+    final body = jsonEncode({'user_id': user_id, 'token_apps': tokenApps});
+
+    try {
+      final response = await dio.post('$baseUrl/savetokenapps', options: _options, data: body);
+
+      if (response.data['status'] == 'success') {
+        // print(inspect(response.data['message']));
+        print('Form saved successfully');
+        return true;
+      } else {
+        print('Failed to save form: $response');
+        return false;
+      }
+    } catch (error) {
+      print('Error: $error');
       return false;
     }
   }

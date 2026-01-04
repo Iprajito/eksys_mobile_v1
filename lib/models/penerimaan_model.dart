@@ -121,9 +121,11 @@ class PenerimaanPoDetail {
   String? satuan_produk;
   String? harga;
   String? qtyorder;
+  String? qtykirim;
   String? qtysupply;
   String? qtysisa;
   String? qtyterima;
+  String? image;
 
   PenerimaanPoDetail({
     this.id,
@@ -134,9 +136,11 @@ class PenerimaanPoDetail {
     this.satuan_produk,
     this.harga,
     this.qtyorder,
+    this.qtykirim,
     this.qtysupply,
     this.qtysisa,
-    this.qtyterima
+    this.qtyterima,
+    this.image,
   });
 
   factory PenerimaanPoDetail.fromJsson(Map<String, dynamic> json) {
@@ -149,9 +153,11 @@ class PenerimaanPoDetail {
       satuan_produk: json['satuan_produk'],
       harga: json['harga'],
       qtyorder: json['qtyorder'],
+      qtykirim: json['qtykirim'],
       qtysupply: json['qtysupply'],
       qtysisa: json['qtysisa'],
-      qtyterima: '0'
+      qtyterima: '0',
+      image: json['image'],
     );
   }
 

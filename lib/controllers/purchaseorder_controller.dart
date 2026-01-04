@@ -2,23 +2,23 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'dart:convert';
-import 'package:eahmindonesia/models/pembelian_model.dart';
-import 'package:eahmindonesia/models/penerimaan_model.dart';
-import 'package:eahmindonesia/models/stokbarang_model.dart';
+import 'package:Eksys/models/pembelian_model.dart';
+import 'package:Eksys/models/penerimaan_model.dart';
+import 'package:Eksys/models/stokbarang_model.dart';
 
 class PurchaseorderController {
   final String baseUrl = 'https://erp.eahm-indonesia.co.id/api';
   Dio dio = Dio();
 
   // Pembelian Start
-  Future<PembelianModel?> getpembelian(String token, String userid) async {
+  Future<PembelianModel?> getpembelian(String token, String userid, String status) async {
     late final Options _options = Options(headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token",
     });
     try {
       final response = await dio.get(
-          '$baseUrl/purchaseorder/getpembelian/$userid',
+          '$baseUrl/purchaseorder/getpembelian/$userid/$status',
           options: _options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
@@ -66,6 +66,75 @@ class PurchaseorderController {
     try {
       final response = await dio.get(
           '$baseUrl/purchaseorder/getpembeliandetailbyid/$idencrypt',
+          options: _options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return PembelianDetailModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<PembelianModel?> getpengiriman(String token, String userid, String status) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+    try {
+      final response = await dio.get(
+          '$baseUrl/purchaseorder/getpengiriman/$userid/$status',
+          options: _options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return PembelianModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<PembelianModel?> getpengirimanbyid(
+      String token, String userid, String idencrypt) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+    try {
+      final response = await dio.get(
+          '$baseUrl/purchaseorder/getpengirimanbyid/$idencrypt',
+          options: _options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return PembelianModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<PembelianDetailModel?> getpengirimandetailbyid(
+      String token, String idencrypt) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+    print("Fetching purchase order details for ID: $idencrypt");
+    try {
+      final response = await dio.get(
+          '$baseUrl/purchaseorder/getpengirimandetailbyid/$idencrypt',
           options: _options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());

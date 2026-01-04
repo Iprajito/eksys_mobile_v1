@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:eahmindonesia/models/penjualan_model.dart';
+import 'package:Eksys/models/penjualan_model.dart';
 
 class SalesorderController {
   final String baseUrl = 'https://erp.eahm-indonesia.co.id/api';
@@ -96,6 +96,50 @@ class SalesorderController {
     }
   }
 
+  Future<PenjualanModel?> getpenjualanbyid(String token, String userid, String id_encrypt) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+    // print("Fetching purchase order details for ID: $userid");
+    try {
+      final response = await dio.get('$baseUrl/salesorder/getpenjualanbyid/$id_encrypt',
+          options: _options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return PenjualanModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<PenjualanDetailModel?> getpenjualandetailbyid(String token, String userid, String id_encrypt) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+    // print("Fetching purchase order details for ID: $userid");
+    try {
+      final response = await dio.get('$baseUrl/salesorder/getpenjualandetailbyid/$id_encrypt',
+          options: _options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return PenjualanDetailModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
   Future<String> savePenjualan(
       String token,
       String userid,
@@ -146,6 +190,31 @@ class SalesorderController {
     } catch (error) {
       print('Error: $error');
       return '0';
+    }
+  }
+
+  Future<bool> savePenjualanBatal(String token, String userid, String id_encrypt) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+    final body = jsonEncode({'userid': userid,'id_encrypt': id_encrypt});
+    try {
+      final response = await dio.post(
+          '$baseUrl/salesorder/penjualanbatal',
+          options: _options,
+          data: body);
+
+      if (response.data['status'] == 'success') {
+        print('Entry saved successfully');
+        return true;
+      } else {
+        print('Failed to save entry: $response');
+        return false;
+      }
+    } catch (error) {
+      print('Error: $error');
+      return false;
     }
   }
 

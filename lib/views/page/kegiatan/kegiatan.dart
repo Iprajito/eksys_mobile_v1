@@ -1,10 +1,10 @@
-import 'package:eahmindonesia/controllers/auth_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/views/page/kegiatan/jadwal.dart';
-import 'package:eahmindonesia/views/page/kegiatan/riwayat.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/kegiatan/jadwal.dart';
+import 'package:Eksys/views/page/kegiatan/riwayat.dart';
 import 'package:flutter/material.dart';
 
 class KegiatanPage extends StatefulWidget {

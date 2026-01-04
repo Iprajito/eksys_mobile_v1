@@ -1,18 +1,18 @@
 import 'dart:collection';
 import 'dart:developer';
 
-import 'package:eahmindonesia/controllers/auth_controller.dart';
-import 'package:eahmindonesia/controllers/master_controller.dart';
-import 'package:eahmindonesia/controllers/old/setorsaldo_controller.dart';
-import 'package:eahmindonesia/controllers/purchaseorder_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/models/master_model.dart';
-import 'package:eahmindonesia/models/pembelian_model.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/detail.dart';
-import 'package:eahmindonesia/widgets/global_widget.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/master_controller.dart';
+import 'package:Eksys/controllers/old/setorsaldo_controller.dart';
+import 'package:Eksys/controllers/purchaseorder_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/models/master_model.dart';
+import 'package:Eksys/models/pembelian_model.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
+import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -251,7 +251,8 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                 title: "Pembelian",
                 message: "Metode Pembayaran tidak boleh kosong!");
           } else {
-            String grandtotal = (isSwitched == true) ? smGrandtotalNonDp.toString() : smGrandtotal.toString();
+            // String grandtotal = (isSwitched == true) ? smGrandtotalNonDp.toString() : smGrandtotal.toString();
+            String grandtotal = smGrandtotal.toString();
             String jumlah_dp = (isSwitched == true) ? smNominalDp.toString() : '0';
             print(
                 "$nopo - $supplier_id - $tanggal - $keterangan - $smSubtotal - $smBiayaLayanan - $grandtotal - $jumlah_dp");
@@ -542,7 +543,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                           children: [
                             BootstrapCol(
                               fit: FlexFit.tight,
-                              sizes: 'col-md-6',
+                              sizes: 'col-md-7',
                               child: Padding(
                                 padding: const EdgeInsets.only(right: 8),
                                 child: TextFormField(
@@ -575,7 +576,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                             ),
                             BootstrapCol(
                               fit: FlexFit.tight,
-                              sizes: 'col-md-6',
+                              sizes: 'col-md-5',
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 8),
                                 child: TextFormField(
@@ -771,6 +772,11 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                                         _tempPembelianDetailModel!
                                                             .data[index].jumlah
                                                             .toString());
+                                                    var image =
+                                                        _tempPembelianDetailModel!
+                                                            .data[index]
+                                                            .image
+                                                            .toString();
                                                     return orderItemDetail(
                                                         index,
                                                         id,
@@ -778,7 +784,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                                         qty,
                                                         satuanproduk,
                                                         harga,
-                                                        jumlah);
+                                                        jumlah,image);
                                                   },
                                                 ),
                                     )),
@@ -1016,6 +1022,12 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                       )
                     ),
                   ),
+                  
+                  Visibility(
+                    visible: _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
+                    child: const SizedBox(height: 16)
+                  ),
+
                   Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -1262,7 +1274,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
   }
 
   Widget orderItemDetail(int index, String id, String namaproduk, int qty,
-      String satuanproduk, int harga, int jumlah) {
+      String satuanproduk, int harga, int jumlah, String image) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     var no = index + 1;
@@ -1276,45 +1288,74 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
     return GestureDetector(
       onTap: () => _delTempProduk(
           id, namaproduk, satuanproduk, int.parse(harga.toString()), qty),
-      child: Column(
-        children: [
-          Container(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 90,
+              height: 90,
               decoration: BoxDecoration(
-                color: color,
-                // borderRadius: BorderRadius.circular(0),
+                color: const Color(0xFFFFFFFF),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
               ),
-              width: screenWidth,
-              padding: const EdgeInsets.all(16),
-              child: Row(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.broken_image),
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: screenWidth * 0.76,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(namaproduk,
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.grey[800])),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('@ ${CurrencyFormat.convertToIdr(harga, 0)}',
-                                style: TextStyle(color: Colors.grey[800])),
-                            Text('x $qty $satuanproduk',
-                                style: TextStyle(color: Colors.grey[800])),
-                            Text(CurrencyFormat.convertToIdr(jumlah, 0),
-                                style: TextStyle(color: Colors.grey[800]))
-                          ],
-                        )
-                      ],
+                  Text(
+                    namaproduk,
+                    style: const TextStyle(fontSize: 16),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    satuanproduk,
+                    style: const TextStyle(
+                        color: Colors.grey, fontSize: 16),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        CurrencyFormat.convertToIdr(harga, 0),
+                        style: const TextStyle(
+                            color: Colors.grey, fontSize: 16),
+                      ),
+                      Text(
+                        'x${qty}',
+                        style: const TextStyle(
+                            color: Colors.grey, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      CurrencyFormat.convertToIdr(jumlah, 0),
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                  )
+                  ),
                 ],
-              )),
-          // Divider(color: Colors.grey[200])
-        ],
-      ),
+              ),
+            ),
+          ]
+        )
+      )
     );
   }
 
@@ -2115,7 +2156,7 @@ class _ProdukPageState extends State<ProdukPage> {
         if (_entryManager.entryExists(menuId) == false) {
           int subtotal = qty * harga;
           _entryManager.addEntry(widget.userid.toString(), menuId,
-              harga.toString(), qty.toString(), satuan, subtotal.toString(), fee);
+              harga.toString(), qty.toString(), satuan, subtotal.toString(), fee.toString());
         } else {
           var newQty = qty;
           var newSubtotal = newQty * harga;
@@ -2331,6 +2372,9 @@ class _ProdukPageState extends State<ProdukPage> {
                               var fee = _produkModel!
                                   .data[index].transaksi_fee
                                   .toString();
+                              var image = _produkModel!
+                                  .data[index].image
+                                  .toString();
                               return listProduk(
                                   id,
                                   nama,
@@ -2341,7 +2385,8 @@ class _ProdukPageState extends State<ProdukPage> {
                                   hrgreseller,
                                   hrgnonmember,
                                   int.parse(qty),
-                                  int.parse(fee)
+                                  int.parse(fee),
+                                  image
                                 );
                             }),
               ),
@@ -2361,7 +2406,7 @@ class _ProdukPageState extends State<ProdukPage> {
       String hrgagen,
       String hrgreseller,
       String hrgnonmember,
-      int qty, int fee) {
+      int qty, int fee, String image) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     var usergroup = widget.usergroup;
@@ -2390,85 +2435,115 @@ class _ProdukPageState extends State<ProdukPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(nama,
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold)),
-                  Text(
-                      '${CurrencyFormat.convertToIdr(int.parse(harga), 0)} / $satuan',
-                      style: TextStyle(color: Colors.grey[800], fontSize: 14)),
-                ],
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFFFFF),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    image,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.broken_image),
+                  ),
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: IconButton(
-                      onPressed: () => _removeEntry(id, harga, satuan, fee),
-                      icon: const Icon(Icons.remove, color: Colors.white),
-                      padding: const EdgeInsets.all(0),
-                      constraints: const BoxConstraints(),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: SizedBox(
-                        width: 50,
-                        height: 30,
-                        child: TextField(
-                          keyboardType: TextInputType.none,
-                          showCursor: false,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.grey),
-                          decoration: InputDecoration(
-                              hintText: qty.toString(),
-                              isDense: true, // biar padding lebih rapat
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 8),
-                              border: const UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.grey), // garis tipis abu-abu
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(nama,
+                        style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold)),
+                    Text(satuan,style: TextStyle(color: Colors.grey[800], fontSize: 16)),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          CurrencyFormat.convertToIdr(int.parse(harga), 0),
+                          style: TextStyle(
+                              color: Colors.amber[900], fontSize: 18),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: 25,
+                              width: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[800],
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
+                              child: IconButton(
+                                onPressed: () => _removeEntry(id, harga, satuan, fee),
+                                icon: const Icon(Icons.remove, color: Colors.white),
+                                padding: const EdgeInsets.all(0),
+                                constraints: const BoxConstraints(),
                               ),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.grey), // saat fokus jadi biru
-                              )),
-                          onTap: () => _showAction(id, nama, satuan,
-                              int.parse(harga.toString()), qty, fee),
-                        )),
-                  ),
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[800],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: IconButton(
-                      onPressed: () => _addEntry(id, harga, satuan, fee),
-                      icon: const Icon(Icons.add, color: Colors.white),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                    ),
-                  ),
-                ],
-              )
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5, right: 5),
+                              child: SizedBox(
+                                  width: 50,
+                                  height: 30,
+                                  child: TextField(
+                                    keyboardType: TextInputType.none,
+                                    showCursor: false,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(color: Colors.grey),
+                                    decoration: InputDecoration(
+                                        hintText: qty.toString(),
+                                        isDense: true, // biar padding lebih rapat
+                                        contentPadding: const EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 8),
+                                        border: const UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.grey), // garis tipis abu-abu
+                                        ),
+                                        enabledBorder: const UnderlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.grey),
+                                        ),
+                                        focusedBorder: const UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.grey), // saat fokus jadi biru
+                                        )),
+                                    onTap: () => _showAction(id, nama, satuan,
+                                        int.parse(harga.toString()), qty, int.parse(fee.toString())),
+                                  )),
+                            ),
+                            Container(
+                              height: 25,
+                              width: 25,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[800],
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: IconButton(
+                                onPressed: () => _addEntry(id, harga, satuan, fee),
+                                icon: const Icon(Icons.add, color: Colors.white),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ],

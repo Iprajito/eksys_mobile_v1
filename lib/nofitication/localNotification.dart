@@ -1,10 +1,12 @@
-import 'package:eahmindonesia/services/navigation_service.dart';
-import 'package:eahmindonesia/views/page/profil.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/services/navigation_service.dart';
+import 'package:Eksys/views/page/profil.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:eahmindonesia/controllers/splash_notif.dart';
-import 'package:eahmindonesia/models/text_globals.dart' as globals;
+import 'package:Eksys/controllers/splash_notif.dart';
+import 'package:Eksys/models/text_globals.dart' as globals;
 
 class LocalNotification {
   static final FlutterLocalNotificationsPlugin _notiPlugin =
@@ -64,7 +66,8 @@ class LocalNotification {
     });
   }
 
-  static void _handlePayload(String payload) {
+  static Future<void> _handlePayload(String payload) async {
+    final userController = UserController(StorageService());
     // Parse the payload string to extract data
     try {
       // Convert the payload string to a Map
@@ -79,15 +82,20 @@ class LocalNotification {
       }
       
       // Original navigation logic
-      if (payloadMap['type'] == 'chat') {
-        print('howww chat');
-        final token = (payloadMap['token'] ?? payloadMap['userToken'] ?? '').toString();
-        final userid = (payloadMap['userid'] ?? '').toString();
-        final idencrypt = (payloadMap['idencrypt'] ?? '').toString();
-        final route =
-            '/pembelian_detail?token=${Uri.encodeComponent(token)}&userid=${Uri.encodeComponent(userid)}&idencrypt=${Uri.encodeComponent(idencrypt)}';
-        NavigationService.navigatePush(route);
-      }
+      // if (payloadMap['type'] == 'pembelian') {
+      //   print('howww chat');
+      //   final token = (payloadMap['token'] ?? payloadMap['userToken'] ?? '').toString();
+      //   final userid = (payloadMap['userid'] ?? '').toString();
+      final idencrypt = (payloadMap['trxIdEncrypt'] ?? '').toString();
+      final path = (payloadMap['direct_path'] ?? '').toString();
+      // final path = payloadMap['path'] ?? '/main_pusat';
+      // print("Navigation path: $path");
+      final user2 = userController.getUserFromStorage();
+      final token = user2.then((user) => user?.token ?? '');
+      final userId = user2.then((user) => user?.uid ?? '');
+      final route = '/${Uri.encodeComponent(path)}?token=${Uri.encodeComponent(await token)}&userid=${Uri.encodeComponent(await userId)}&idencrypt=${Uri.encodeComponent(idencrypt)}';
+      NavigationService.navigatePush(route);
+      // }
     } catch (e) {
       print('Error parsing payload: $e');
     }

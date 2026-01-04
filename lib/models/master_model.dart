@@ -99,6 +99,19 @@ class AnggotaModel {
   }
 }
 
+class SubscribeModel {
+  final List<Subscribe> data;
+
+  SubscribeModel({required this.data});
+
+  factory SubscribeModel.fromJson(Map<String, dynamic> json) {
+    var datas = json['data'] as List? ?? [];
+    List<Subscribe> data = datas.map((i) => Subscribe.fromJsson(i)).toList();
+
+    return SubscribeModel(data: data);
+  }
+}
+
 class Supplier {
   String? id;
   String? idencrypt;
@@ -245,6 +258,7 @@ class Produk {
   String? hrg_agen;
   String? hrg_reseller;
   String? hrg_nonmember;
+  String? image;
 
   Produk(
       {this.id,
@@ -255,7 +269,9 @@ class Produk {
       this.hrg_distributor,
       this.hrg_agen,
       this.hrg_reseller,
-      this.hrg_nonmember});
+      this.hrg_nonmember,
+      this.image,
+  });
 
   factory Produk.fromJsson(Map<String, dynamic> json) {
     return Produk(
@@ -268,6 +284,7 @@ class Produk {
       hrg_agen: json['hrg_agen'],
       hrg_reseller: json['hrg_reseller'],
       hrg_nonmember: json['hrg_nonmember'],
+      image: json['image'],
     );
   }
 }
@@ -300,5 +317,27 @@ class Anggota {
   factory Anggota.fromJsson(Map<String, dynamic> json) {
     return Anggota(
         id: json['id'], nama: json['nama'], wilayah: json['wilayah']);
+  }
+}
+
+class Subscribe {
+  String? id;
+  String? id_encrypt;
+  String? subscribe;
+  String? harga;
+  String? expr;
+  String? unit;
+
+  Subscribe({this.id, this.id_encrypt, this.subscribe, this.harga, this.expr, this.unit});
+
+  factory Subscribe.fromJsson(Map<String, dynamic> json) {
+    return Subscribe(
+      id: json['id'], 
+      id_encrypt: json['id_encrypt'],
+      subscribe: json['subscribe'], 
+      harga: json['harga'],
+      expr: json['expr'],
+      unit: json['unit']
+    );
   }
 }
