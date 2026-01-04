@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- <color name="my_splash_color">#00302F</color>
+	<color name="ic_launcher_background">#00302F</color> -->
+
+    <color name="my_splash_color">#FFFFFF</color>
+	<color name="ic_launcher_background">#00302F</color>
+</resources>
