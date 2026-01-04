@@ -1,10 +1,5 @@
-import 'package:eahmindonesia/nofitication/localNotification.dart';
-import 'package:eahmindonesia/views/page/dasboard.dart';
-import 'package:eahmindonesia/views/page/profil.dart';
-import 'package:eahmindonesia/views/page/old/setor/setor.dart';
-import 'package:eahmindonesia/views/page/old/inventory/inventory.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/pembelian.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:Eksys/views/page/dasboard.dart';
+import 'package:Eksys/views/page/profil.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -22,22 +17,6 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     currentPageIndex = widget.currIndex;
-
-    LocalNotification.initialize();
-
-    // Foreground notification
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      LocalNotification.showNotification(message);
-    });
-
-    // When app opened from notification
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (!mounted) return; // ✅ Ensure context still valid
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const PembelianPage()),
-      );
-    });
   }
 
   @override
@@ -100,12 +79,13 @@ class _MainPageState extends State<MainPage> {
         const DashboardPage(),
 
         /// Pesanan page
+        // const PesananPage(),
 
         /// Stok page
-        const InventoryPage(),
+        // const InventoryPage(),
 
         // Setor Page
-        const SetorPage(),
+        // const SetorPage(),
 
         // Profile
         const ProfilPage(),

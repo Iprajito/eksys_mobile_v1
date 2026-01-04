@@ -1,5 +1,5 @@
-import 'package:eahmindonesia/controllers/old/inventory_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
+import 'package:Eksys/controllers/old/inventory_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
 import 'package:camera/camera.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';

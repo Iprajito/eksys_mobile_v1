@@ -1,11 +1,14 @@
-import 'package:eahmindonesia/controllers/auth_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/pembelian.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/penerimaan/penerimaan.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/stokbarang/stokbarang.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembelian.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembelianbatal.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembeliankemas.dart';
+import 'package:Eksys/views/page/purchaseorder/pengiriman/pembeliankirim.dart';
+import 'package:Eksys/views/page/purchaseorder/penerimaan/penerimaan.dart';
+import 'package:Eksys/views/page/purchaseorder/stokbarang/stokbarang.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseorderPage extends StatefulWidget {
@@ -67,7 +70,7 @@ class _PurchaseorderPageState extends State<PurchaseorderPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 6,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -82,21 +85,30 @@ class _PurchaseorderPageState extends State<PurchaseorderPage> {
           ),
           backgroundColor: const Color.fromARGB(255, 0, 48, 47),
           bottom: const TabBar(
+            isScrollable: true,
             labelColor: Colors.white,
             indicatorColor: Colors.white70,
             unselectedLabelColor: Colors.white70,
+            tabAlignment: TabAlignment.start, // ⬅️ posisi tab mulai dari kiri
             tabs: [
-              Tab(text: 'Pembelian'),
-              Tab(text: 'Penerimaan Barang'),
-              Tab(text: 'Stok Barang'),
+              Tab(child: SizedBox(width: 65, child: Center(child: Text('Belum Bayar')))),
+              Tab(child: SizedBox(width: 65, child: Center(child: Text('Dikemas')))),
+              Tab(child: SizedBox(width: 65, child: Center(child: Text('Dikirim')))),
+              Tab(child: SizedBox(width: 65, child: Center(child: Text('Diterima')))),
+              Tab(child: SizedBox(width: 65, child: Center(child: Text('Dibatalkan')))),
+              Tab(child: SizedBox(width: 65, child: Center(child: Text('Stok Barang')))),
             ],
           ),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
         body: TabBarView(
           children: [
-            isLoading ? const Text('') : PembelianPage(token: userToken, userid: userId),
-            isLoading ? const Text('') : PenerimaanPage(token: userToken, userid: userId),
+            isLoading ? const Text('') : PembelianPage(token: userToken, userid: userId), // Tunggu Pembayaran
+            isLoading ? const Text('') : PembelianKemasPage(token: userToken, userid: userId), // Lunas / Sudah di bayar
+            isLoading ? const Text('') : PembelianKirimPage(token: userToken, userid: userId), // Terima
+            
+            isLoading ? const Text('') : PenerimaanPage(token: userToken, userid: userId), // Kirim
+            isLoading ? const Text('') : PembelianBatalPage(token: userToken, userid: userId), // Batal
             isLoading ? const Text('') : StokBarangPage(token: userToken, userid: userId),
             //isLoading ? const Text('') : SelesaiPurchaseorderPage(token : userToken, outletId: userOutletId),
           ],

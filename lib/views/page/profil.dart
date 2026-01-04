@@ -1,11 +1,11 @@
-import 'package:eahmindonesia/controllers/auth_controller.dart';
-import 'package:eahmindonesia/controllers/master_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/models/master_model.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/widgets/global_widget.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/master_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/models/master_model.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

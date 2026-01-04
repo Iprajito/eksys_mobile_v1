@@ -1,16 +1,17 @@
-import 'package:eahmindonesia/controllers/auth_controller.dart';
-import 'package:eahmindonesia/controllers/salesorder_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/controllers/purchaseorder_controller.dart';
-import 'package:eahmindonesia/models/pembelian_model.dart';
-import 'package:eahmindonesia/models/penjualan_model.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/detail.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/tambah.dart';
-import 'package:eahmindonesia/views/page/salesorder/penjualan/tambah.dart';
-import 'package:eahmindonesia/widgets/global_widget.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/salesorder_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/controllers/purchaseorder_controller.dart';
+import 'package:Eksys/models/pembelian_model.dart';
+import 'package:Eksys/models/penjualan_model.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/tambah.dart';
+import 'package:Eksys/views/page/salesorder/penjualan/detail.dart';
+import 'package:Eksys/views/page/salesorder/penjualan/tambah.dart';
+import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -118,7 +119,7 @@ class _PenjualanPageState extends State<PenjualanPage> {
         PageRouteBuilder(
           pageBuilder:
               (context, animation, secondaryAnimation) => //DrawerExample(),
-                  PembelianDetailPage(
+                  PenjualanDetailPage(
                       token: token, userid: userid, idencrypt: idencrypt),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0); // Slide from right
@@ -260,7 +261,7 @@ class _PenjualanPageState extends State<PenjualanPage> {
               ),
             )),
         onTap: () {
-          // toDetailPesananPage(widget.token.toString(), widget.userid.toString(), data.id_encrypt.toString());
+          toDetailPesananPage(widget.token.toString(), widget.userid.toString(), data.id_encrypt.toString());
         });
   }
 }

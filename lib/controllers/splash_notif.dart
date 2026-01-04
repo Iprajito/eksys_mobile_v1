@@ -1,9 +1,9 @@
-import 'package:eahmindonesia/views/page/main.dart';
-import 'package:eahmindonesia/views/page/profil.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/detail.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/pembelian.dart';
+import 'package:Eksys/views/page/main.dart';
+import 'package:Eksys/views/page/profil.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembelian.dart';
 import 'package:flutter/material.dart';
-import 'package:eahmindonesia/models/text_globals.dart' as globals;
+import 'package:Eksys/models/text_globals.dart' as globals;
 
 class SplashNotif extends StatefulWidget {
   const SplashNotif({Key? key}) : super(key: key);

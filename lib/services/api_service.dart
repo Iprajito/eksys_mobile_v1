@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:eahmindonesia/models/user_model.dart';
+import 'package:Eksys/models/user_model.dart';
 import 'package:dio/dio.dart';
 
 class ApiServive {

@@ -1,12 +1,15 @@
 class PembelianModel {
   final List<Pembelian> data;
+  // final List<PembelianProduct> product;
 
   PembelianModel({required this.data});
 
   factory PembelianModel.fromJson(Map<String, dynamic> json) {
     var datas = json['data'] as List;
+    // var dataproduct = json['data']['product'] as List;
 
     List<Pembelian> data = datas.map((i) => Pembelian.fromJsson(i)).toList();
+    // List<PembelianProduct> product = dataproduct.map((i) => PembelianProduct.fromJsson(i)).toList();
     return PembelianModel(data: data);
   }
 }
@@ -114,12 +117,20 @@ class Pembelian {
   String? keterangan;
   String? tipeppn;
   String? tipe_ppn;
+  String? id_syaratbayar;
   String? syaratbayar;
   String? ispu;
   String? status;
   String? jumlahdp;
   String? item;
   String? qty;
+  String? metode_bayar;
+  String? tgl_dp;
+  String? tgl_sj;
+  String? tgl_pu;
+  String? nomor_si;
+  String? nomor_sj;
+  List<PembelianProduct>? product;
 
   Pembelian(
       {this.id,
@@ -136,12 +147,20 @@ class Pembelian {
       this.keterangan,
       this.tipeppn,
       this.tipe_ppn,
+      this.id_syaratbayar,
       this.syaratbayar,
       this.ispu,
       this.status,
       this.jumlahdp,
       this.item,
-      this.qty
+      this.qty,
+      this.metode_bayar,
+      this.tgl_dp,
+      this.tgl_sj,
+      this.tgl_pu,
+      this.nomor_si,
+      this.nomor_sj,
+      this.product
     });
 
   factory Pembelian.fromJsson(Map<String, dynamic> json) {
@@ -150,7 +169,7 @@ class Pembelian {
         idencrypt: json['id_encrypt'],
         nopo: json['nopo'],
         tglpo: json['tgl_po'],
-        supplierid: json['supplierid'],
+        supplierid: json['supplier_id'],
         supplier: json['supplier'],
         subtotal: json['subtotal'],
         diskon: json['diskon'],
@@ -160,12 +179,20 @@ class Pembelian {
         keterangan: json['keterangan'],
         tipeppn: json['tipeppn'],
         tipe_ppn: json['tipe_ppn'],
+        id_syaratbayar: json['id_syaratbayar'],
         syaratbayar: json['syaratbayar'],
         ispu: json['is_pu'],
         status: json['status'],
         jumlahdp: json['jumlah_dp'],
         item: json['item'],
-        qty: json['qty']
+        qty: json['qty'],
+        metode_bayar: json['metode_bayar'],
+        tgl_dp: json['tgl_dp'],
+        tgl_sj: json['tgl_sj'],
+        tgl_pu: json['tgl_pu'],
+        nomor_si: json['nomor_si'],
+        nomor_sj: json['nomor_sj'],
+        product: (json['product'] as List<dynamic>?)?.map((e) => PembelianProduct.fromJsson(e)).toList() ??[],
     );
   }
 }
@@ -181,6 +208,7 @@ class PembelianDetail {
   String? satuanproduk;
   String? harga;
   String? jumlah;
+  String? image;
 
   PembelianDetail(
       {this.id,
@@ -192,7 +220,8 @@ class PembelianDetail {
       this.qty,
       this.satuanproduk,
       this.harga,
-      this.jumlah});
+      this.jumlah,
+      this.image});
 
   factory PembelianDetail.fromJsson(Map<String, dynamic> json) {
     return PembelianDetail(
@@ -206,6 +235,7 @@ class PembelianDetail {
       satuanproduk: json['satuan_produk'],
       harga: json['harga'],
       jumlah: json['jumlah'],
+      image: json['image'],
     );
   }
 }
@@ -229,6 +259,7 @@ class TempPembelianDetail {
   String? harga;
   String? jumlah;
   String? fee;
+  String? image;
 
   TempPembelianDetail(
       {this.id,
@@ -239,6 +270,7 @@ class TempPembelianDetail {
       this.harga,
       this.jumlah,
       this.fee,
+      this.image
     });
 
   factory TempPembelianDetail.fromJsson(Map<String, dynamic> json) {
@@ -251,6 +283,7 @@ class TempPembelianDetail {
       harga: json['harga'],
       jumlah: json['jumlah'],
       fee: json['fee'],
+      image: json['image'],
     );
   }
 }
@@ -320,6 +353,34 @@ class PembelianVA {
       total_amount: json['total_amount'],
       expired_date: json['expired_date'],
       bank: json['bank']
+    );
+  }
+}
+
+class PembelianProduct {
+  String? id;
+  String? namaproduk;
+  String? satuan_produk;
+  String? qty;
+  String? harga;
+  String? image;
+
+  PembelianProduct(
+      {this.id,this.namaproduk,
+      this.satuan_produk,
+      this.qty,
+      this.harga,
+      this.image
+    });
+
+  factory PembelianProduct.fromJsson(Map<String, dynamic> json) {
+    return PembelianProduct(
+      id: json['id'],
+      namaproduk: json['namaproduk'],
+      satuan_produk: json['satuan_produk'],
+      qty: json['qty'],
+      harga: json['harga'],
+      image: json['image']
     );
   }
 }

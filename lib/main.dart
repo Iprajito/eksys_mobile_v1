@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:eahmindonesia/nofitication/localNotification.dart';
-import 'package:eahmindonesia/services/navigation_service.dart';
-import 'package:eahmindonesia/views/auth/login.dart';
-import 'package:eahmindonesia/views/auth/logincabang.dart';
-import 'package:eahmindonesia/views/page/dasboard.dart';
-import 'package:eahmindonesia/views/page/main.dart';
-import 'package:eahmindonesia/views/page/main_pusat.dart';
-import 'package:eahmindonesia/views/page/profil.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/detail.dart';
-import 'package:eahmindonesia/views/page/splash.dart';
+import 'package:Eksys/nofitication/localNotification.dart';
+import 'package:Eksys/services/navigation_service.dart';
+import 'package:Eksys/views/auth/login.dart';
+import 'package:Eksys/views/auth/logincabang.dart';
+import 'package:Eksys/views/page/dasboard.dart';
+import 'package:Eksys/views/page/main.dart';
+import 'package:Eksys/views/page/main_pusat.dart';
+import 'package:Eksys/views/page/profil.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
+import 'package:Eksys/views/page/splash.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';

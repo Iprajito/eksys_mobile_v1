@@ -15,18 +15,21 @@ class StokBarang {
   String? id;
   String? namaproduk;
   String? stok;
+  String? image;
 
   StokBarang({
     this.id,
     this.namaproduk,
-    this.stok
+    this.stok,
+    this.image,
   });
 
   factory StokBarang.fromJsson(Map<String, dynamic> json) {
     return StokBarang(
       id: json['id'],
       namaproduk: json['namaproduk'],
-      stok: json['stok']
+      stok: json['stok'],
+      image: json['image'],
     );
   }
 }

@@ -1,14 +1,14 @@
-import 'package:eahmindonesia/controllers/auth_controller.dart';
-import 'package:eahmindonesia/controllers/user_controller.dart';
-import 'package:eahmindonesia/functions/global_functions.dart';
-import 'package:eahmindonesia/controllers/purchaseorder_controller.dart';
-import 'package:eahmindonesia/models/pembelian_model.dart';
-import 'package:eahmindonesia/services/api_service.dart';
-import 'package:eahmindonesia/services/localstorage_service.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/detail.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/pembayaran.dart';
-import 'package:eahmindonesia/views/page/purchaseorder/pembelian/tambah.dart';
-import 'package:eahmindonesia/widgets/global_widget.dart';
+import 'package:Eksys/controllers/auth_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
+import 'package:Eksys/functions/global_functions.dart';
+import 'package:Eksys/controllers/purchaseorder_controller.dart';
+import 'package:Eksys/models/pembelian_model.dart';
+import 'package:Eksys/services/api_service.dart';
+import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaran.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/tambah.dart';
+import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -29,7 +29,7 @@ class _PembelianPageState extends State<PembelianPage> {
   final userController = UserController(StorageService());
   String userId = "", userName = "", userEmail = "", userToken = "", userGroup = "";
   bool isLoading = true;
-
+  bool showAll = false;
   @override
   void initState() {
     super.initState();
@@ -179,7 +179,7 @@ class _PembelianPageState extends State<PembelianPage> {
 
   void _dataPesanan(token, userid) async {
     PembelianModel? dataPembelian =
-        await purchaseorderController.getpembelian(token, userid);
+        await purchaseorderController.getpembelian(token, userid, 'Tunggu Pembayaran');
     if (mounted) {
       setState(() {
         _pembelianModel = dataPembelian;
@@ -231,6 +231,7 @@ class _PembelianPageState extends State<PembelianPage> {
                               var ispu = _pembelianModel!.data[index].ispu.toString();
                               var item = _pembelianModel!.data[index].item.toString();
                               var qty = _pembelianModel!.data[index].qty.toString();
+                              var product = _pembelianModel!.data[index].product;
                               return orderItem(
                                   id,
                                   idencrypt,
@@ -241,7 +242,7 @@ class _PembelianPageState extends State<PembelianPage> {
                                   status,
                                   int.parse(grandtotal),
                                   keterangan,
-                                  ispu,item,qty);
+                                  ispu,item,qty,product!);
                             }),
               ))
             ],
@@ -263,7 +264,7 @@ class _PembelianPageState extends State<PembelianPage> {
       String status,
       int grandtotal,
       String keterangan,
-      String ispu, String item, String qty) {
+      String ispu, String item, String qty, List product) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     String formatDate(String dateStr) {
@@ -272,6 +273,7 @@ class _PembelianPageState extends State<PembelianPage> {
       return df.format(date);
     }
 
+    final displayedProducts = showAll ? product : product.take(1).toList();
     return GestureDetector(
         child: Container(
             // height: screenHeight * 0.085,
@@ -290,43 +292,55 @@ class _PembelianPageState extends State<PembelianPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        nopo,
+                        supplier,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
-                        formatDate(tglpo),
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        supplier,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                      Text(
-                        status,
+                        'Belum Bayar',
                         style: TextStyle(fontSize: 14, color: Colors.amber[900]),
                       )
+                      // Text(
+                      //   formatDate(tglpo),
+                      //   style: TextStyle(color: Colors.grey[600]),
+                      // ),
                     ],
                   ),
-                  Divider(height: 16, color: Colors.grey[300]),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // _labelValue('Subtotal', CurrencyFormat.convertToIdr(subtotal, 0)),
-                      // _labelValue('Total Item', CurrencyFormat.convertNumber(ppn, 0)),
-                      Text(
-                        'Total ${CurrencyFormat.convertNumber(int.parse(item), 0)} Produk, ${CurrencyFormat.convertNumber(int.parse(qty), 0)} Karton',
-                        style: const TextStyle(fontSize: 14),
+                  // const SizedBox(height: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: displayedProducts.map((prod) {
+                      return productItem(prod.image,prod.namaproduk,prod.satuan_produk,prod.qty,prod.harga);
+                    }).toList(),
+                  ),
+                  // Tombol toggle jika produk lebih dari 1
+                  const SizedBox(height: 8),
+                  if (product.length > 1)
+                    GestureDetector(
+                      onTap: () => setState(() => showAll = !showAll),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(showAll ? "Sembunyikan" : "Lihat Semua"
+                          ),
+                          Icon(
+                            showAll ? Icons.expand_less : Icons.expand_more, size: 17,
+                          ),
+                        ],
                       ),
-                      _labelValue('Grand Total',
-                          CurrencyFormat.convertToIdr(grandtotal, 0),
-                          isBold: true),
+                    ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Total ${CurrencyFormat.convertNumber(int.parse(item), 0)} Produk : ',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        CurrencyFormat.convertToIdr(grandtotal, 0),
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                     ],
                   ),
                 ],
@@ -340,6 +354,76 @@ class _PembelianPageState extends State<PembelianPage> {
           }
         });
   }
+}
+
+Widget productItem(image,namaproduk,satuan,qty,harga) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 10),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Gambar produk dengan border
+        Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFFFFF),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              image,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.broken_image),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+
+        // Detail produk
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                namaproduk,
+                style: const TextStyle(fontSize: 16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              // const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    satuan,
+                    style: const TextStyle(
+                        color: Colors.grey, fontSize: 13),
+                  ),
+                  Text(
+                    'x${qty}',
+                    style: const TextStyle(
+                        color: Colors.grey, fontSize: 13),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  CurrencyFormat.convertToIdr(int.parse(harga), 0),
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 Widget _labelValue(String label, String value, {bool isBold = false}) {
