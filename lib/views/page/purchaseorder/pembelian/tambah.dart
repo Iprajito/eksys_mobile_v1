@@ -1146,6 +1146,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
           ),
         ),
         bottomNavigationBar: Container(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
             decoration: BoxDecoration(
               boxShadow: <BoxShadow>[
                 BoxShadow(

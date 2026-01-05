@@ -59,6 +59,7 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0, 48, 47),
       body: Container(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
