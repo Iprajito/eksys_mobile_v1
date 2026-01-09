@@ -332,9 +332,8 @@ class PurchaseorderController {
     final body = jsonEncode({'userid': userid,'id_encrypt': id_encrypt, 'tipe' : tipe});
     print("Body : $body");
     try {
-      final response = await dio.post('$baseUrl/virtualaccount/create',
-          options: _options, data: body);
-      print(response);
+      // final response = await dio.post('$baseUrl/virtualaccount/create',options: _options, data: body); // Bima Sakti
+      final response = await dio.post('$baseUrl/flip/bill',options: _options, data: body); // Flip
       if (response.data['status'] == 200) {
         // print(inspect(response.data['message']));
         print('Form saved successfully');

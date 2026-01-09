@@ -81,8 +81,8 @@ class MasterController {
       "Authorization": "Bearer $token",
     });
     try {
-      final response = await dio.get('$baseUrl/master/getmetodebayar/bank',
-          options: _options);
+      // final response = await dio.get('$baseUrl/master/getmetodebayar/bank',options: _options);
+      final response = await dio.get('$baseUrl/master/getmetodebayar/virtual_account',options: _options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
         return MetodeBayarBankModel.fromJson(data);
@@ -103,8 +103,8 @@ class MasterController {
       "Authorization": "Bearer $token",
     });
     try {
-      final response = await dio.get('$baseUrl/master/getmetodebayar/agen',
-          options: _options);
+      // final response = await dio.get('$baseUrl/master/getmetodebayar/agen',options: _options);
+      final response = await dio.get('$baseUrl/master/getmetodebayar/online_to_offline_account',options: _options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
         return MetodeBayarAgenModel.fromJson(data);

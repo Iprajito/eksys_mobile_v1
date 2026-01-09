@@ -126,7 +126,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
   String? metode_id;
   String? metode_channel;
   String? metode_institusi;
-  String? metode_tipe = "Bank";
+  String? metode_tipe = "virtual_account";
 
   @override
   void initState() {
@@ -947,8 +947,8 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                         ),
                                         _buildPaymentOption(
                                             2,
-                                            (metode_tipe == 'Bank')
-                                                ? "Transfer Bank"
+                                            (metode_tipe == 'virtual_account')
+                                                ? "Virtual Account"
                                                 : "Bayar Tunai di Mitra/Agen",
                                             metode_institusi.toString(),
                                             FontAwesomeIcons.rightLeft),
@@ -1794,7 +1794,7 @@ class _MetodeBayarPageState extends State<MetodeBayarPage> {
   String? _selectedMetodeId;
   String? _selectedMetodeChannel;
   String? _selectedMetodeInstitusi;
-  String? _selectedMetodeTipe = "Bank";
+  String? _selectedMetodeTipe = "virtual_account";
 
   @override
   void initState() {
@@ -1939,7 +1939,7 @@ class _MetodeBayarPageState extends State<MetodeBayarPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Transfer Bank",
+                                Text("Virtual Account",
                                     style: TextStyle(
                                         color: Colors.grey[800],
                                         fontWeight: FontWeight.w700,
@@ -2084,7 +2084,7 @@ class _MetodeBayarPageState extends State<MetodeBayarPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        label,
+                        label.toUpperCase(),
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

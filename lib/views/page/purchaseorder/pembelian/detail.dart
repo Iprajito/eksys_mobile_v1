@@ -370,7 +370,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                                         alignment: Alignment.bottomRight,
                                         child: _pembelianModel == null
                                           ? const ListMenuShimmer(total: 1, circular: 4, height: 16)
-                                          : Text(_pembelianModel!.data[0].metode_bayar.toString(), style: TextStyle(color: Colors.grey[800],fontSize: 16)),
+                                          : Text(_pembelianModel!.data[0].metode_bayar.toString().toUpperCase(), style: TextStyle(color: Colors.grey[800],fontSize: 16)),
                                       ),
                                     ),
                                   ],
