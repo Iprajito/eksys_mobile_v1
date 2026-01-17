@@ -202,15 +202,15 @@ class _MainPusatPageState extends State<MainPusatPage> {
                     ),
                     label: 'Penjualan',
                   ),
-                  NavigationDestination(
-                    icon: Image.asset(
-                      'assets/images/icon/megaphone.png',
-                      // width: 0,
-                      height: 25,
-                      // color: Colors.white, // opsional kalau mau tint warna
-                    ),
-                    label: 'Berita',
-                  ),
+                  // NavigationDestination(
+                  //   icon: Image.asset(
+                  //     'assets/images/icon/megaphone.png',
+                  //     // width: 0,
+                  //     height: 25,
+                  //     // color: Colors.white, // opsional kalau mau tint warna
+                  //   ),
+                  //   label: 'Berita',
+                  // ),
                   NavigationDestination(
                     icon: Image.asset(
                       'assets/images/icon/settings.png',
