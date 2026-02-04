@@ -1855,6 +1855,7 @@ class _MetodeBayarPageState extends State<MetodeBayarPage> {
         backgroundColor: const Color(0xFFF5F5F5),
         body: dataMetodeBayar(),
         bottomNavigationBar: Container(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
             decoration: BoxDecoration(
               boxShadow: <BoxShadow>[
                 BoxShadow(
@@ -2250,6 +2251,7 @@ class _ProdukPageState extends State<ProdukPage> {
         backgroundColor: const Color(0xFFF5F5F5),
         body: dataProduk(),
         bottomNavigationBar: Container(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
             decoration: BoxDecoration(
               boxShadow: <BoxShadow>[
                 BoxShadow(

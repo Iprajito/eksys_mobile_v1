@@ -718,7 +718,10 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
           ),
         ),
       ),
-      bottomNavigationBar: getStatusButton(_pembelianModel) ?? const SizedBox(),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+        child: getStatusButton(_pembelianModel) ?? const SizedBox(),
+      ),
     );
   }
 

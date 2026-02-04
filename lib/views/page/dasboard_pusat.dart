@@ -23,6 +23,7 @@ import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:Eksys/controllers/auth_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pocketbase/pocketbase.dart';
 
 import '../../widgets/global_widget.dart';
 
@@ -52,12 +53,13 @@ class _DashboardPusatPageState extends State<DashboardPusatPage> {
       userEmail = "",
       userToken = "",
       userGroup = "";
-  bool isLoading = true;
+  bool isLoading = true, buttonEnabled = false;
 
   @override
   void initState() {
     super.initState();
     _checkToken();
+    _checkButtonEnabled();
   }
 
   @override
@@ -75,6 +77,22 @@ class _DashboardPusatPageState extends State<DashboardPusatPage> {
       if (mounted) {
         showExpiredTokenDialog(context: context);
       }
+    }
+  }
+
+  Future<void> _checkButtonEnabled() async {
+    final pb = PocketBase('https://pb.pemapi.com');
+
+    final record = await pb.collection('config').getFirstListItem('config_name="dashboardPusatButton"');
+
+    final isEnabled = record.getBoolValue('active');
+
+    print("isEnabled aktif g nih : $isEnabled");
+
+    if (mounted) {
+      setState(() {
+        buttonEnabled = isEnabled;
+      });
     }
   }
 
@@ -473,208 +491,208 @@ class _DashboardPusatPageState extends State<DashboardPusatPage> {
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // GestureDetector(
-                              //   onTap: () => _showComingSoonDialog(context),
-                              //   child: Row(
-                              //     mainAxisAlignment: MainAxisAlignment.center,
-                              //     children: [
-                              //       Column(
-                              //         mainAxisAlignment: MainAxisAlignment.center,
-                              //         crossAxisAlignment:
-                              //             CrossAxisAlignment.center,
-                              //         children: [
-                              //           ClipRRect(
-                              //             borderRadius: const BorderRadius.only(
-                              //               topLeft: Radius.elliptical(20, 20),
-                              //               topRight: Radius.elliptical(20, 20),
-                              //               bottomLeft: Radius.elliptical(20, 20),
-                              //               bottomRight:
-                              //                   Radius.elliptical(20, 20),
-                              //             ),
-                              //             child: Container(
-                              //               padding: EdgeInsets.all(10),
-                              //               color: Colors.grey[200],
-                              //               child: Container(
-                              //                 height: 35,
-                              //                 width: 35,
-                              //                 decoration: const BoxDecoration(
-                              //                     image: DecorationImage(
-                              //                         image: AssetImage(
-                              //                             "assets/images/icon/topup.png"),
-                              //                         fit: BoxFit.fill)),
-                              //               ),
-                              //             ),
-                              //           ),
-                              //           const SizedBox(height: 5),
-                              //           const Text('Top Up',
-                              //               style: TextStyle(
-                              //                   fontSize: 14,
-                              //                   color: Colors.black87))
-                              //         ],
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                              // const SizedBox(width: 5),
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   children: [
-                              //     Column(
-                              //       mainAxisAlignment: MainAxisAlignment.center,
-                              //       crossAxisAlignment:
-                              //           CrossAxisAlignment.center,
-                              //       children: [
-                              //         ClipRRect(
-                              //           borderRadius: const BorderRadius.only(
-                              //             topLeft: Radius.elliptical(20, 20),
-                              //             topRight: Radius.elliptical(20, 20),
-                              //             bottomLeft: Radius.elliptical(20, 20),
-                              //             bottomRight:
-                              //                 Radius.elliptical(20, 20),
-                              //           ),
-                              //           child: Container(
-                              //             padding: EdgeInsets.all(10),
-                              //             color: Colors.grey[200],
-                              //             child: Container(
-                              //               height: 35,
-                              //               width: 35,
-                              //               decoration: const BoxDecoration(
-                              //                   image: DecorationImage(
-                              //                       image: AssetImage(
-                              //                           "assets/images/icon/withdraw.png"),
-                              //                       fit: BoxFit.fill)),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //         const SizedBox(height: 5),
-                              //         const Text('Penarikan',
-                              //             style: TextStyle(
-                              //                 fontSize: 14,
-                              //                 color: Colors.black87))
-                              //       ],
-                              //     ),
-                              //   ],
-                              // ),
-                              // const SizedBox(width: 5),
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   children: [
-                              //     Column(
-                              //       mainAxisAlignment: MainAxisAlignment.center,
-                              //       crossAxisAlignment:
-                              //           CrossAxisAlignment.center,
-                              //       children: [
-                              //         ClipRRect(
-                              //           borderRadius: const BorderRadius.only(
-                              //             topLeft: Radius.elliptical(20, 20),
-                              //             topRight: Radius.elliptical(20, 20),
-                              //             bottomLeft: Radius.elliptical(20, 20),
-                              //             bottomRight:
-                              //                 Radius.elliptical(20, 20),
-                              //           ),
-                              //           child: Container(
-                              //             padding: EdgeInsets.all(10),
-                              //             color: Colors.grey[200],
-                              //             child: Container(
-                              //               height: 35,
-                              //               width: 35,
-                              //               decoration: const BoxDecoration(
-                              //                   image: DecorationImage(
-                              //                       image: AssetImage(
-                              //                           "assets/images/icon/paper-plane.png"),
-                              //                       fit: BoxFit.fill)),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //         const SizedBox(height: 5),
-                              //         const Text('Transfer',
-                              //             style: TextStyle(
-                              //                 fontSize: 14,
-                              //                 color: Colors.black87))
-                              //       ],
-                              //     ),
-                              //   ],
-                              // ),
-                              // const SizedBox(width: 5),
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   children: [
-                              //     Column(
-                              //       mainAxisAlignment: MainAxisAlignment.center,
-                              //       crossAxisAlignment:
-                              //           CrossAxisAlignment.center,
-                              //       children: [
-                              //         ClipRRect(
-                              //           borderRadius: const BorderRadius.only(
-                              //             topLeft: Radius.elliptical(20, 20),
-                              //             topRight: Radius.elliptical(20, 20),
-                              //             bottomLeft: Radius.elliptical(20, 20),
-                              //             bottomRight:
-                              //                 Radius.elliptical(20, 20),
-                              //           ),
-                              //           child: Container(
-                              //             padding: EdgeInsets.all(10),
-                              //             color: Colors.grey[200],
-                              //             child: Container(
-                              //               height: 35,
-                              //               width: 35,
-                              //               decoration: const BoxDecoration(
-                              //                   image: DecorationImage(
-                              //                       image: AssetImage(
-                              //                           "assets/images/icon/bill.png"),
-                              //                       fit: BoxFit.fill)),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //         const SizedBox(height: 5),
-                              //         const Text('Mutasi',
-                              //             style: TextStyle(
-                              //                 fontSize: 14,
-                              //                 color: Colors.black87))
-                              //       ],
-                              //     ),
-                              //   ],
-                              // ),
-                              // const SizedBox(width: 5),
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.center,
-                              //   children: [
-                              //     Column(
-                              //       mainAxisAlignment: MainAxisAlignment.center,
-                              //       crossAxisAlignment:
-                              //           CrossAxisAlignment.center,
-                              //       children: [
-                              //         ClipRRect(
-                              //           borderRadius: const BorderRadius.only(
-                              //             topLeft: Radius.elliptical(20, 20),
-                              //             topRight: Radius.elliptical(20, 20),
-                              //             bottomLeft: Radius.elliptical(20, 20),
-                              //             bottomRight:
-                              //                 Radius.elliptical(20, 20),
-                              //           ),
-                              //           child: Container(
-                              //             padding: EdgeInsets.all(10),
-                              //             color: Colors.amber,
-                              //             child: Container(
-                              //               height: 35,
-                              //               width: 35,
-                              //               child: const Center(
-                              //                   child: FaIcon(
-                              //                       FontAwesomeIcons.ellipsis,
-                              //                       color: Color(0xFF005F5B),
-                              //                       size: 35)),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //         const SizedBox(height: 5),
-                              //         const Text('Lainnya',
-                              //             style: TextStyle(
-                              //                 fontSize: 14,
-                              //                 color: Colors.black87))
-                              //       ],
-                              //     ),
-                              //   ],
-                              // ),
+                              GestureDetector(
+                                onTap: () => !buttonEnabled ? _showComingSoonDialog(context) : null,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.elliptical(20, 20),
+                                            topRight: Radius.elliptical(20, 20),
+                                            bottomLeft: Radius.elliptical(20, 20),
+                                            bottomRight:
+                                                Radius.elliptical(20, 20),
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(10),
+                                            color: Colors.grey[200],
+                                            child: Container(
+                                              height: 35,
+                                              width: 35,
+                                              decoration: const BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image: AssetImage(
+                                                          "assets/images/icon/topup.png"),
+                                                      fit: BoxFit.fill)),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        const Text('Top Up',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black87))
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.elliptical(20, 20),
+                                          topRight: Radius.elliptical(20, 20),
+                                          bottomLeft: Radius.elliptical(20, 20),
+                                          bottomRight:
+                                              Radius.elliptical(20, 20),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          color: Colors.grey[200],
+                                          child: Container(
+                                            height: 35,
+                                            width: 35,
+                                            decoration: const BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: AssetImage(
+                                                        "assets/images/icon/withdraw.png"),
+                                                    fit: BoxFit.fill)),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      const Text('Penarikan',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black87))
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.elliptical(20, 20),
+                                          topRight: Radius.elliptical(20, 20),
+                                          bottomLeft: Radius.elliptical(20, 20),
+                                          bottomRight:
+                                              Radius.elliptical(20, 20),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          color: Colors.grey[200],
+                                          child: Container(
+                                            height: 35,
+                                            width: 35,
+                                            decoration: const BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: AssetImage(
+                                                        "assets/images/icon/paper-plane.png"),
+                                                    fit: BoxFit.fill)),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      const Text('Transfer',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black87))
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.elliptical(20, 20),
+                                          topRight: Radius.elliptical(20, 20),
+                                          bottomLeft: Radius.elliptical(20, 20),
+                                          bottomRight:
+                                              Radius.elliptical(20, 20),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          color: Colors.grey[200],
+                                          child: Container(
+                                            height: 35,
+                                            width: 35,
+                                            decoration: const BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: AssetImage(
+                                                        "assets/images/icon/bill.png"),
+                                                    fit: BoxFit.fill)),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      const Text('Mutasi',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black87))
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 5),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          topLeft: Radius.elliptical(20, 20),
+                                          topRight: Radius.elliptical(20, 20),
+                                          bottomLeft: Radius.elliptical(20, 20),
+                                          bottomRight:
+                                              Radius.elliptical(20, 20),
+                                        ),
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          color: Colors.amber,
+                                          child: Container(
+                                            height: 35,
+                                            width: 35,
+                                            child: const Center(
+                                                child: FaIcon(
+                                                    FontAwesomeIcons.ellipsis,
+                                                    color: Color(0xFF005F5B),
+                                                    size: 35)),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      const Text('Lainnya',
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black87))
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ]),
                       ],
                     ),
