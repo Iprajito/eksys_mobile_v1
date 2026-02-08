@@ -255,6 +255,28 @@ class _AlamatPageState extends State<AlamatPage> {
                   ),
                 ],
               ),
+              BootstrapRow(
+                // height: 60,
+                children: [
+                  BootstrapCol(
+                    sizes: 'col-2',
+                    child: prim_address != 'Utama' ? const Text('') : Container(
+                      margin: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all( color: Colors.orangeAccent.shade700, width: 1.0),
+                      ),
+                      child: Text('Utama', style: TextStyle(
+                          color: Colors.orangeAccent.shade700,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ]
           ),
       ),

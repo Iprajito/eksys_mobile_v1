@@ -1810,7 +1810,7 @@ class _SupplierPageState extends State<SupplierPage> {
             Navigator.pop(context);
           },
         ),
-        title: const Text("Penjual",
+        title: const Text("Pilih Penjual",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
         backgroundColor: const Color.fromARGB(255, 0, 48, 47),
       ),
