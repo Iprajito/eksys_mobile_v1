@@ -125,7 +125,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
 
   String? metode_id;
   String? metode_channel;
-  String? metode_institusi;
+  String? metode_institusi = "BCA Syariah";
   String? metode_tipe = "virtual_account";
 
   @override
@@ -674,6 +674,233 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0)),
+                      padding: const EdgeInsets.all(16),
+                      child: _pelangganModel == null ?  const ListMenuShimmer(total: 2, circular: 4, height: 32) :
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: BootstrapContainer(
+                              fluid: true,
+                              children: [
+                                BootstrapRow(
+                                  // height: 60,
+                                  children: [
+                                    BootstrapCol(
+                                      sizes: 'col-1',
+                                      child: Icon(Icons.location_on_rounded, size: 16, color: Colors.grey[800]),
+                                    ),
+                                    BootstrapCol(
+                                      sizes: 'col-11',
+                                      child: Row(
+                                        children: [
+                                          Text(_pelangganModel!.data[0].nama_penerima.toString().toUpperCase(), 
+                                          style: TextStyle( color: Colors.grey[800],fontWeight: FontWeight.w700,fontSize: 16)),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            _pelangganModel!.data[0].telepon_penerima.toString(),
+                                            style: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                BootstrapRow(
+                                  // height: 60,
+                                  children: [
+                                    BootstrapCol(
+                                      sizes: 'col-1',
+                                      child: const Text(''),
+                                    ),
+                                    BootstrapCol(
+                                      sizes: 'col-11',
+                                      child: Text(_pelangganModel!.data[0].alamat_kirim1.toString(),
+                                            style: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                BootstrapRow(
+                                  // height: 60,
+                                  children: [
+                                    BootstrapCol(
+                                      sizes: 'col-1',
+                                      child: const Text(''),
+                                    ),
+                                    BootstrapCol(
+                                      sizes: 'col-11',
+                                      child: Text(_pelangganModel!.data[0].alamat_kirim2.toString(),
+                                            style: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ]
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward_ios, size: 15, color: Colors.grey[400]),
+                        ],
+                      )
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0)),
+                      padding: const EdgeInsets.all(16),
+                      child: _pelangganModel == null ?  const ListMenuShimmer(total: 2, circular: 4, height: 32) :
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: BootstrapContainer(
+                              fluid: true,
+                              children: [
+                                BootstrapRow(
+                                  // height: 60,
+                                  children: [
+                                    BootstrapCol(
+                                      sizes: 'col-1',
+                                      child: Icon(Icons.store, size: 16, color: Colors.grey[800]),
+                                    ),
+                                    BootstrapCol(
+                                      sizes: 'col-11',
+                                      child: Row(
+                                        children: [
+                                          Text(_pelangganModel!.data[0].nama_penerima.toString().toUpperCase(), 
+                                          style: TextStyle( color: Colors.grey[800],fontWeight: FontWeight.w700,fontSize: 16)),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            _pelangganModel!.data[0].telepon_penerima.toString(),
+                                            style: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                BootstrapRow(
+                                  // height: 60,
+                                  children: [
+                                    BootstrapCol(
+                                      sizes: 'col-1',
+                                      child: const Text(''),
+                                    ),
+                                    BootstrapCol(
+                                      sizes: 'col-11',
+                                      child: Text(_pelangganModel!.data[0].alamat_kirim1.toString(),
+                                            style: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                BootstrapRow(
+                                  // height: 60,
+                                  children: [
+                                    BootstrapCol(
+                                      sizes: 'col-1',
+                                      child: const Text(''),
+                                    ),
+                                    BootstrapCol(
+                                      sizes: 'col-11',
+                                      child: Text(_pelangganModel!.data[0].alamat_kirim2.toString(),
+                                            style: TextStyle(
+                                              color: Colors.grey[800],
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ]
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward_ios, size: 15, color: Colors.grey[400]),
+                        ],
+                      )
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.0)),
+                    padding: const EdgeInsets.all(16),
+                    child: BootstrapContainer(
+                      fluid: true,
+                      children: [
+                        BootstrapRow(
+                          height: 30,
+                          children: [
+                            BootstrapCol(
+                              sizes: 'col-12',
+                              child: Text("Pesan untuk Penjual",
+                                  style: TextStyle(
+                                      color: Colors.grey[800],
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 16)),
+                            ),
+                          ],
+                        ),
+                        BootstrapRow(
+                          // height: 60,
+                          children: [
+                            BootstrapCol(
+                              sizes: 'col-12',
+                              child: TextFormField(
+                                maxLines: null,
+                                controller: keteranganController,
+                                cursorColor: Colors.grey,
+                                decoration: InputDecoration(
+                                    labelText: 'Tinggalkan pesan untuk penjual',
+                                    labelStyle:
+                                        const TextStyle(color: Colors.grey),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    )),
+                                onSaved: (value) {
+                                  keterangan = value!;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   Container(
                     decoration: BoxDecoration(
                         color: Colors.white,
@@ -695,7 +922,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                       style: TextStyle(
                                           color: Colors.grey[800],
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 14)),
+                                          fontSize: 16)),
                                   GestureDetector(
                                     onTap: () => navigateToProdukPage(),
                                     child: Row(
@@ -732,9 +959,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                       child: _tempPembelianDetailModel == null
                                           ? const ListMenuShimmer(
                                               total: 4, circular: 4, height: 42)
-                                          : _tempPembelianDetailModel!
-                                                      .data.length ==
-                                                  0
+                                          : _tempPembelianDetailModel!.data.length == 0
                                               ? const Center(
                                                   child: Text('Belum ada data'))
                                               : ListView.builder(
@@ -795,8 +1020,8 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(
-                                              'Total $smItem Produk, $smQty Karton'),
+                                          // Text('Total $smItem Produk, $smQty Karton'),
+                                          const Text(''),
                                           Text(
                                               CurrencyFormat.convertToIdr(
                                                   (int.parse(
@@ -804,7 +1029,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                                   0),
                                               style: TextStyle(
                                                   color: Colors.grey[800],
-                                                  fontSize: 16,
+                                                  fontSize: 18,
                                                   fontWeight: FontWeight.bold)),
                                         ],
                                       ),
@@ -838,20 +1063,20 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                       style: TextStyle(
                                           color: Colors.grey[800],
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 14)),
-                                  GestureDetector(
-                                    onTap: () => navigateToMetodeBayarPage(),
-                                    child: Row(
-                                      children: [
-                                        Text('Lihat Semua',
-                                            style: TextStyle(
-                                                color: Colors.grey[500])),
-                                        const SizedBox(width: 5),
-                                        Icon(Icons.arrow_forward_ios,
-                                            size: 12, color: Colors.grey[500])
-                                      ],
-                                    ),
-                                  )
+                                          fontSize: 16)),
+                                  // GestureDetector(
+                                  //   onTap: () => navigateToMetodeBayarPage(),
+                                  //   child: Row(
+                                  //     children: [
+                                  //       Text('Lihat Semua',
+                                  //           style: TextStyle(
+                                  //               color: Colors.grey[500])),
+                                  //       const SizedBox(width: 5),
+                                  //       Icon(Icons.arrow_forward_ios,
+                                  //           size: 12, color: Colors.grey[500])
+                                  //     ],
+                                  //   ),
+                                  // )
                                 ],
                               ),
                             ),
@@ -933,22 +1158,27 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                         //         ),
                                         //       ),
                                         //     )),
-                                        Visibility(
-                                          visible: _pelangganModel?.data[0].is_dompetku.toString() == '0' ? false : true,
-                                          child: _buildPaymentOption(
-                                              1,
-                                              "Saldoku",
-                                              "Rp11.410",
-                                              FontAwesomeIcons.wallet),
-                                        ),
-                                        Visibility(
-                                          visible: _pelangganModel?.data[0].is_dompetku.toString() == '0' ? false : true,
-                                          child: Divider(height: 16,color: Colors.grey[300])
-                                        ),
+                                        // Visibility(
+                                        //   visible: _pelangganModel?.data[0].is_dompetku.toString() == '0' ? false : true,
+                                        //   child: _buildPaymentOption(
+                                        //       1,
+                                        //       "Dompetku",
+                                        //       "Rp11.410",
+                                        //       FontAwesomeIcons.wallet),
+                                        // ),
+                                        // Visibility(
+                                        //   visible: _pelangganModel?.data[0].is_dompetku.toString() == '0' ? false : true,
+                                        //   child: Divider(height: 16,color: Colors.grey[300])
+                                        // ),
+                                        _pelangganModel == null
+                                        ?  const ListMenuShimmer(
+                                        total: 1, circular: 4, height: 32) :
+                                        _buildPaymentOption(1,"Dompetku",'Rp ${_pelangganModel!.data[0].saldo}',FontAwesomeIcons.wallet),
+                                        Divider(height: 16,color: Colors.grey[300]),
                                         _buildPaymentOption(
                                             2,
                                             (metode_tipe == 'virtual_account')
-                                                ? "Virtual Account"
+                                                ? "Transfer Bank"
                                                 : "Bayar Tunai di Mitra/Agen",
                                             metode_institusi.toString(),
                                             FontAwesomeIcons.rightLeft),
@@ -959,7 +1189,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                       ])),
                   const SizedBox(height: 16),
                   Visibility(
-                    visible: _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
+                    visible: false, // _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -1024,7 +1254,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                   ),
                   
                   Visibility(
-                    visible: _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
+                    visible: false, // _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
                     child: const SizedBox(height: 16)
                   ),
 
@@ -1043,7 +1273,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                   style: TextStyle(
                                       color: Colors.grey[800],
                                       fontWeight: FontWeight.w700,
-                                      fontSize: 14)),
+                                      fontSize: 16)),
                             ),
                           ],
                         ),
@@ -1054,7 +1284,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                   fit: FlexFit.tight,
                                   sizes: 'col-md-12',
                                   child: SizedBox(
-                                      height: 100,
+                                      // height: 100,
                                       child: Column(
                                           mainAxisAlignment:MainAxisAlignment.start,
                                           crossAxisAlignment:CrossAxisAlignment.start,
@@ -1069,22 +1299,32 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                               ],
                                             ),
                                             const SizedBox(height: 8),
-                                            Visibility(
-                                              visible: _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text('Nominal Uang Muka $smDpProsen%'),
-                                                  Text((isSwitched == true)
-                                                      ? CurrencyFormat.convertToIdr(
-                                                          (int.parse(smNominalDp
-                                                              .toString())),
-                                                          0)
-                                                      : 'Rp 0'),
-                                                ],
-                                              ),
+                                            // Visibility(
+                                            //   visible: _pelangganModel?.data[0].id_syaratbayar.toString() == '1' ? false : true,
+                                            //   child: Row(
+                                            //     mainAxisAlignment:
+                                            //         MainAxisAlignment
+                                            //             .spaceBetween,
+                                            //     children: [
+                                            //       Text('Nominal Uang Muka $smDpProsen%'),
+                                            //       Text((isSwitched == true)
+                                            //           ? CurrencyFormat.convertToIdr(
+                                            //               (int.parse(smNominalDp
+                                            //                   .toString())),
+                                            //               0)
+                                            //           : 'Rp 0'),
+                                            //     ],
+                                            //   ),
+                                            // ),
+                                            // const SizedBox(height: 8),
+                                            const Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const Text('Subtotal Pengiriman'),
+                                                Text('Dibayar oleh Penerima'),
+                                              ],
                                             ),
                                             const SizedBox(height: 8),
                                             Row(
@@ -1106,15 +1346,11 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                                 height: 1,
                                                 color: Colors.grey[200]),
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.only(top: 8),
+                                              padding: const EdgeInsets.only(top: 8),
                                               child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                mainAxisAlignment:MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  const Text(
-                                                      'Total Pembayaran'),
+                                                  const Text('Total Pembayaran'),
                                                   Text(
                                                       (isSwitched == true)
                                                           ? CurrencyFormat.convertToIdr(
@@ -1940,7 +2176,7 @@ class _MetodeBayarPageState extends State<MetodeBayarPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text("Virtual Account",
+                                Text("Transfer Bank",
                                     style: TextStyle(
                                         color: Colors.grey[800],
                                         fontWeight: FontWeight.w700,
