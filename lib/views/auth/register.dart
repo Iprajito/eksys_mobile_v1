@@ -119,40 +119,45 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _buildPageOne() {
-    return Column(
-      children: [
-        _buildDropdown('Tipe Pelanggan', _tipePelangganList, _selectedTipePelanggan, (val) {
-          setState(() => _selectedTipePelanggan = val);
-        }),
-        _buildTextField('NIK', _nikController),
-        _buildTextField('Nama', _namaController),
-        _buildDatePicker('Tanggal Lahir', _tanggalLahirController, context),
-        _buildTextField('Tempat Lahir', _tempatLahirController),
-        _buildTextField('Telepon', _teleponController, keyboardType: TextInputType.phone),
-        _buildTextField('Email', _emailController, keyboardType: TextInputType.emailAddress),
-        const SizedBox(height: 30),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(16),
-              backgroundColor: const Color.fromARGB(255, 254, 185, 3),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+      child: Column(
+        children: [
+          _buildTextField('Kode Referral', _kodeReferralController),
+          const SizedBox(height: 30),
+          _buildDropdown('Tipe Pelanggan', _tipePelangganList, _selectedTipePelanggan, (val) {
+            setState(() => _selectedTipePelanggan = val);
+          }),
+          _buildTextField('NIK', _nikController),
+          _buildTextField('Nama', _namaController),
+          _buildDatePicker('Tanggal Lahir', _tanggalLahirController, context),
+          _buildTextField('Tempat Lahir', _tempatLahirController),
+          _buildTextField('Telepon', _teleponController, keyboardType: TextInputType.phone),
+          _buildTextField('Email', _emailController, keyboardType: TextInputType.emailAddress),
+          const SizedBox(height: 30),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(16),
+                backgroundColor: const Color.fromARGB(255, 254, 185, 3),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
               ),
-            ),
-            onPressed: _nextPage,
-            child: Text(
-              'Next',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-                color: Colors.grey[800],
+              onPressed: _nextPage,
+              child: Text(
+                'Next',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: Colors.grey[800],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -161,12 +166,9 @@ class _RegisterPageState extends State<RegisterPage> {
       children: [
         _buildTextField('Alamat', _alamatController, maxLines: 3),
         const SizedBox(height: 10),
-        _buildFileUpload('Upload KTP'),
-        const SizedBox(height: 10),
-        _buildFileUpload('Upload Foto / KTA'),
-        const SizedBox(height: 10),
-        _buildTextField('Kode Referral', _kodeReferralController),
-        const SizedBox(height: 30),
+        _buildDropdown("Provinsi", _tipePelangganList, _selectedSyaratBayar, (val) {
+          setState(() => _selectedSyaratBayar = val);
+        }),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
