@@ -8,7 +8,7 @@ import 'package:Eksys/views/auth/register.dart';
 import 'package:Eksys/views/page/dasboard.dart';
 import 'package:Eksys/views/page/main.dart';
 import 'package:Eksys/views/page/main_pusat.dart';
-import 'package:Eksys/views/page/profil.dart';
+import 'package:Eksys/views/page/profil/profil.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
 import 'package:Eksys/views/page/splash.dart';
 import 'package:camera/camera.dart';

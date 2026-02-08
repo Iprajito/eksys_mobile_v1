@@ -1,5 +1,5 @@
 import 'package:Eksys/views/page/dasboard.dart';
-import 'package:Eksys/views/page/profil.dart';
+import 'package:Eksys/views/page/profil/profil.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {

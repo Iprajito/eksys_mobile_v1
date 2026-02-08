@@ -5,7 +5,7 @@ import 'package:Eksys/functions/global_functions.dart';
 import 'package:Eksys/models/master_model.dart';
 import 'package:Eksys/services/api_service.dart';
 import 'package:Eksys/services/localstorage_service.dart';
-import 'package:Eksys/views/page/alamat.dart';
+import 'package:Eksys/views/page/profil/alamat.dart';
 import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bootstrap/flutter_bootstrap.dart';
