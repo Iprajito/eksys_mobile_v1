@@ -7,6 +7,7 @@ import 'package:Eksys/services/api_service.dart';
 import 'package:Eksys/services/localstorage_service.dart';
 import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bootstrap/flutter_bootstrap.dart';
 import 'package:go_router/go_router.dart';
 
 class ProfilPage extends StatefulWidget {
@@ -175,8 +176,8 @@ class _ProfilPageState extends State<ProfilPage> {
                           _pelangganModel == null
                               ? const ListMenuShimmer(
                                   total: 1, circular: 4, height: 16)
-                              : const Text("EA-100A001",
-                                  style: TextStyle(
+                              :  Text(_pelangganModel!.data[0].kode_pelanggan.toString(),
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w700,
                                       fontSize: 16))
@@ -189,100 +190,127 @@ class _ProfilPageState extends State<ProfilPage> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Card(
-                      color: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      elevation: 0,
-                      child: ListTile(
-                        title: const Text('Tipe Anggota'),
-                        subtitle: _pelangganModel == null
-                            ? const ListMenuShimmer(
-                                total: 1, circular: 4, height: 16)
-                            : Text(_pelangganModel!.data[0].tipe_pelanggan
-                                .toString()),
-                      )),
-                  Card(
-                      color: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      elevation: 0,
-                      child: ListTile(
-                        title: const Text('Nomor Kartu Tanda Anggota'),
-                        subtitle: _pelangganModel == null
-                            ? const ListMenuShimmer(
-                                total: 1, circular: 4, height: 16)
-                            : Text(
-                                _pelangganModel!.data[0].nomor_kta.toString()),
-                      )),
-                  Card(
-                      color: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      elevation: 0,
-                      child: ListTile(
-                        title: const Text('Email'),
-                        subtitle: _pelangganModel == null
-                            ? const ListMenuShimmer(
-                                total: 1, circular: 4, height: 16)
-                            : Text(_pelangganModel!.data[0].email.toString()),
-                      )),
-                  Card(
-                      color: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      elevation: 0,
-                      child: ListTile(
-                        title: const Text('Kontak'),
-                        subtitle: _pelangganModel == null
-                            ? const ListMenuShimmer(
-                                total: 1, circular: 4, height: 16)
-                            : Text(_pelangganModel!.data[0].telepon.toString()),
-                      )),
-                  Card(
-                      color: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      elevation: 0,
-                      child: ListTile(
-                        title: const Text('Tempat Tanggal Lahir'),
-                        subtitle: _pelangganModel == null
-                            ? const ListMenuShimmer(
-                                total: 1, circular: 4, height: 16)
-                            : Text(
-                                "${_pelangganModel!.data[0].kota_lahir.toString().trim()}, ${_pelangganModel!.data[0].tgl_lahir.toString()}"),
-                      )),
-                  Card(
-                      color: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      elevation: 0,
-                      child: ListTile(
-                        title: const Text('Alamat'),
-                        subtitle: _pelangganModel == null
-                            ? const ListMenuShimmer(
-                                total: 1, circular: 4, height: 16)
-                            : Text(_pelangganModel!.data[0].alamat.toString()),
-                      )),
-                  // const SizedBox(height: 10),
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   child: ElevatedButton(
-                  //     onPressed: () => _logoutcabang(context),
-                  //     style: ElevatedButton.styleFrom(
-                  //       backgroundColor: Colors.white, // background color
-                  //       foregroundColor: Colors.white, // text (foreground) color
-                  //       elevation: 0,
-                  //       padding:
-                  //           const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                  //     ),
-                  //     child: Row(
-                  //       children: [
-                  //         Icon(Icons.pin_drop_outlined,
-                  //             color: Colors.grey[800], size: 20),
-                  //         const SizedBox(width: 10),
-                  //         Text('Pindah Cabang',
-                  //             style: TextStyle(
-                  //                 color: Colors.grey[800], fontSize: 16))
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  const SizedBox(height: 5),
+                  Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8.0)),
+                      padding: const EdgeInsets.all(16),
+                      child: BootstrapContainer(fluid: true, children: [
+                        // BootstrapRow(
+                        //   height: 30,
+                        //   children: [
+                        //     BootstrapCol(
+                        //       sizes: 'col-12',
+                        //       child: Text("Profil",
+                        //           style: TextStyle(
+                        //               color: Colors.grey[800],
+                        //               fontWeight: FontWeight.w700,
+                        //               fontSize: 18)),
+                        //     ),
+                        //   ],
+                        // ),
+                        BootstrapRow(
+                          // height: 60,
+                          children: [
+                            BootstrapCol(
+                              fit: FlexFit.tight,
+                              sizes: 'col-md-12',
+                              child: SizedBox(
+                                // height: 100,
+                                child: Column(
+                                    mainAxisAlignment:MainAxisAlignment.start,
+                                    crossAxisAlignment:CrossAxisAlignment.start,
+                                    children: [
+                                      _pelangganModel == null ? const ListMenuShimmer(total: 1, circular: 4, height: 16) : 
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Tipe Anggota", style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                          Text(_pelangganModel!.data[0].tipe_pelanggan.toString(), style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Divider(
+                                          height: 1,
+                                          color: Colors.grey[100]),
+                                      const SizedBox(height: 16),
+                                      _pelangganModel == null ? const ListMenuShimmer(total: 1, circular: 4, height: 16) : 
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                        children: [
+                                          Text("NIK", style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                          Text(_pelangganModel!.data[0].nik.toString(), style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Divider(
+                                          height: 1,
+                                          color: Colors.grey[100]),
+                                      const SizedBox(height: 16),
+                                      _pelangganModel == null ? const ListMenuShimmer(total: 1, circular: 4, height: 16) : 
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                        children: [
+                                          Text("Email", style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                          Text(_pelangganModel!.data[0].email.toString(), style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Divider(
+                                          height: 1,
+                                          color: Colors.grey[100]),
+                                      const SizedBox(height: 16),
+                                      _pelangganModel == null ? const ListMenuShimmer(total: 1, circular: 4, height: 16) : 
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                        children: [
+                                          Text("No. Handphone", style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                          Text(_pelangganModel!.data[0].telepon.toString(), style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Divider(
+                                          height: 1,
+                                          color: Colors.grey[100]),
+                                      const SizedBox(height: 16),
+                                      _pelangganModel == null ? const ListMenuShimmer(total: 1, circular: 4, height: 16) : 
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                        children: [
+                                          Text("Tanggal Lahir", style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                          Text(_pelangganModel!.data[0].tgl_lahir.toString(), style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Divider(
+                                          height: 1,
+                                          color: Colors.grey[100]),
+                                      const SizedBox(height: 16),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                        children: [
+                                          Text("Alamat Saya", style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                          Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey[500]),
+                                        ],
+                                      ),
+                                    ]
+                                  )
+                                )
+                            )
+                          ]
+                        )
+                      ])),
+                  const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(

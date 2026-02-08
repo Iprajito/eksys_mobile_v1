@@ -152,6 +152,7 @@ class Supplier {
 class Pelanggan {
   String? id;
   String? idencrypt;
+  String? kode_pelanggan;
   String? tipe_pelanggan;
   String? tgl_daftar;
   String? nik;
@@ -172,10 +173,16 @@ class Pelanggan {
   String? upline_id;
   String? file_ktp;
   String? file_photo;
+  String? saldo;
+  String? nama_penerima;
+  String? telepon_penerima;
+  String? alamat_kirim1;
+  String? alamat_kirim2;
 
   Pelanggan(
       {this.id,
       this.idencrypt,
+      this.kode_pelanggan,
       this.tipe_pelanggan,
       this.tgl_daftar,
       this.nik,
@@ -195,12 +202,19 @@ class Pelanggan {
       this.end_subscribe,
       this.upline_id,
       this.file_ktp,
-      this.file_photo});
+      this.file_photo,
+      this.saldo,
+      this.nama_penerima,
+      this.telepon_penerima,
+      this.alamat_kirim1,
+      this.alamat_kirim2
+  });
 
   factory Pelanggan.fromJsson(Map<String, dynamic> json) {
     return Pelanggan(
         id: json['id'],
         idencrypt: json['id_encrypt'],
+        kode_pelanggan: json['kode_pelanggan'],
         tipe_pelanggan: json['tipe_pelanggan'],
         tgl_daftar: json['tgl_daftar'],
         nik: json['nik'],
@@ -220,12 +234,18 @@ class Pelanggan {
         end_subscribe: json['end_subscribe'],
         upline_id: json['upline_id'],
         file_ktp: json['file_ktp'],
-        file_photo: json['file_photo']);
+        file_photo: json['file_photo'],
+        saldo: json['saldo'],
+        nama_penerima: json['nama_penerima'],
+        telepon_penerima: json['telepon_penerima'],
+        alamat_kirim1: json['alamat_kirim1'],
+        alamat_kirim2: json['alamat_kirim2']
+    );
   }
 
   @override
   String toString() {
-    return 'Pelanggan{id: $id, idencrypt: $idencrypt, tipe_pelanggan: $tipe_pelanggan, tgl_daftar: $tgl_daftar, nik: $nik, nama: $nama, nomor_kta: $nomor_kta, nama_instansi: $nama_instansi, tgl_lahir: $tgl_lahir, kota_lahir: $kota_lahir, telepon: $telepon, email: $email, alamat: $alamat, is_dompetku: $is_dompetku, va_dompetku: $va_dompetku, id_syaratbayar: $id_syaratbayar, tipeppn: $tipeppn, start_subscribe: $start_subscribe, end_subscribe: $end_subscribe, upline_id: $upline_id, file_ktp: $file_ktp, file_photo: $file_photo}';
+    return 'Pelanggan{id: $id, idencrypt: $idencrypt, kode_pelanggan: $kode_pelanggan, tipe_pelanggan: $tipe_pelanggan, tgl_daftar: $tgl_daftar, nik: $nik, nama: $nama, nomor_kta: $nomor_kta, nama_instansi: $nama_instansi, tgl_lahir: $tgl_lahir, kota_lahir: $kota_lahir, telepon: $telepon, email: $email, alamat: $alamat, is_dompetku: $is_dompetku, va_dompetku: $va_dompetku, id_syaratbayar: $id_syaratbayar, tipeppn: $tipeppn, start_subscribe: $start_subscribe, end_subscribe: $end_subscribe, upline_id: $upline_id, file_ktp: $file_ktp, file_photo: $file_photo,saldo:$saldo, nama_penerima:$nama_penerima, telepon_penerima:$telepon_penerima, alamat_kirim1:$alamat_kirim1, alamat_kirim2:$alamat_kirim2}';
   }
 }
 
