@@ -5,6 +5,7 @@ import 'package:Eksys/functions/global_functions.dart';
 import 'package:Eksys/models/master_model.dart';
 import 'package:Eksys/services/api_service.dart';
 import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/alamat.dart';
 import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bootstrap/flutter_bootstrap.dart';
@@ -87,9 +88,28 @@ class _ProfilPageState extends State<ProfilPage> {
     GoRouter.of(context).go('/login');
   }
 
-  Future<void> _logoutcabang(BuildContext context) async {
-    await authController.logoutOutlet();
-    GoRouter.of(context).go('/logincabang');
+  Future<void> navigateToAlamatPage() async {
+    final result = await Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder:
+              (context, animation, secondaryAnimation) => //DrawerExample(),
+                  AlamatPage(token: userToken, userid: userId),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0); // Slide from right
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            final tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            final offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ));
   }
 
   String getInitials(String input) {
@@ -124,70 +144,52 @@ class _ProfilPageState extends State<ProfilPage> {
               children: [
                 const RoundedAppBar(),
                 Center(
-                  child: Container(
-                      width: 75,
-                      height: 75,
-                      padding: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(50)),
-                        color: const Color(0xFFF5F5F5),
-                        border: Border.all(color: Colors.white, width: 2),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 65,
+                        height: 65,
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(50)),
+                          color: const Color(0xFFF5F5F5),
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        alignment: Alignment.bottomCenter,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                                _pelangganModel == null
+                                    ? ""
+                                    : getInitials(
+                                        _pelangganModel!.data[0].nama.toString()),
+                                style: const TextStyle(
+                                    color: Color.fromARGB(255, 17, 19, 21),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 25))
+                          ],
+                        )
                       ),
-                      alignment: Alignment.bottomCenter,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                              _pelangganModel == null
-                                  ? ""
-                                  : getInitials(
-                                      _pelangganModel!.data[0].nama.toString()),
-                              style: const TextStyle(
-                                  color: Color.fromARGB(255, 17, 19, 21),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 25))
-                        ],
-                      )),
+                      const SizedBox(height: 8),
+                      _pelangganModel == null ? const Text('')
+                      : Text(_pelangganModel!.data[0].nama.toString().toUpperCase(),
+                      style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 20)),
+                      _pelangganModel == null ? const Text('')
+                      : Text(_pelangganModel!.data[0].kode_pelanggan.toString(), 
+                      style: const TextStyle(color: Colors.white,fontWeight: FontWeight.w700,fontSize: 16)),
+                      const SizedBox(height: 8),
+                      _pelangganModel == null ? const Text('')
+                      : Text('${_pelangganModel!.data[0].anggota} Anggota', style: const TextStyle(color: Colors.white,fontSize: 14))
+                    ],
+                  ),
                 ),
-                Positioned(
-                    // top: 0,
-                    left: 20,
-                    right: 20,
-                    bottom: 10,
-                    child: Container(
-                      width: 50,
-                      padding: const EdgeInsets.all(10.0),
-                      alignment: Alignment.bottomCenter,
-                      height: 65,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          _pelangganModel == null
-                              ? const ListMenuShimmer(
-                                  total: 1, circular: 4, height: 16)
-                              : Text(_pelangganModel!.data[0].nama.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 20)),
-                          _pelangganModel == null
-                              ? const ListMenuShimmer(
-                                  total: 1, circular: 4, height: 16)
-                              :  Text(_pelangganModel!.data[0].kode_pelanggan.toString(),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 16))
-                        ],
-                      ),
-                    ))
               ],
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   Container(
@@ -294,13 +296,32 @@ class _ProfilPageState extends State<ProfilPage> {
                                           height: 1,
                                           color: Colors.grey[100]),
                                       const SizedBox(height: 16),
+                                      GestureDetector(
+                                        onTap: () {
+                                          navigateToAlamatPage();
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment
+                                                  .spaceBetween,
+                                          children: [
+                                            Text("Alamat Saya", style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                            Icon(Icons.arrow_forward_ios,size: 12, color: Colors.grey[500]),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Divider(
+                                          height: 1,
+                                          color: Colors.grey[100]),
+                                      const SizedBox(height: 16),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment
                                                 .spaceBetween,
                                         children: [
-                                          Text("Alamat Saya", style: TextStyle(color: Colors.grey[800], fontSize: 17)),
-                                          Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey[500]),
+                                          Text("Anggota Saya", style: TextStyle(color: Colors.grey[800], fontSize: 17)),
+                                          Icon(Icons.arrow_forward_ios,size: 12, color: Colors.grey[500]),
                                         ],
                                       ),
                                     ]

@@ -29,6 +29,24 @@ class PelangganModel {
   }
 }
 
+class PelangganAlamatModel {
+  final List<PelangganAlamat> data;
+
+  PelangganAlamatModel({required this.data});
+
+  factory PelangganAlamatModel.fromJson(Map<String, dynamic> json) {
+    var datas = json['data'] as List;
+
+    List<PelangganAlamat> data = datas.map((i) => PelangganAlamat.fromJsson(i)).toList();
+    return PelangganAlamatModel(data: data);
+  }
+
+  @override
+  String toString() {
+    return 'PelangganModel{data: ${data.map((e) => e.toString()).toList()}}';
+  }
+}
+
 class ProdukModel {
   final List<Produk> data;
 
@@ -178,6 +196,7 @@ class Pelanggan {
   String? telepon_penerima;
   String? alamat_kirim1;
   String? alamat_kirim2;
+  String? anggota;
 
   Pelanggan(
       {this.id,
@@ -207,7 +226,8 @@ class Pelanggan {
       this.nama_penerima,
       this.telepon_penerima,
       this.alamat_kirim1,
-      this.alamat_kirim2
+      this.alamat_kirim2,
+      this.anggota
   });
 
   factory Pelanggan.fromJsson(Map<String, dynamic> json) {
@@ -239,13 +259,30 @@ class Pelanggan {
         nama_penerima: json['nama_penerima'],
         telepon_penerima: json['telepon_penerima'],
         alamat_kirim1: json['alamat_kirim1'],
-        alamat_kirim2: json['alamat_kirim2']
+        alamat_kirim2: json['alamat_kirim2'],
+        anggota: json['anggota']
     );
   }
 
   @override
   String toString() {
-    return 'Pelanggan{id: $id, idencrypt: $idencrypt, kode_pelanggan: $kode_pelanggan, tipe_pelanggan: $tipe_pelanggan, tgl_daftar: $tgl_daftar, nik: $nik, nama: $nama, nomor_kta: $nomor_kta, nama_instansi: $nama_instansi, tgl_lahir: $tgl_lahir, kota_lahir: $kota_lahir, telepon: $telepon, email: $email, alamat: $alamat, is_dompetku: $is_dompetku, va_dompetku: $va_dompetku, id_syaratbayar: $id_syaratbayar, tipeppn: $tipeppn, start_subscribe: $start_subscribe, end_subscribe: $end_subscribe, upline_id: $upline_id, file_ktp: $file_ktp, file_photo: $file_photo,saldo:$saldo, nama_penerima:$nama_penerima, telepon_penerima:$telepon_penerima, alamat_kirim1:$alamat_kirim1, alamat_kirim2:$alamat_kirim2}';
+    return 'Pelanggan{id: $id, idencrypt: $idencrypt, kode_pelanggan: $kode_pelanggan, tipe_pelanggan: $tipe_pelanggan, tgl_daftar: $tgl_daftar, nik: $nik, nama: $nama, nomor_kta: $nomor_kta, nama_instansi: $nama_instansi, tgl_lahir: $tgl_lahir, kota_lahir: $kota_lahir, telepon: $telepon, email: $email, alamat: $alamat, is_dompetku: $is_dompetku, va_dompetku: $va_dompetku, id_syaratbayar: $id_syaratbayar, tipeppn: $tipeppn, start_subscribe: $start_subscribe, end_subscribe: $end_subscribe, upline_id: $upline_id, file_ktp: $file_ktp, file_photo: $file_photo,saldo:$saldo, nama_penerima:$nama_penerima, telepon_penerima:$telepon_penerima, alamat_kirim1:$alamat_kirim1, alamat_kirim2:$alamat_kirim2, anggota:$anggota}';
+  }
+}
+
+class PelangganAlamat {
+  String? id;
+  String? nama_penerima;
+  String? telepon_penerima;
+  String? alamat_kirim1;
+  String? alamat_kirim2;
+  String? prim_address;
+
+  PelangganAlamat({this.id, this.nama_penerima, this.telepon_penerima, this.alamat_kirim1, this.alamat_kirim2, this.prim_address});
+
+  factory PelangganAlamat.fromJsson(Map<String, dynamic> json) {
+    return PelangganAlamat(
+        id: json['id'], nama_penerima: json['nama_penerima'], telepon_penerima: json['telepon_penerima'], alamat_kirim1: json['alamat_kirim1'], alamat_kirim2: json['alamat_kirim2'], prim_address: json['prim_address']);
   }
 }
 
