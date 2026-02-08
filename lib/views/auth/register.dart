@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _selectedSyaratBayar;
 
   // Mock data for dropdowns
-  final List<String> _tipePelangganList = ['Regular', 'VIP', 'Corporate'];
+  final List<String> _tipePelangganList = ['Distributor', 'Agen', 'Reseller'];
   final List<String> _wilayahList = ['Jakarta', 'Bandung', 'Surabaya', 'Other'];
   final List<String> _tipePpnList = ['Tanpa Ppn', 'Include Ppn', 'Exclude Ppn'];
   final List<String> _syaratBayarList = ['Cash', 'Credit 30 Days', 'Credit 60 Days'];
@@ -124,11 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _buildDropdown('Tipe Pelanggan', _tipePelangganList, _selectedTipePelanggan, (val) {
           setState(() => _selectedTipePelanggan = val);
         }),
-        _buildDropdown('Wilayah', _wilayahList, _selectedWilayah, (val) {
-          setState(() => _selectedWilayah = val);
-        }),
         _buildTextField('NIK', _nikController),
-        _buildTextField('Nomor KTA', _nomorKtaController),
         _buildTextField('Nama', _namaController),
         _buildDatePicker('Tanggal Lahir', _tanggalLahirController, context),
         _buildTextField('Tempat Lahir', _tempatLahirController),
@@ -169,12 +165,6 @@ class _RegisterPageState extends State<RegisterPage> {
         const SizedBox(height: 10),
         _buildFileUpload('Upload Foto / KTA'),
         const SizedBox(height: 10),
-        _buildDropdown('Tipe Ppn', _tipePpnList, _selectedTipePpn, (val) {
-          setState(() => _selectedTipePpn = val);
-        }),
-        _buildDropdown('Syarat Bayar', _syaratBayarList, _selectedSyaratBayar, (val) {
-          setState(() => _selectedSyaratBayar = val);
-        }),
         _buildTextField('Kode Referral', _kodeReferralController),
         const SizedBox(height: 30),
         SizedBox(
