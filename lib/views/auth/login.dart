@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                     
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.only(left: 16, right: 16),
                   child: SizedBox(
@@ -193,7 +193,38 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                )
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.all(16),
+                        foregroundColor:
+                            const Color.fromARGB(255, 254, 185, 3),
+                        backgroundColor:
+                            const Color.fromARGB(255, 254, 185, 3)
+                                .withOpacity(0.08),
+                        side: const BorderSide(
+                          color: Color.fromARGB(255, 254, 185, 3),
+                          width: 1.4,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      onPressed: () {
+                        GoRouter.of(context).go('/register');
+                      },
+                      child: const Text(
+                        'Register',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           )

@@ -4,6 +4,7 @@ import 'package:Eksys/nofitication/localNotification.dart';
 import 'package:Eksys/services/navigation_service.dart';
 import 'package:Eksys/views/auth/login.dart';
 import 'package:Eksys/views/auth/logincabang.dart';
+import 'package:Eksys/views/auth/register.dart';
 import 'package:Eksys/views/page/dasboard.dart';
 import 'package:Eksys/views/page/main.dart';
 import 'package:Eksys/views/page/main_pusat.dart';
@@ -94,6 +95,7 @@ class MainApp extends StatelessWidget {
       routes: [
         GoRoute(path: '/splash', builder: (context, state) => const SplashPage()),
         GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+        GoRoute(path: '/register', builder: (context, state) => const RegisterPage()),
         GoRoute(path: '/logincabang',builder: (context, state) => const LoginCabangPage()),
         GoRoute(path: '/main',builder: (context, state) => const MainPage(currIndex: 0,)),
         GoRoute(path: '/main_pusat',builder: (context, state) => const MainPusatPage(currIndex: 0)),
