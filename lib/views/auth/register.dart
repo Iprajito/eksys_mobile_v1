@@ -25,6 +25,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _kodeReferralController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   // Dropdown values
   String? _selectedTipePelanggan;
@@ -144,6 +149,8 @@ class _RegisterPageState extends State<RegisterPage> {
     _emailController.dispose();
     _alamatController.dispose();
     _kodeReferralController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -260,115 +267,179 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Widget _buildPageTwo() {
-    return Column(
-      children: [
-        _buildTextField('Alamat', _alamatController, maxLines: 3),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-              child: _buildDropdown("Provinsi", _provinsiNames, _selectedProvinsi, (val) {
-                setState(() {
-                  _selectedProvinsi = val;
-                  if (val != null) {
-                    int index = _provinsiNames.indexOf(val);
-                    if (index != -1 && index < _provinsiList.length) {
-                      String id = _provinsiList[index].id ?? '';
-                      _fetchKabKota(id);
-                    }
-                  }
-                });
-
-                // setState(() {
-                  
-                // });
-              }),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _buildDropdown("Kota/Kabupaten", _kabKotaNames, _selectedKabKota, (val) {
-                setState(() {
-                  _selectedKabKota = val;
-                  if (val != null) {
-                    int index = _kabKotaNames.indexOf(val);
-                    if (index != -1 && index < _kabKotaList.length) {
-                      String id = _kabKotaList[index].id ?? '';
-                      _fetchKecamatan(id);
-                    }
-                  }
-                });
-              }),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: _buildDropdown("Kecamatan", _kecamatanNames, _selectedKecamatan, (val) {
-                setState(() {
-                  _selectedKecamatan = val;
-                  if (val != null) {
-                    int index = _kecamatanNames.indexOf(val);
-                    if (index != -1 && index < _kecamatanList.length) {
-                      String id = _kecamatanList[index].id ?? '';
-                      _fetchKelurahan(id);
-                    }
-                  }
-                });
-              }),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _buildDropdown("Kelurahan", _kelurahanNames, _selectedKelurahan, (val) {
-                setState(() {
-                  _selectedKelurahan = val; 
-                  if (val != null) {
-                    int index = _kelurahanNames.indexOf(val);
-                    if (index != -1 && index < _kelurahanList.length) {
-                      String id = _kelurahanList[index].id ?? '';
-                      print(id);
-                      _fetchKodePos(id);
-                    }
-                  }
-                });
-              }),
-            ),
-            const SizedBox(width: 10),
-          ],
-        ),
-        _buildDropdown("Kode Pos", _kodePosNames, _selectedKodePos, (val) {
-          setState(() => _selectedKodePos = val);
-        }),
-        const SizedBox(height: 30),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(16),
-              backgroundColor: const Color.fromARGB(255, 254, 185, 3),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                // Process data
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+      child: Column(
+        children: [
+          _buildTextField('Alamat', _alamatController, maxLines: 3),
+          const SizedBox(height: 10),
+          _buildDropdown("Provinsi", _provinsiNames, _selectedProvinsi, (val) {
+            setState(() {
+              _selectedProvinsi = val;
+              if (val != null) {
+                int index = _provinsiNames.indexOf(val);
+                if (index != -1 && index < _provinsiList.length) {
+                  String id = _provinsiList[index].id ?? '';
+                  _fetchKabKota(id);
+                }
               }
-            },
-            child: Text(
-              'Simpan',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-                color: Colors.grey[800],
+            });
+          }),
+          Row(
+            children: [
+              Expanded(
+                child: _buildDropdown("Kota/Kabupaten", _kabKotaNames, _selectedKabKota, (val) {
+                  setState(() {
+                    _selectedKabKota = val;
+                    if (val != null) {
+                      int index = _kabKotaNames.indexOf(val);
+                      if (index != -1 && index < _kabKotaList.length) {
+                        String id = _kabKotaList[index].id ?? '';
+                        _fetchKecamatan(id);
+                      }
+                    }
+                  });
+                }),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildDropdown("Kecamatan", _kecamatanNames, _selectedKecamatan, (val) {
+                  setState(() {
+                    _selectedKecamatan = val;
+                    if (val != null) {
+                      int index = _kecamatanNames.indexOf(val);
+                      if (index != -1 && index < _kecamatanList.length) {
+                        String id = _kecamatanList[index].id ?? '';
+                        _fetchKelurahan(id);
+                      }
+                    }
+                  });
+                }),
+              ),
+              const SizedBox(width: 10),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: _buildDropdown("Kelurahan", _kelurahanNames, _selectedKelurahan, (val) {
+                  setState(() {
+                    _selectedKelurahan = val; 
+                    if (val != null) {
+                      int index = _kelurahanNames.indexOf(val);
+                      if (index != -1 && index < _kelurahanList.length) {
+                        String id = _kelurahanList[index].id ?? '';
+                        print(id);
+                        _fetchKodePos(id);
+                      }
+                    }
+                  });
+                }),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildDropdown("Kode Pos", _kodePosNames, _selectedKodePos, (val) {
+                  setState(() => _selectedKodePos = val);
+                }),
+              ),
+              const SizedBox(width: 10),
+            ],
+          ),
+          const SizedBox(height: 20),
+          const Divider(
+            color: Colors.grey, // Warna garis
+            thickness: 1,       // Ketebalan garis
+            indent: 0,          // Jarak kosong di awal garis
+            endIndent: 0,       // Jarak kosong di akhir garis
+          ),
+          const SizedBox(height: 20),
+          _buildPasswordField('Password', _passwordController, _isPasswordVisible, () {
+            setState(() {
+              _isPasswordVisible = !_isPasswordVisible;
+            });
+          }),
+          const SizedBox(height: 16),
+          _buildPasswordField('Re-type Password', _confirmPasswordController, _isConfirmPasswordVisible, () {
+            setState(() {
+              _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+            });
+          }),
+          const SizedBox(height: 30),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(16),
+                backgroundColor: const Color.fromARGB(255, 254, 185, 3),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  // Process data
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Processing Data')),
+                  );
+                }
+              },
+              child: Text(
+                'Simpan',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                  color: Colors.grey[800],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPasswordField(String label, TextEditingController controller, bool isVisible, VoidCallback toggleVisibility) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: controller,
+            obscureText: !isVisible,
+            style: TextStyle(color: Colors.grey[800]),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return '$label tidak boleh kosong';
+              }
+              if (label == 'Re-type Password' && value != _passwordController.text) {
+                return 'Password tidak sama';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.all(12),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              hintText: label,
+              hintStyle: TextStyle(color: Colors.grey[400]),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  isVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.grey,
+                ),
+                onPressed: toggleVisibility,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
