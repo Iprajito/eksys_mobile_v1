@@ -5,7 +5,7 @@ import 'package:Eksys/services/navigation_service.dart';
 import 'package:Eksys/views/page/dasboard_pusat.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/pembelian.dart';
 import 'package:Eksys/views/page/salesorder/salesorder.dart';
-import 'package:Eksys/views/page/profil.dart';
+import 'package:Eksys/views/page/profil/profil.dart';
 import 'package:Eksys/views/page/purchaseorder/purchaseorder.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';

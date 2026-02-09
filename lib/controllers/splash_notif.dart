@@ -1,5 +1,5 @@
 import 'package:Eksys/views/page/main.dart';
-import 'package:Eksys/views/page/profil.dart';
+import 'package:Eksys/views/page/profil/profil.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/pembelian.dart';
 import 'package:flutter/material.dart';

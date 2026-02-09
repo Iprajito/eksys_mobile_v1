@@ -52,6 +52,29 @@ class MasterController {
     }
   }
 
+  Future<PelangganAlamatModel?> getpelangganalamatbyuserid(String token, String userid) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+    try {
+      final response = await dio.get(
+          '$baseUrl/master/getpelangganalamatbyuserid/$userid',
+          options: _options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        print(PelangganAlamatModel.fromJson(data));
+        return PelangganAlamatModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
   Future<ProdukModel?> getproduks(String token, String userid) async {
     late final Options _options = Options(headers: {
       "Content-Type": "application/json",
