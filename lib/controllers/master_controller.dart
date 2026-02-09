@@ -203,4 +203,104 @@ class MasterController {
       return null;
     }
   }
+
+  Future<ProvinsiModel?> getProvinsi() async {
+    late final Options options = Options(headers: {
+      "Content-Type": "application/json"
+    });
+    try {
+      final response = await dio.get('$baseUrl/master/getprovinsi',
+          options: options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return ProvinsiModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<KabKotaModel?> getKabKota(String provinsiId) async {
+    late final Options options = Options(headers: {
+      "Content-Type": "application/json"
+    });
+    try {
+      final response = await dio.get('$baseUrl/master/getkotabyprovinsiid/$provinsiId',
+          options: options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return KabKotaModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<KecamatanModel?> getKecamatan(String kotaId) async {
+    late final Options options = Options(headers: {
+      "Content-Type": "application/json"
+    });
+    try {
+      final response = await dio.get('$baseUrl/master/getkecamatanbykotaid/$kotaId',
+          options: options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return KecamatanModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<KelurahanModel?> getKelurahan(String kecamatanId) async {
+    late final Options options = Options(headers: {
+      "Content-Type": "application/json"
+    });
+    try {
+      final response = await dio.get('$baseUrl/master/getkelurahanbykecamatanid/$kecamatanId',
+          options: options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return KelurahanModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<KodePosModel?> getKodePos(String kelurahanId) async {
+    late final Options options = Options(headers: {
+      "Content-Type": "application/json"
+    });
+    try {
+      final response = await dio.get('$baseUrl/master/getkodeposbykelurahanid/$kelurahanId',
+          options: options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return KodePosModel.fromJson(data);
+      } else {
+        print("Failed to load data");
+        return null;
+      }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
 }

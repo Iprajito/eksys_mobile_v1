@@ -398,3 +398,138 @@ class Subscribe {
     );
   }
 }
+
+class ProvinsiModel {
+  final List<Provinsi> data;
+
+  ProvinsiModel({required this.data});
+
+  factory ProvinsiModel.fromJson(Map<String, dynamic> json) {
+    var datas = json['data'] as List;
+
+    List<Provinsi> data = datas.map((i) => Provinsi.fromJson(i)).toList();
+    return ProvinsiModel(data: data);
+  }
+}
+
+class Provinsi {
+  String? id;
+  String? provinsi;
+
+  Provinsi({this.id, this.provinsi});
+
+  factory Provinsi.fromJson(Map<String, dynamic> json) {
+    return Provinsi(
+      id: json['id'],
+      provinsi: json['provinsi'],
+    );
+  }
+}
+class KabKotaModel {
+  final List<KabKota> data;
+
+  KabKotaModel({required this.data});
+
+  factory KabKotaModel.fromJson(Map<String, dynamic> json) {
+    var datas = json['data'] as List;
+
+    List<KabKota> data = datas.map((i) => KabKota.fromJson(i)).toList();
+    return KabKotaModel(data: data);
+  }
+}
+
+class KabKota {
+  String? id;
+  String? provinsiId;
+  String? kabkota;
+
+  KabKota({this.id, this.provinsiId, this.kabkota});
+
+  factory KabKota.fromJson(Map<String, dynamic> json) {
+    return KabKota(
+      id: json['id'],
+      provinsiId: json['provinsi_id'],
+      kabkota: json['kota'],
+    );
+  }
+}
+class KecamatanModel {
+  final List<Kecamatan> data;
+
+  KecamatanModel({required this.data});
+
+  factory KecamatanModel.fromJson(Map<String, dynamic> json) {
+    var datas = json['data'] as List;
+
+    List<Kecamatan> data = datas.map((i) => Kecamatan.fromJson(i)).toList();
+    return KecamatanModel(data: data);
+  }
+}
+
+class Kecamatan {
+  String? id;
+  String? kotaId;
+  String? kecamatan;
+
+  Kecamatan({this.id, this.kotaId, this.kecamatan});
+
+  factory Kecamatan.fromJson(Map<String, dynamic> json) {
+    return Kecamatan(
+      id: json['id'],
+      kotaId: json['kota_id'],
+      kecamatan: json['kecamatan'],
+    );
+  }
+}
+class KelurahanModel {
+  final List<Kelurahan> data;
+
+  KelurahanModel({required this.data});
+
+  factory KelurahanModel.fromJson(Map<String, dynamic> json) {
+    var datas = json['data'] as List;
+
+    List<Kelurahan> data = datas.map((i) => Kelurahan.fromJson(i)).toList();
+    return KelurahanModel(data: data);
+  }
+}
+
+class Kelurahan {
+  String? id;
+  String? kecamatanId;
+  String? kelurahan;
+
+  Kelurahan({this.id, this.kecamatanId, this.kelurahan});
+
+  factory Kelurahan.fromJson(Map<String, dynamic> json) {
+    return Kelurahan(
+      id: json['id'],
+      kecamatanId: json['kecamatan_id'],
+      kelurahan: json['kelurahan'],
+    );
+  }
+}
+class KodePosModel {
+  final List<KodePos> data;
+
+  KodePosModel({required this.data});
+
+  factory KodePosModel.fromJson(Map<String, dynamic> json) {
+    var datas = json['data'] as List;
+
+    List<KodePos> data = datas.map((i) => KodePos.fromJson(i)).toList();
+    return KodePosModel(data: data);
+  }
+}
+
+class KodePos {
+  String? kodePos;
+
+  KodePos({this.kodePos});
+
+  factory KodePos.fromJson(Map<String, dynamic> json) {
+    return KodePos(
+      kodePos: json['kodepos'],
+    );
+  }
+}

@@ -1,3 +1,5 @@
+import 'package:Eksys/controllers/master_controller.dart';
+import 'package:Eksys/models/master_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -13,6 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   int _currentPage = 0; // 0 for the first page, 1 for the second page
 
   // Controllers
+  final MasterController _masterController = MasterController();
   final TextEditingController _nikController = TextEditingController();
   final TextEditingController _nomorKtaController = TextEditingController();
   final TextEditingController _namaController = TextEditingController();
@@ -29,11 +32,106 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _selectedTipePpn;
   String? _selectedSyaratBayar;
 
+
+  // Data lists --> Start
+  String? _selectedProvinsi;
+  String? _selectedKabKota;
+  String? _selectedKecamatan;
+  String? _selectedKelurahan;
+  String? _selectedKodePos;
+  
+  List<Provinsi> _provinsiList = [];
+  List<String> _provinsiNames = [];
+  
+  List<KabKota> _kabKotaList = [];
+  List<String> _kabKotaNames = [];
+
+  List<Kecamatan> _kecamatanList = [];
+  List<String> _kecamatanNames = [];
+  
+  List<Kelurahan> _kelurahanList = [];
+  List<String> _kelurahanNames = [];
+
+  List<KodePos> _kodePosList = [];
+  List<String> _kodePosNames = [];
+  // Data lists --> End
+
   // Mock data for dropdowns
   final List<String> _tipePelangganList = ['Distributor', 'Agen', 'Reseller'];
   final List<String> _wilayahList = ['Jakarta', 'Bandung', 'Surabaya', 'Other'];
   final List<String> _tipePpnList = ['Tanpa Ppn', 'Include Ppn', 'Exclude Ppn'];
   final List<String> _syaratBayarList = ['Cash', 'Credit 30 Days', 'Credit 60 Days'];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProvinsi();
+  }
+
+  Future<void> _fetchProvinsi() async {
+    final result = await _masterController.getProvinsi();
+    if (result != null) {
+      setState(() {
+        _provinsiList = result.data;
+        _provinsiNames = _provinsiList.map((e) => e.provinsi ?? '').where((e) => e.isNotEmpty).toList();
+      });
+    }
+  }
+
+  Future<void> _fetchKabKota(String provinsiId) async {
+    final result = await _masterController.getKabKota(provinsiId);
+    if (result != null) {
+      _selectedKecamatan = "- Pilih -";
+      _kecamatanList.clear();
+      _selectedKelurahan = "- Pilih -";
+      _kelurahanList.clear();
+      _selectedKodePos = "- Pilih -";
+      _kodePosList.clear();
+      setState(() {
+
+        _kabKotaList = result.data;
+        _kabKotaNames = _kabKotaList.map((e) => e.kabkota ?? '').where((e) => e.isNotEmpty).toList();
+      });
+    }
+  }
+
+  Future<void> _fetchKecamatan(String kotaId) async {
+    _selectedKelurahan = "- Pilih -";
+    _kelurahanList.clear();
+    _selectedKodePos = "- Pilih -";
+    _kodePosList.clear();
+    final result = await _masterController.getKecamatan(kotaId);
+    if (result != null) {
+      _selectedKelurahan = "- Pilih -";
+      _kelurahanList.clear();
+      setState(() {
+        _kecamatanList = result.data;
+        _kecamatanNames = _kecamatanList.map((e) => e.kecamatan ?? '').where((e) => e.isNotEmpty).toList();
+      });
+    }
+  }
+
+  Future<void> _fetchKelurahan(String kecamatanId) async {
+    _selectedKodePos = "- Pilih -";
+    _kodePosList.clear();
+    final result = await _masterController.getKelurahan(kecamatanId);
+    if (result != null) {
+      setState(() {
+        _kelurahanList = result.data;
+        _kelurahanNames = _kelurahanList.map((e) => e.kelurahan ?? '').where((e) => e.isNotEmpty).toList();
+      });
+    }
+  }
+  
+  Future<void> _fetchKodePos(String kelurahanId) async {
+    final result = await _masterController.getKodePos(kelurahanId);
+    if (result != null) {
+      setState(() {
+        _kodePosList = result.data;
+        _kodePosNames = _kodePosList.map((e) => e.kodePos ?? '').where((e) => e.isNotEmpty).toList();
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -169,18 +267,79 @@ class _RegisterPageState extends State<RegisterPage> {
         Row(
           children: [
             Expanded(
-              child: _buildDropdown("Provinsi", _tipePelangganList, _selectedSyaratBayar, (val) {
-                setState(() => _selectedSyaratBayar = val);
+              child: _buildDropdown("Provinsi", _provinsiNames, _selectedProvinsi, (val) {
+                setState(() {
+                  _selectedProvinsi = val;
+                  if (val != null) {
+                    int index = _provinsiNames.indexOf(val);
+                    if (index != -1 && index < _provinsiList.length) {
+                      String id = _provinsiList[index].id ?? '';
+                      _fetchKabKota(id);
+                    }
+                  }
+                });
+
+                // setState(() {
+                  
+                // });
               }),
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: _buildDropdown("Kota/Kabupaten", _tipePelangganList, _selectedSyaratBayar, (val) {
-                setState(() => _selectedSyaratBayar = val);
+              child: _buildDropdown("Kota/Kabupaten", _kabKotaNames, _selectedKabKota, (val) {
+                setState(() {
+                  _selectedKabKota = val;
+                  if (val != null) {
+                    int index = _kabKotaNames.indexOf(val);
+                    if (index != -1 && index < _kabKotaList.length) {
+                      String id = _kabKotaList[index].id ?? '';
+                      _fetchKecamatan(id);
+                    }
+                  }
+                });
               }),
             ),
           ],
         ),
+        Row(
+          children: [
+            Expanded(
+              child: _buildDropdown("Kecamatan", _kecamatanNames, _selectedKecamatan, (val) {
+                setState(() {
+                  _selectedKecamatan = val;
+                  if (val != null) {
+                    int index = _kecamatanNames.indexOf(val);
+                    if (index != -1 && index < _kecamatanList.length) {
+                      String id = _kecamatanList[index].id ?? '';
+                      _fetchKelurahan(id);
+                    }
+                  }
+                });
+              }),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _buildDropdown("Kelurahan", _kelurahanNames, _selectedKelurahan, (val) {
+                setState(() {
+                  _selectedKelurahan = val; 
+                  if (val != null) {
+                    int index = _kelurahanNames.indexOf(val);
+                    if (index != -1 && index < _kelurahanList.length) {
+                      String id = _kelurahanList[index].id ?? '';
+                      print(id);
+                      _fetchKodePos(id);
+                    }
+                  }
+                });
+              }),
+            ),
+            const SizedBox(width: 10),
+          ],
+        ),
+        _buildDropdown("Kode Pos", _kodePosNames, _selectedKodePos, (val) {
+          setState(() => _selectedKodePos = val);
+        }),
+        const SizedBox(height: 30),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -308,16 +467,16 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButtonFormField<String>(
-                value: currentValue,
-                isExpanded: true,
-                hint: Text('- Pilih -', style: TextStyle(color: Colors.grey[400])),
-                icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
-                items: items.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value, style: TextStyle(color: Colors.grey[800])),
-                  );
-                }).toList(),
+              initialValue: items.contains(currentValue) ? currentValue : null,
+              isExpanded: true,
+              hint: Text('- Pilih -', style: TextStyle(color: Colors.grey[400])),
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+              items: items.toSet().map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: TextStyle(color: Colors.grey[800])),
+                );
+              }).toList(),
                 onChanged: onChanged,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
