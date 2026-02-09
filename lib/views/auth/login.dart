@@ -216,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       onPressed: () {
-                        GoRouter.of(context).go('/register');
+                        GoRouter.of(context).push('/register');
                       },
                       child: const Text(
                         'Register',

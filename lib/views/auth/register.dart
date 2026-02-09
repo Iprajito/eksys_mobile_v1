@@ -166,9 +166,21 @@ class _RegisterPageState extends State<RegisterPage> {
       children: [
         _buildTextField('Alamat', _alamatController, maxLines: 3),
         const SizedBox(height: 10),
-        _buildDropdown("Provinsi", _tipePelangganList, _selectedSyaratBayar, (val) {
-          setState(() => _selectedSyaratBayar = val);
-        }),
+        Row(
+          children: [
+            Expanded(
+              child: _buildDropdown("Provinsi", _tipePelangganList, _selectedSyaratBayar, (val) {
+                setState(() => _selectedSyaratBayar = val);
+              }),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _buildDropdown("Kota/Kabupaten", _tipePelangganList, _selectedSyaratBayar, (val) {
+                setState(() => _selectedSyaratBayar = val);
+              }),
+            ),
+          ],
+        ),
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
