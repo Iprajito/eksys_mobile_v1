@@ -1,108 +1,20 @@
-import 'package:Eksys/controllers/auth_controller.dart';
 import 'package:Eksys/controllers/master_controller.dart';
-import 'package:Eksys/controllers/user_controller.dart';
-import 'package:Eksys/functions/global_functions.dart';
 import 'package:Eksys/models/master_model.dart';
-import 'package:Eksys/services/api_service.dart';
-import 'package:Eksys/services/localstorage_service.dart';
-import 'package:Eksys/views/page/profil/tambah_alamat.dart';
-import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bootstrap/flutter_bootstrap.dart';
-import 'package:go_router/go_router.dart';
 
-class AlamatPage extends StatefulWidget {
-  final String? token;
-  final String? userid;
-  const AlamatPage({super.key, this.token, this.userid});
+class TambahAlamat extends StatefulWidget {
+  const TambahAlamat({super.key});
 
   @override
-  State<AlamatPage> createState() => _AlamatPageState();
+  State<TambahAlamat> createState() => _TambahAlamatState();
 }
 
-class _AlamatPageState extends State<AlamatPage> {
-  final authController = AuthController(ApiServive(), StorageService());
-  final storageService = StorageService();
-  final userController = UserController(StorageService());
-
-  final MasterController _masterController = MasterController();
-  final TextEditingController _alamatController = TextEditingController();
-
-  // Ubah jadi masterController
-  late MasterController masterController;
-  PelangganModel? _pelangganModel;
-  PelangganAlamatModel? _pelangganAlamatModel;
-
-  String userId = "", userToken = "";
-
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkToken();
-    _fetchProvinsi();
-    // _dataUser();
-  }
-
-  @override
-  void dispose() {
-    // Dispose resources
-    super.dispose();
-  }
-
-  Future<void> _checkToken() async {
-    final authController = AuthController(ApiServive(), StorageService());
-    final check = await authController.validateToken();
-    if (check == 'success') {
-      print('Valid Token');
-      // ini uncomment
-      _dataUser();
-    } else {
-      if (mounted) {
-        showExpiredTokenDialog(context: context);
-      }
-    }
-  }
-
-  Future<void> _dataUser() async {
-    final user = await userController.getUserFromStorage();
-
-    setState(() {
-      isLoading = true;
-    });
-
-    setState(() {
-      userId = user!.uid.toString();
-      userToken = user.token.toString();
-      _dataPelanggan(userToken, userId);
-      _dataPelangganAlamat(userToken, userId);
-      isLoading = false;
-    });
-  }
-
-  void _dataPelanggan(String token, String id) async {
-    masterController = MasterController();
-    PelangganModel? data = await masterController.getpelangganbyid(token, id);
-    if (mounted) {
-      setState(() {
-        _pelangganModel = data;
-      });
-    }
-  }
-
-  void _dataPelangganAlamat(String token, String id) async {
-    masterController = MasterController();
-    PelangganAlamatModel? data = await masterController.getpelangganalamatbyuserid(token, id);
-    if (mounted) {
-      setState(() {
-        _pelangganAlamatModel = data;
-      });
-    }
-  }
-
+class _TambahAlamatState extends State<TambahAlamat> {
   final _formKey = GlobalKey<FormState>();
-  int _currentPage = 0; 
+  int _currentPage = 0;
+
+  final TextEditingController _alamatController = TextEditingController();
+  final MasterController _masterController = MasterController();
 
   // Data lists --> Start
   String? _selectedProvinsi;
@@ -126,6 +38,12 @@ class _AlamatPageState extends State<AlamatPage> {
   List<KodePos> _kodePosList = [];
   List<String> _kodePosNames = [];
   // Data lists --> End
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProvinsi();
+  }
 
   Future<void> _fetchProvinsi() async {
     final result = await _masterController.getProvinsi();
@@ -208,138 +126,38 @@ class _AlamatPageState extends State<AlamatPage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 0, 48, 47),
       appBar: AppBar(
+        title: const Text('Tambah Alamat Baru', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: _currentPage == 1
             ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white,),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: _previousPage,
               )
-            : IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Row(
-          children: [
-            Text("Alamat Saya",
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w700)),
-          ],
-        ),
-        backgroundColor: const Color.fromARGB(255, 0, 48, 47),
+            : null, // Default back button behavior for the first page
       ),
-      backgroundColor: const Color(0xFFF5F5F5),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
         child: Form(
           key: _formKey,
-          child: _currentPage == 0 ? _buildPageOne() : _buildPageTwo()),
-      ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-        decoration: BoxDecoration(
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey[300]!,
-                blurRadius: 1.0,
-                spreadRadius: 2 //, offset: Offset(0, -3)
-                )
-          ],
-        ),
-        child: Container(
-          height: 65,
-          // width: (screenWidth/2),
-          // margin: const EdgeInsets.only(left: 0.0, right: 1.0),
-          padding: const EdgeInsets.all(8),
-          decoration: const BoxDecoration(
-            // border: Border.all(color: Colors.white),
-            color: Colors.white,
-            // borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _currentPage == 0 ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: (screenWidth) - 16,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) => //DrawerExample(),
-                                    const TambahAlamat(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              const begin = Offset(1.0, 0.0); // Slide from right
-                              const end = Offset.zero;
-                              const curve = Curves.ease;
-
-                              final tween =
-                                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                              final offsetAnimation = animation.drive(tween);
-
-                              return SlideTransition(
-                                position: offsetAnimation,
-                                child: child,
-                              );
-                            },
-                        ));
-                      }, //_saveProduks
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(8),
-                        backgroundColor: const Color.fromARGB(255, 254, 185, 3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        'Tambah Alamat Baru',
-                        style: TextStyle(
-                            color: Colors.grey[800], fontSize: 16),
-                      ),
-                    ),
-                  ),
-                ],
-              ) : Container()
+              _buildWidgetAlamat(),
             ],
           ),
-        ))
+        ),
+      ),
     );
   }
 
-  Widget _buildPageOne() {
+  Widget _buildWidgetAlamat() {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: _pelangganAlamatModel == null
-          ? const ListMenuShimmer(total: 5)
-          : ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _pelangganAlamatModel!.data.length,
-              itemBuilder: (context, index) {
-                final item = _pelangganAlamatModel!.data[index];
-                return listAlamat(
-                  item.id.toString(),
-                  item.nama_penerima.toString(),
-                  item.telepon_penerima.toString(),
-                  item.alamat_kirim1.toString(),
-                  item.alamat_kirim2.toString(),
-                  item.prim_address.toString(),
-                );
-              },
-            ),
-    );
-  }
-
-  Widget _buildPageTwo() {
-    return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom, left: 16, right: 16),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
       child: Column(
         children: [
           _buildTextField('Alamat', _alamatController, maxLines: 3),
@@ -423,7 +241,7 @@ class _AlamatPageState extends State<AlamatPage> {
             indent: 0,          // Jarak kosong di awal garis
             endIndent: 0,       // Jarak kosong di akhir garis
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -505,7 +323,7 @@ class _AlamatPageState extends State<AlamatPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.black, fontSize: 14)),
+          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -543,94 +361,4 @@ class _AlamatPageState extends State<AlamatPage> {
       ),
     );
   }
-
-  Widget listAlamat(String id, String nama, String telepon, String alamat1, String alamat2, String prim_address) {
-    return GestureDetector(
-      onTap: () {
-        
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16.0),
-        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(8.0)),
-        padding: const EdgeInsets.all(16),
-        child: BootstrapContainer(
-            fluid: true,
-            children: [
-              BootstrapRow(
-                // height: 60,
-                children: [
-                  BootstrapCol(
-                    sizes: 'col-12',
-                    child: Row(
-                      children: [
-                        Text(nama.toUpperCase(), 
-                        style: TextStyle( color: Colors.grey[800],fontWeight: FontWeight.w700,fontSize: 16)),
-                        const SizedBox(width: 5),
-                        Text(telepon,
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              BootstrapRow(
-                // height: 60,
-                children: [
-                  BootstrapCol(
-                    sizes: 'col-12',
-                    child: Text(alamat1,
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 16,
-                          ),
-                        ),
-                  ),
-                ],
-              ),
-              BootstrapRow(
-                // height: 60,
-                children: [
-                  BootstrapCol(
-                    sizes: 'col-12',
-                    child: Text(alamat2,
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 16,
-                          ),
-                        ),
-                  ),
-                ],
-              ),
-              BootstrapRow(
-                // height: 60,
-                children: [
-                  BootstrapCol(
-                    sizes: 'col-2',
-                    child: prim_address != 'Utama' ? const Text('') : Container(
-                      margin: const EdgeInsets.only(top: 8.0),
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all( color: Colors.orangeAccent.shade700, width: 1.0),
-                      ),
-                      child: Text('Utama', style: TextStyle(
-                          color: Colors.orangeAccent.shade700,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ]
-          ),
-      ),
-    );
-  }
 }
-
