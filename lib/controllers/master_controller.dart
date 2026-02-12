@@ -52,7 +52,8 @@ class MasterController {
     }
   }
 
-  Future<PelangganAlamatModel?> getpelangganalamatbyuserid(String token, String userid) async {
+  Future<PelangganAlamatModel?> getpelangganalamatbyuserid(
+      String token, String userid) async {
     late final Options _options = Options(headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token",
@@ -105,7 +106,9 @@ class MasterController {
     });
     try {
       // final response = await dio.get('$baseUrl/master/getmetodebayar/bank',options: _options);
-      final response = await dio.get('$baseUrl/master/getmetodebayar/virtual_account',options: _options);
+      final response = await dio.get(
+          '$baseUrl/master/getmetodebayar/virtual_account',
+          options: _options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
         return MetodeBayarBankModel.fromJson(data);
@@ -127,7 +130,9 @@ class MasterController {
     });
     try {
       // final response = await dio.get('$baseUrl/master/getmetodebayar/agen',options: _options);
-      final response = await dio.get('$baseUrl/master/getmetodebayar/online_to_offline_account',options: _options);
+      final response = await dio.get(
+          '$baseUrl/master/getmetodebayar/online_to_offline_account',
+          options: _options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
         return MetodeBayarAgenModel.fromJson(data);
@@ -190,7 +195,8 @@ class MasterController {
       "Authorization": "Bearer $token",
     });
     try {
-      final response = await dio.get('$baseUrl/master/getsubscribe', options: _options);
+      final response =
+          await dio.get('$baseUrl/master/getsubscribe', options: _options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
         return SubscribeModel.fromJson(data);
@@ -205,12 +211,11 @@ class MasterController {
   }
 
   Future<ProvinsiModel?> getProvinsi() async {
-    late final Options options = Options(headers: {
-      "Content-Type": "application/json"
-    });
+    late final Options options =
+        Options(headers: {"Content-Type": "application/json"});
     try {
-      final response = await dio.get('$baseUrl/master/getprovinsi',
-          options: options);
+      final response =
+          await dio.get('$baseUrl/master/getprovinsi', options: options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
         return ProvinsiModel.fromJson(data);
@@ -225,11 +230,11 @@ class MasterController {
   }
 
   Future<KabKotaModel?> getKabKota(String provinsiId) async {
-    late final Options options = Options(headers: {
-      "Content-Type": "application/json"
-    });
+    late final Options options =
+        Options(headers: {"Content-Type": "application/json"});
     try {
-      final response = await dio.get('$baseUrl/master/getkotabyprovinsiid/$provinsiId',
+      final response = await dio.get(
+          '$baseUrl/master/getkotabyprovinsiid/$provinsiId',
           options: options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
@@ -245,11 +250,11 @@ class MasterController {
   }
 
   Future<KecamatanModel?> getKecamatan(String kotaId) async {
-    late final Options options = Options(headers: {
-      "Content-Type": "application/json"
-    });
+    late final Options options =
+        Options(headers: {"Content-Type": "application/json"});
     try {
-      final response = await dio.get('$baseUrl/master/getkecamatanbykotaid/$kotaId',
+      final response = await dio.get(
+          '$baseUrl/master/getkecamatanbykotaid/$kotaId',
           options: options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
@@ -265,11 +270,11 @@ class MasterController {
   }
 
   Future<KelurahanModel?> getKelurahan(String kecamatanId) async {
-    late final Options options = Options(headers: {
-      "Content-Type": "application/json"
-    });
+    late final Options options =
+        Options(headers: {"Content-Type": "application/json"});
     try {
-      final response = await dio.get('$baseUrl/master/getkelurahanbykecamatanid/$kecamatanId',
+      final response = await dio.get(
+          '$baseUrl/master/getkelurahanbykecamatanid/$kecamatanId',
           options: options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
@@ -285,11 +290,11 @@ class MasterController {
   }
 
   Future<KodePosModel?> getKodePos(String kelurahanId) async {
-    late final Options options = Options(headers: {
-      "Content-Type": "application/json"
-    });
+    late final Options options =
+        Options(headers: {"Content-Type": "application/json"});
     try {
-      final response = await dio.get('$baseUrl/master/getkodeposbykelurahanid/$kelurahanId',
+      final response = await dio.get(
+          '$baseUrl/master/getkodeposbykelurahanid/$kelurahanId',
           options: options);
       if (response.data['status'] == 'success') {
         final data = json.decode(response.toString());
@@ -298,6 +303,36 @@ class MasterController {
         print("Failed to load data");
         return null;
       }
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> checkRegister(
+      String kodeReferral, String email, String telepon) async {
+    late final Options options =
+        Options(headers: {"Content-Type": "application/json"});
+    final body = jsonEncode(
+        {"kodereferral": kodeReferral, "email": email, "telepon": telepon});
+    try {
+      final response = await dio.post('$baseUrl/master/checkregister',
+          options: options, data: body);
+
+      // Allow the caller to handle the response logic
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        print("Failed to validate register: ${response.statusCode}");
+        return response
+            .data; // Return data even on error if API returns 200 with status:error
+      }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return e.response?.data;
+      }
+      print("Error: $e");
+      return null;
     } catch (e) {
       print("Error: $e");
       return null;

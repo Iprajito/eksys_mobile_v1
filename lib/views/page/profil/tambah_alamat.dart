@@ -1,9 +1,12 @@
 import 'package:Eksys/controllers/master_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
 import 'package:Eksys/models/master_model.dart';
+import 'package:Eksys/services/localstorage_service.dart';
 import 'package:flutter/material.dart';
 
 class TambahAlamat extends StatefulWidget {
-  const TambahAlamat({super.key});
+  final String userId;
+  const TambahAlamat({super.key, required this.userId});
 
   @override
   State<TambahAlamat> createState() => _TambahAlamatState();
@@ -14,7 +17,15 @@ class _TambahAlamatState extends State<TambahAlamat> {
   int _currentPage = 0;
 
   final TextEditingController _alamatController = TextEditingController();
+  final TextEditingController _detailAlamatController = TextEditingController();
+  final TextEditingController _namaPenerimaController = TextEditingController();
+  final TextEditingController _noTelpController = TextEditingController();
+  final TextEditingController _noRumahController = TextEditingController();
+  final TextEditingController _rtController = TextEditingController();
+  final TextEditingController _rwController = TextEditingController();
   final MasterController _masterController = MasterController();
+  final UserController _userController = UserController(StorageService());
+  bool _isDefault = false;
 
   // Data lists --> Start
   String? _selectedProvinsi;
@@ -22,16 +33,16 @@ class _TambahAlamatState extends State<TambahAlamat> {
   String? _selectedKecamatan;
   String? _selectedKelurahan;
   String? _selectedKodePos;
-  
+
   List<Provinsi> _provinsiList = [];
   List<String> _provinsiNames = [];
-  
+
   List<KabKota> _kabKotaList = [];
   List<String> _kabKotaNames = [];
 
   List<Kecamatan> _kecamatanList = [];
   List<String> _kecamatanNames = [];
-  
+
   List<Kelurahan> _kelurahanList = [];
   List<String> _kelurahanNames = [];
 
@@ -50,7 +61,10 @@ class _TambahAlamatState extends State<TambahAlamat> {
     if (result != null) {
       setState(() {
         _provinsiList = result.data;
-        _provinsiNames = _provinsiList.map((e) => e.provinsi ?? '').where((e) => e.isNotEmpty).toList();
+        _provinsiNames = _provinsiList
+            .map((e) => e.provinsi ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -65,9 +79,11 @@ class _TambahAlamatState extends State<TambahAlamat> {
       _selectedKodePos = "- Pilih -";
       _kodePosList.clear();
       setState(() {
-
         _kabKotaList = result.data;
-        _kabKotaNames = _kabKotaList.map((e) => e.kabkota ?? '').where((e) => e.isNotEmpty).toList();
+        _kabKotaNames = _kabKotaList
+            .map((e) => e.kabkota ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -83,7 +99,10 @@ class _TambahAlamatState extends State<TambahAlamat> {
       _kelurahanList.clear();
       setState(() {
         _kecamatanList = result.data;
-        _kecamatanNames = _kecamatanList.map((e) => e.kecamatan ?? '').where((e) => e.isNotEmpty).toList();
+        _kecamatanNames = _kecamatanList
+            .map((e) => e.kecamatan ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -95,17 +114,23 @@ class _TambahAlamatState extends State<TambahAlamat> {
     if (result != null) {
       setState(() {
         _kelurahanList = result.data;
-        _kelurahanNames = _kelurahanList.map((e) => e.kelurahan ?? '').where((e) => e.isNotEmpty).toList();
+        _kelurahanNames = _kelurahanList
+            .map((e) => e.kelurahan ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
-  
+
   Future<void> _fetchKodePos(String kelurahanId) async {
     final result = await _masterController.getKodePos(kelurahanId);
     if (result != null) {
       setState(() {
         _kodePosList = result.data;
-        _kodePosNames = _kodePosList.map((e) => e.kodePos ?? '').where((e) => e.isNotEmpty).toList();
+        _kodePosNames = _kodePosList
+            .map((e) => e.kodePos ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -129,7 +154,8 @@ class _TambahAlamatState extends State<TambahAlamat> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0, 48, 47),
       appBar: AppBar(
-        title: const Text('Tambah Alamat Baru', style: TextStyle(color: Colors.white)),
+        title: const Text('Tambah Alamat Baru',
+            style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -177,7 +203,8 @@ class _TambahAlamatState extends State<TambahAlamat> {
           Row(
             children: [
               Expanded(
-                child: _buildDropdown("Kota/Kabupaten", _kabKotaNames, _selectedKabKota, (val) {
+                child: _buildDropdown(
+                    "Kota/Kabupaten", _kabKotaNames, _selectedKabKota, (val) {
                   setState(() {
                     _selectedKabKota = val;
                     if (val != null) {
@@ -192,7 +219,8 @@ class _TambahAlamatState extends State<TambahAlamat> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: _buildDropdown("Kecamatan", _kecamatanNames, _selectedKecamatan, (val) {
+                child: _buildDropdown(
+                    "Kecamatan", _kecamatanNames, _selectedKecamatan, (val) {
                   setState(() {
                     _selectedKecamatan = val;
                     if (val != null) {
@@ -211,9 +239,10 @@ class _TambahAlamatState extends State<TambahAlamat> {
           Row(
             children: [
               Expanded(
-                child: _buildDropdown("Kelurahan", _kelurahanNames, _selectedKelurahan, (val) {
+                child: _buildDropdown(
+                    "Kelurahan", _kelurahanNames, _selectedKelurahan, (val) {
                   setState(() {
-                    _selectedKelurahan = val; 
+                    _selectedKelurahan = val;
                     if (val != null) {
                       int index = _kelurahanNames.indexOf(val);
                       if (index != -1 && index < _kelurahanList.length) {
@@ -225,23 +254,73 @@ class _TambahAlamatState extends State<TambahAlamat> {
                   });
                 }),
               ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildTextField("RT", _rtController, maxLines: 1),
+              ),
               const SizedBox(width: 10),
               Expanded(
-                child: _buildDropdown("Kode Pos", _kodePosNames, _selectedKodePos, (val) {
+                child: _buildTextField("RW", _rwController, maxLines: 1),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildTextField('No Rumah / Gedung', _noRumahController,
+                    maxLines: 1),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildDropdown(
+                    "Kode Pos", _kodePosNames, _selectedKodePos, (val) {
                   setState(() => _selectedKodePos = val);
                 }),
               ),
               const SizedBox(width: 10),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
+          _buildTextField('Detail Alamat Lainnya', _detailAlamatController,
+              maxLines: 3),
+          const SizedBox(height: 10),
+          _buildTextField('Nama Penerima', _namaPenerimaController,
+              maxLines: 1),
+          const SizedBox(height: 10),
+          _buildTextField('Telepon Penerima', _noTelpController, maxLines: 1),
+          const SizedBox(height: 10),
           const Divider(
             color: Colors.grey, // Warna garis
-            thickness: 1,       // Ketebalan garis
-            indent: 0,          // Jarak kosong di awal garis
-            endIndent: 0,       // Jarak kosong di akhir garis
+            thickness: 1, // Ketebalan garis
+            indent: 0, // Jarak kosong di awal garis
+            endIndent: 0, // Jarak kosong di akhir garis
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Set as Default',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              Switch(
+                value: _isDefault,
+                onChanged: (value) {
+                  setState(() {
+                    _isDefault = value;
+                  });
+                },
+                activeColor: const Color.fromARGB(255, 254, 185, 3),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Container(),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -252,12 +331,75 @@ class _TambahAlamatState extends State<TambahAlamat> {
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   // Process data
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Processing Data')),
                   );
+
+                  // Get IDs
+                  String? provinsiId = _provinsiList
+                      .firstWhere((e) => e.provinsi == _selectedProvinsi,
+                          orElse: () => Provinsi())
+                      .id;
+                  String? kotaId = _kabKotaList
+                      .firstWhere((e) => e.kabkota == _selectedKabKota,
+                          orElse: () => KabKota())
+                      .id;
+                  String? kecamatanId = _kecamatanList
+                      .firstWhere((e) => e.kecamatan == _selectedKecamatan,
+                          orElse: () => Kecamatan())
+                      .id;
+                  String? kelurahanId = _kelurahanList
+                      .firstWhere((e) => e.kelurahan == _selectedKelurahan,
+                          orElse: () => Kelurahan())
+                      .id;
+
+                  String? kodePosVal = _selectedKodePos;
+
+                  if (provinsiId != null &&
+                      kotaId != null &&
+                      kecamatanId != null &&
+                      kelurahanId != null &&
+                      kodePosVal != null) {
+                    Map<String, dynamic> data = {
+                      "user_id": widget.userId,
+                      "nama_penerima": _namaPenerimaController.text,
+                      "telepon_penerima": _noTelpController.text,
+                      "alamat_pengiriman": _alamatController.text,
+                      "alamat_provinsi": provinsiId,
+                      "alamat_kota": kotaId,
+                      "alamat_kecamatan": kecamatanId,
+                      "alamat_kelurahan": kelurahanId,
+                      "alamat_rt": _rtController.text,
+                      "alamat_rw": _rwController.text,
+                      "alamat_no": _noRumahController.text,
+                      "alamat_kodepos": kodePosVal,
+                      "alamat_detail_lain": _detailAlamatController.text,
+                      "is_default": _isDefault ? "1" : "0"
+                    };
+
+                    bool success =
+                        await _userController.saveAlamatPelanggan(data);
+
+                    if (!mounted) return;
+
+                    if (success) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Berhasil disimpan')),
+                      );
+                      Navigator.pop(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Gagal menyimpan data')),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Data wilayah tidak valid')),
+                    );
+                  }
                 }
               },
               child: Text(
@@ -282,7 +424,8 @@ class _TambahAlamatState extends State<TambahAlamat> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          Text(label,
+              style: const TextStyle(color: Colors.white70, fontSize: 14)),
           const SizedBox(height: 8),
           TextFormField(
             controller: controller,
@@ -293,7 +436,7 @@ class _TambahAlamatState extends State<TambahAlamat> {
               // Basic validation, allow empty if not critical, but typically fields are required
               // For now, let's say only Nama and Email are strictly required for demo or all are required?
               // Assuming all text fields are required for simplicity as per form logic usually
-              // But modifying to be lenient or strict based on requirement. 
+              // But modifying to be lenient or strict based on requirement.
               // Let's make it simple: required.
               if (value == null || value.isEmpty) {
                 return '$label tidak boleh kosong';
@@ -317,13 +460,15 @@ class _TambahAlamatState extends State<TambahAlamat> {
     );
   }
 
-  Widget _buildDropdown(String label, List<String> items, String? currentValue, Function(String?) onChanged) {
+  Widget _buildDropdown(String label, List<String> items, String? currentValue,
+      Function(String?) onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          Text(label,
+              style: const TextStyle(color: Colors.white70, fontSize: 14)),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -333,16 +478,19 @@ class _TambahAlamatState extends State<TambahAlamat> {
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButtonFormField<String>(
-              initialValue: items.contains(currentValue) ? currentValue : null,
-              isExpanded: true,
-              hint: Text('- Pilih -', style: TextStyle(color: Colors.grey[400])),
-              icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
-              items: items.toSet().map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: TextStyle(color: Colors.grey[800])),
-                );
-              }).toList(),
+                initialValue:
+                    items.contains(currentValue) ? currentValue : null,
+                isExpanded: true,
+                hint: Text('- Pilih -',
+                    style: TextStyle(color: Colors.grey[400])),
+                icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                items: items.toSet().map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child:
+                        Text(value, style: TextStyle(color: Colors.grey[800])),
+                  );
+                }).toList(),
                 onChanged: onChanged,
                 validator: (value) {
                   if (value == null || value.isEmpty) {

@@ -1,6 +1,9 @@
 import 'package:Eksys/controllers/master_controller.dart';
+import 'package:Eksys/controllers/user_controller.dart';
 import 'package:Eksys/models/master_model.dart';
+import 'package:Eksys/services/localstorage_service.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -16,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Controllers
   final MasterController _masterController = MasterController();
+  final UserController _userController = UserController(StorageService());
   final TextEditingController _nikController = TextEditingController();
   final TextEditingController _nomorKtaController = TextEditingController();
   final TextEditingController _namaController = TextEditingController();
@@ -26,7 +30,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _kodeReferralController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -37,23 +42,22 @@ class _RegisterPageState extends State<RegisterPage> {
   String? _selectedTipePpn;
   String? _selectedSyaratBayar;
 
-
   // Data lists --> Start
   String? _selectedProvinsi;
   String? _selectedKabKota;
   String? _selectedKecamatan;
   String? _selectedKelurahan;
   String? _selectedKodePos;
-  
+
   List<Provinsi> _provinsiList = [];
   List<String> _provinsiNames = [];
-  
+
   List<KabKota> _kabKotaList = [];
   List<String> _kabKotaNames = [];
 
   List<Kecamatan> _kecamatanList = [];
   List<String> _kecamatanNames = [];
-  
+
   List<Kelurahan> _kelurahanList = [];
   List<String> _kelurahanNames = [];
 
@@ -65,7 +69,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final List<String> _tipePelangganList = ['Distributor', 'Agen', 'Reseller'];
   final List<String> _wilayahList = ['Jakarta', 'Bandung', 'Surabaya', 'Other'];
   final List<String> _tipePpnList = ['Tanpa Ppn', 'Include Ppn', 'Exclude Ppn'];
-  final List<String> _syaratBayarList = ['Cash', 'Credit 30 Days', 'Credit 60 Days'];
+  final List<String> _syaratBayarList = [
+    'Cash',
+    'Credit 30 Days',
+    'Credit 60 Days'
+  ];
 
   @override
   void initState() {
@@ -78,7 +86,10 @@ class _RegisterPageState extends State<RegisterPage> {
     if (result != null) {
       setState(() {
         _provinsiList = result.data;
-        _provinsiNames = _provinsiList.map((e) => e.provinsi ?? '').where((e) => e.isNotEmpty).toList();
+        _provinsiNames = _provinsiList
+            .map((e) => e.provinsi ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -93,9 +104,11 @@ class _RegisterPageState extends State<RegisterPage> {
       _selectedKodePos = "- Pilih -";
       _kodePosList.clear();
       setState(() {
-
         _kabKotaList = result.data;
-        _kabKotaNames = _kabKotaList.map((e) => e.kabkota ?? '').where((e) => e.isNotEmpty).toList();
+        _kabKotaNames = _kabKotaList
+            .map((e) => e.kabkota ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -111,7 +124,10 @@ class _RegisterPageState extends State<RegisterPage> {
       _kelurahanList.clear();
       setState(() {
         _kecamatanList = result.data;
-        _kecamatanNames = _kecamatanList.map((e) => e.kecamatan ?? '').where((e) => e.isNotEmpty).toList();
+        _kecamatanNames = _kecamatanList
+            .map((e) => e.kecamatan ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -123,17 +139,23 @@ class _RegisterPageState extends State<RegisterPage> {
     if (result != null) {
       setState(() {
         _kelurahanList = result.data;
-        _kelurahanNames = _kelurahanList.map((e) => e.kelurahan ?? '').where((e) => e.isNotEmpty).toList();
+        _kelurahanNames = _kelurahanList
+            .map((e) => e.kelurahan ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
-  
+
   Future<void> _fetchKodePos(String kelurahanId) async {
     final result = await _masterController.getKodePos(kelurahanId);
     if (result != null) {
       setState(() {
         _kodePosList = result.data;
-        _kodePosNames = _kodePosList.map((e) => e.kodePos ?? '').where((e) => e.isNotEmpty).toList();
+        _kodePosNames = _kodePosList
+            .map((e) => e.kodePos ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -168,12 +190,94 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void _nextPage() {
+  Future<void> _nextPage() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _currentPage = 1;
-      });
+      // Show loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const Center(child: CircularProgressIndicator());
+        },
+      );
+
+      try {
+        final result = await _masterController.checkRegister(
+            _kodeReferralController.text,
+            _emailController.text,
+            _teleponController.text);
+
+        if (!mounted) return;
+
+        // Hide loading
+        Navigator.pop(context);
+
+        if (result != null && result['status'] == 'success') {
+          // Check if data is valid
+          // Assuming result['data'] having "1" means valid.
+          // If the API returns success, we likely can proceed.
+          if (result['data'][0]['kode_referral'] == '1' &&
+              result['data'][0]['email'] == '0' &&
+              result['data'][0]['telepon'] == '0') {
+            setState(() {
+              _currentPage = 1;
+            });
+          } else {
+            String message = result['message'] ??
+                'Validasi Gagal. Silakan cek data anda kembali.';
+            if (result['data'][0]['kode_referral'] == '0') {
+              _showErrorDialog("Kode Referral Tidak Valid");
+            } else if (result['data'][0]['email'] == '1') {
+              _showErrorDialog("Email Sudah Terdaftar");
+            } else if (result['data'][0]['telepon'] == '1') {
+              _showErrorDialog("Nomor Telepon Sudah Terdaftar");
+            }
+          }
+        } else {
+          String message = result != null && result['message'] != null
+              ? result['message']
+              : 'Validasi Gagal. Silakan cek data anda kembali.';
+          _showErrorDialog(message);
+        }
+      } catch (e) {
+        if (mounted) {
+          Navigator.pop(context); // Hide loading on error
+          _showErrorDialog('Terjadi kesalahan: $e');
+        }
+      }
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Informasi"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Informasi"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => GoRouter.of(context).go('/login'),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   void _previousPage() {
@@ -187,7 +291,8 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0, 48, 47),
       appBar: AppBar(
-        title: const Text('Register Eksys', style: TextStyle(color: Colors.white)),
+        title:
+            const Text('Register Eksys', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -230,15 +335,19 @@ class _RegisterPageState extends State<RegisterPage> {
         children: [
           _buildTextField('Kode Referral', _kodeReferralController),
           const SizedBox(height: 30),
-          _buildDropdown('Tipe Pelanggan', _tipePelangganList, _selectedTipePelanggan, (val) {
+          _buildDropdown(
+              'Tipe Pelanggan', _tipePelangganList, _selectedTipePelanggan,
+              (val) {
             setState(() => _selectedTipePelanggan = val);
           }),
           _buildTextField('NIK', _nikController),
           _buildTextField('Nama', _namaController),
           _buildDatePicker('Tanggal Lahir', _tanggalLahirController, context),
           _buildTextField('Tempat Lahir', _tempatLahirController),
-          _buildTextField('Telepon', _teleponController, keyboardType: TextInputType.phone),
-          _buildTextField('Email', _emailController, keyboardType: TextInputType.emailAddress),
+          _buildTextField('Telepon', _teleponController,
+              keyboardType: TextInputType.phone),
+          _buildTextField('Email', _emailController,
+              keyboardType: TextInputType.emailAddress),
           const SizedBox(height: 30),
           SizedBox(
             width: double.infinity,
@@ -288,7 +397,8 @@ class _RegisterPageState extends State<RegisterPage> {
           Row(
             children: [
               Expanded(
-                child: _buildDropdown("Kota/Kabupaten", _kabKotaNames, _selectedKabKota, (val) {
+                child: _buildDropdown(
+                    "Kota/Kabupaten", _kabKotaNames, _selectedKabKota, (val) {
                   setState(() {
                     _selectedKabKota = val;
                     if (val != null) {
@@ -303,7 +413,8 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: _buildDropdown("Kecamatan", _kecamatanNames, _selectedKecamatan, (val) {
+                child: _buildDropdown(
+                    "Kecamatan", _kecamatanNames, _selectedKecamatan, (val) {
                   setState(() {
                     _selectedKecamatan = val;
                     if (val != null) {
@@ -322,9 +433,10 @@ class _RegisterPageState extends State<RegisterPage> {
           Row(
             children: [
               Expanded(
-                child: _buildDropdown("Kelurahan", _kelurahanNames, _selectedKelurahan, (val) {
+                child: _buildDropdown(
+                    "Kelurahan", _kelurahanNames, _selectedKelurahan, (val) {
                   setState(() {
-                    _selectedKelurahan = val; 
+                    _selectedKelurahan = val;
                     if (val != null) {
                       int index = _kelurahanNames.indexOf(val);
                       if (index != -1 && index < _kelurahanList.length) {
@@ -338,7 +450,8 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: _buildDropdown("Kode Pos", _kodePosNames, _selectedKodePos, (val) {
+                child: _buildDropdown(
+                    "Kode Pos", _kodePosNames, _selectedKodePos, (val) {
                   setState(() => _selectedKodePos = val);
                 }),
               ),
@@ -348,18 +461,20 @@ class _RegisterPageState extends State<RegisterPage> {
           const SizedBox(height: 20),
           const Divider(
             color: Colors.grey, // Warna garis
-            thickness: 1,       // Ketebalan garis
-            indent: 0,          // Jarak kosong di awal garis
-            endIndent: 0,       // Jarak kosong di akhir garis
+            thickness: 1, // Ketebalan garis
+            indent: 0, // Jarak kosong di awal garis
+            endIndent: 0, // Jarak kosong di akhir garis
           ),
           const SizedBox(height: 20),
-          _buildPasswordField('Password', _passwordController, _isPasswordVisible, () {
+          _buildPasswordField(
+              'Password', _passwordController, _isPasswordVisible, () {
             setState(() {
               _isPasswordVisible = !_isPasswordVisible;
             });
           }),
           const SizedBox(height: 16),
-          _buildPasswordField('Re-type Password', _confirmPasswordController, _isConfirmPasswordVisible, () {
+          _buildPasswordField('Re-type Password', _confirmPasswordController,
+              _isConfirmPasswordVisible, () {
             setState(() {
               _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
             });
@@ -375,12 +490,78 @@ class _RegisterPageState extends State<RegisterPage> {
                   borderRadius: BorderRadius.circular(15),
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  // Process data
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
+                  // Show Loading
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return const Center(child: CircularProgressIndicator());
+                    },
                   );
+
+                  // Get IDs
+                  String? provinsiId = _provinsiList
+                      .firstWhere((e) => e.provinsi == _selectedProvinsi,
+                          orElse: () => Provinsi())
+                      .id;
+                  String? kotaId = _kabKotaList
+                      .firstWhere((e) => e.kabkota == _selectedKabKota,
+                          orElse: () => KabKota())
+                      .id;
+                  String? kecamatanId = _kecamatanList
+                      .firstWhere((e) => e.kecamatan == _selectedKecamatan,
+                          orElse: () => Kecamatan())
+                      .id;
+                  String? kelurahanId = _kelurahanList
+                      .firstWhere((e) => e.kelurahan == _selectedKelurahan,
+                          orElse: () => Kelurahan())
+                      .id;
+
+                  Map<String, dynamic> data = {
+                    "kodereferral": _kodeReferralController.text,
+                    "tipe_pelanggan": _selectedTipePelanggan,
+                    "nik": _nikController.text,
+                    "nama": _namaController.text,
+                    "tgl_lahir": _tanggalLahirController.text,
+                    "kota_lahir": _tempatLahirController.text,
+                    "telepon": _teleponController.text,
+                    "email": _emailController.text,
+                    "alamat_pengiriman": _alamatController.text,
+                    "alamat_provinsi": provinsiId ?? "",
+                    "alamat_kota": kotaId ?? "",
+                    "alamat_kecamatan": kecamatanId ?? "",
+                    "alamat_kelurahan": kelurahanId ?? "",
+                    "alamat_rt": "1",
+                    "alamat_rw": "1",
+                    "alamat_no": "1",
+                    "alamat_kodepos": _selectedKodePos ?? "",
+                    "alamat_detail_lain": "",
+                    "password": _passwordController.text
+                  };
+
+                  try {
+                    final result = await _userController.registerUser(data);
+
+                    if (!mounted) return;
+                    Navigator.pop(context); // Hide loading
+
+                    if (result != null && result['status'] == 'success') {
+                      _showSuccessDialog("Registrasi Berhasil. Silakan Login.");
+                    } else {
+                      String message =
+                          result != null && result['message'] != null
+                              ? result['message']
+                              : "Registrasi Gagal";
+                      _showErrorDialog(message);
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      Navigator.pop(context);
+                      _showErrorDialog("Terjadi kesalahan: $e");
+                    }
+                  }
                 }
               },
               child: Text(
@@ -398,13 +579,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildPasswordField(String label, TextEditingController controller, bool isVisible, VoidCallback toggleVisibility) {
+  Widget _buildPasswordField(String label, TextEditingController controller,
+      bool isVisible, VoidCallback toggleVisibility) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          Text(label,
+              style: const TextStyle(color: Colors.white70, fontSize: 14)),
           const SizedBox(height: 8),
           TextFormField(
             controller: controller,
@@ -414,7 +597,8 @@ class _RegisterPageState extends State<RegisterPage> {
               if (value == null || value.isEmpty) {
                 return '$label tidak boleh kosong';
               }
-              if (label == 'Re-type Password' && value != _passwordController.text) {
+              if (label == 'Re-type Password' &&
+                  value != _passwordController.text) {
                 return 'Password tidak sama';
               }
               return null;
@@ -450,7 +634,8 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          Text(label,
+              style: const TextStyle(color: Colors.white70, fontSize: 14)),
           const SizedBox(height: 8),
           TextFormField(
             controller: controller,
@@ -459,13 +644,21 @@ class _RegisterPageState extends State<RegisterPage> {
             style: TextStyle(color: Colors.grey[800]),
             validator: (value) {
               // Basic validation, allow empty if not critical, but typically fields are required
-              // For now, let's say only Nama and Email are strictly required for demo or all are required?
-              // Assuming all text fields are required for simplicity as per form logic usually
-              // But modifying to be lenient or strict based on requirement. 
-              // Let's make it simple: required.
               if (value == null || value.isEmpty) {
                 return '$label tidak boleh kosong';
               }
+
+              if (keyboardType == TextInputType.emailAddress &&
+                  value.isNotEmpty) {
+                // Basic email regex
+                final bool emailValid = RegExp(
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                    .hasMatch(value);
+                if (!emailValid) {
+                  return 'Format email tidak valid';
+                }
+              }
+
               return null;
             },
             decoration: InputDecoration(
@@ -485,13 +678,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildDatePicker(String label, TextEditingController controller, BuildContext context) {
+  Widget _buildDatePicker(
+      String label, TextEditingController controller, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          Text(label,
+              style: const TextStyle(color: Colors.white70, fontSize: 14)),
           const SizedBox(height: 8),
           TextFormField(
             controller: controller,
@@ -522,13 +717,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildDropdown(String label, List<String> items, String? currentValue, Function(String?) onChanged) {
+  Widget _buildDropdown(String label, List<String> items, String? currentValue,
+      Function(String?) onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          Text(label,
+              style: const TextStyle(color: Colors.white70, fontSize: 14)),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -538,16 +735,19 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButtonFormField<String>(
-              initialValue: items.contains(currentValue) ? currentValue : null,
-              isExpanded: true,
-              hint: Text('- Pilih -', style: TextStyle(color: Colors.grey[400])),
-              icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
-              items: items.toSet().map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: TextStyle(color: Colors.grey[800])),
-                );
-              }).toList(),
+                initialValue:
+                    items.contains(currentValue) ? currentValue : null,
+                isExpanded: true,
+                hint: Text('- Pilih -',
+                    style: TextStyle(color: Colors.grey[400])),
+                icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                items: items.toSet().map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child:
+                        Text(value, style: TextStyle(color: Colors.grey[800])),
+                  );
+                }).toList(),
                 onChanged: onChanged,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -573,13 +773,15 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          Text(label,
+              style: const TextStyle(color: Colors.white70, fontSize: 14)),
           const SizedBox(height: 8),
           InkWell(
             onTap: () {
-               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('File picker not implemented yet')),
-               );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('File picker not implemented yet')),
+              );
             },
             child: Container(
               width: double.infinity,
@@ -591,16 +793,19 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(color: Colors.grey[400]!),
                     ),
-                    child: const Text('Choose file', style: TextStyle(color: Colors.black)),
+                    child: const Text('Choose file',
+                        style: TextStyle(color: Colors.black)),
                   ),
                   const SizedBox(width: 12),
-                  const Text('No file chosen', style: TextStyle(color: Colors.grey)),
+                  const Text('No file chosen',
+                      style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ),

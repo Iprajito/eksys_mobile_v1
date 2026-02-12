@@ -93,7 +93,8 @@ class _AlamatPageState extends State<AlamatPage> {
 
   void _dataPelangganAlamat(String token, String id) async {
     masterController = MasterController();
-    PelangganAlamatModel? data = await masterController.getpelangganalamatbyuserid(token, id);
+    PelangganAlamatModel? data =
+        await masterController.getpelangganalamatbyuserid(token, id);
     if (mounted) {
       setState(() {
         _pelangganAlamatModel = data;
@@ -102,7 +103,7 @@ class _AlamatPageState extends State<AlamatPage> {
   }
 
   final _formKey = GlobalKey<FormState>();
-  int _currentPage = 0; 
+  int _currentPage = 0;
 
   // Data lists --> Start
   String? _selectedProvinsi;
@@ -110,16 +111,16 @@ class _AlamatPageState extends State<AlamatPage> {
   String? _selectedKecamatan;
   String? _selectedKelurahan;
   String? _selectedKodePos;
-  
+
   List<Provinsi> _provinsiList = [];
   List<String> _provinsiNames = [];
-  
+
   List<KabKota> _kabKotaList = [];
   List<String> _kabKotaNames = [];
 
   List<Kecamatan> _kecamatanList = [];
   List<String> _kecamatanNames = [];
-  
+
   List<Kelurahan> _kelurahanList = [];
   List<String> _kelurahanNames = [];
 
@@ -132,7 +133,10 @@ class _AlamatPageState extends State<AlamatPage> {
     if (result != null) {
       setState(() {
         _provinsiList = result.data;
-        _provinsiNames = _provinsiList.map((e) => e.provinsi ?? '').where((e) => e.isNotEmpty).toList();
+        _provinsiNames = _provinsiList
+            .map((e) => e.provinsi ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -147,9 +151,11 @@ class _AlamatPageState extends State<AlamatPage> {
       _selectedKodePos = "- Pilih -";
       _kodePosList.clear();
       setState(() {
-
         _kabKotaList = result.data;
-        _kabKotaNames = _kabKotaList.map((e) => e.kabkota ?? '').where((e) => e.isNotEmpty).toList();
+        _kabKotaNames = _kabKotaList
+            .map((e) => e.kabkota ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -165,7 +171,10 @@ class _AlamatPageState extends State<AlamatPage> {
       _kelurahanList.clear();
       setState(() {
         _kecamatanList = result.data;
-        _kecamatanNames = _kecamatanList.map((e) => e.kecamatan ?? '').where((e) => e.isNotEmpty).toList();
+        _kecamatanNames = _kecamatanList
+            .map((e) => e.kecamatan ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -177,17 +186,23 @@ class _AlamatPageState extends State<AlamatPage> {
     if (result != null) {
       setState(() {
         _kelurahanList = result.data;
-        _kelurahanNames = _kelurahanList.map((e) => e.kelurahan ?? '').where((e) => e.isNotEmpty).toList();
+        _kelurahanNames = _kelurahanList
+            .map((e) => e.kelurahan ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
-  
+
   Future<void> _fetchKodePos(String kelurahanId) async {
     final result = await _masterController.getKodePos(kelurahanId);
     if (result != null) {
       setState(() {
         _kodePosList = result.data;
-        _kodePosNames = _kodePosList.map((e) => e.kodePos ?? '').where((e) => e.isNotEmpty).toList();
+        _kodePosNames = _kodePosList
+            .map((e) => e.kodePos ?? '')
+            .where((e) => e.isNotEmpty)
+            .toList();
       });
     }
   }
@@ -210,107 +225,118 @@ class _AlamatPageState extends State<AlamatPage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        leading: _currentPage == 1
-            ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white,),
-                onPressed: _previousPage,
-              )
-            : IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: const Row(
-          children: [
-            Text("Alamat Saya",
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w700)),
-          ],
-        ),
-        backgroundColor: const Color.fromARGB(255, 0, 48, 47),
-      ),
-      backgroundColor: const Color(0xFFF5F5F5),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: _currentPage == 0 ? _buildPageOne() : _buildPageTwo()),
-      ),
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-        decoration: BoxDecoration(
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey[300]!,
-                blurRadius: 1.0,
-                spreadRadius: 2 //, offset: Offset(0, -3)
-                )
-          ],
-        ),
-        child: Container(
-          height: 65,
-          // width: (screenWidth/2),
-          // margin: const EdgeInsets.only(left: 0.0, right: 1.0),
-          padding: const EdgeInsets.all(8),
-          decoration: const BoxDecoration(
-            // border: Border.all(color: Colors.white),
-            color: Colors.white,
-            // borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              _currentPage == 0 ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: (screenWidth) - 16,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) => //DrawerExample(),
-                                    const TambahAlamat(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                              const begin = Offset(1.0, 0.0); // Slide from right
-                              const end = Offset.zero;
-                              const curve = Curves.ease;
-
-                              final tween =
-                                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-                              final offsetAnimation = animation.drive(tween);
-
-                              return SlideTransition(
-                                position: offsetAnimation,
-                                child: child,
-                              );
-                            },
-                        ));
-                      }, //_saveProduks
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(8),
-                        backgroundColor: const Color.fromARGB(255, 254, 185, 3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        'Tambah Alamat Baru',
-                        style: TextStyle(
-                            color: Colors.grey[800], fontSize: 16),
-                      ),
-                    ),
+        appBar: AppBar(
+          leading: _currentPage == 1
+              ? IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
                   ),
-                ],
-              ) : Container()
+                  onPressed: _previousPage,
+                )
+              : IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+          title: const Row(
+            children: [
+              Text("Alamat Saya",
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w700)),
             ],
           ),
-        ))
-    );
+          backgroundColor: const Color.fromARGB(255, 0, 48, 47),
+        ),
+        backgroundColor: const Color(0xFFF5F5F5),
+        body: SingleChildScrollView(
+          child: Form(
+              key: _formKey,
+              child: _currentPage == 0 ? _buildPageOne() : _buildPageTwo()),
+        ),
+        bottomNavigationBar: Container(
+            padding:
+                EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+            decoration: BoxDecoration(
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.grey[300]!,
+                    blurRadius: 1.0,
+                    spreadRadius: 2 //, offset: Offset(0, -3)
+                    )
+              ],
+            ),
+            child: Container(
+              height: 65,
+              // width: (screenWidth/2),
+              // margin: const EdgeInsets.only(left: 0.0, right: 1.0),
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                // border: Border.all(color: Colors.white),
+                color: Colors.white,
+                // borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  _currentPage == 0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: (screenWidth) - 16,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  await Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) => //DrawerExample(),
+                                            TambahAlamat(userId: userId),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          const begin = Offset(
+                                              1.0, 0.0); // Slide from right
+                                          const end = Offset.zero;
+                                          const curve = Curves.ease;
+
+                                          final tween = Tween(
+                                                  begin: begin, end: end)
+                                              .chain(CurveTween(curve: curve));
+                                          final offsetAnimation =
+                                              animation.drive(tween);
+
+                                          return SlideTransition(
+                                            position: offsetAnimation,
+                                            child: child,
+                                          );
+                                        },
+                                      ));
+                                  _dataUser();
+                                }, //_saveProduks
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(8),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 254, 185, 3),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Tambah Alamat Baru',
+                                  style: TextStyle(
+                                      color: Colors.grey[800], fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container()
+                ],
+              ),
+            )));
   }
 
   Widget _buildPageOne() {
@@ -339,7 +365,8 @@ class _AlamatPageState extends State<AlamatPage> {
 
   Widget _buildPageTwo() {
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom, left: 16, right: 16),
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).padding.bottom, left: 16, right: 16),
       child: Column(
         children: [
           _buildTextField('Alamat', _alamatController, maxLines: 3),
@@ -359,7 +386,8 @@ class _AlamatPageState extends State<AlamatPage> {
           Row(
             children: [
               Expanded(
-                child: _buildDropdown("Kota/Kabupaten", _kabKotaNames, _selectedKabKota, (val) {
+                child: _buildDropdown(
+                    "Kota/Kabupaten", _kabKotaNames, _selectedKabKota, (val) {
                   setState(() {
                     _selectedKabKota = val;
                     if (val != null) {
@@ -374,7 +402,8 @@ class _AlamatPageState extends State<AlamatPage> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: _buildDropdown("Kecamatan", _kecamatanNames, _selectedKecamatan, (val) {
+                child: _buildDropdown(
+                    "Kecamatan", _kecamatanNames, _selectedKecamatan, (val) {
                   setState(() {
                     _selectedKecamatan = val;
                     if (val != null) {
@@ -393,9 +422,10 @@ class _AlamatPageState extends State<AlamatPage> {
           Row(
             children: [
               Expanded(
-                child: _buildDropdown("Kelurahan", _kelurahanNames, _selectedKelurahan, (val) {
+                child: _buildDropdown(
+                    "Kelurahan", _kelurahanNames, _selectedKelurahan, (val) {
                   setState(() {
-                    _selectedKelurahan = val; 
+                    _selectedKelurahan = val;
                     if (val != null) {
                       int index = _kelurahanNames.indexOf(val);
                       if (index != -1 && index < _kelurahanList.length) {
@@ -409,7 +439,8 @@ class _AlamatPageState extends State<AlamatPage> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: _buildDropdown("Kode Pos", _kodePosNames, _selectedKodePos, (val) {
+                child: _buildDropdown(
+                    "Kode Pos", _kodePosNames, _selectedKodePos, (val) {
                   setState(() => _selectedKodePos = val);
                 }),
               ),
@@ -419,9 +450,9 @@ class _AlamatPageState extends State<AlamatPage> {
           const SizedBox(height: 20),
           const Divider(
             color: Colors.grey, // Warna garis
-            thickness: 1,       // Ketebalan garis
-            indent: 0,          // Jarak kosong di awal garis
-            endIndent: 0,       // Jarak kosong di akhir garis
+            thickness: 1, // Ketebalan garis
+            indent: 0, // Jarak kosong di awal garis
+            endIndent: 0, // Jarak kosong di akhir garis
           ),
           const SizedBox(height: 20),
           SizedBox(
@@ -464,7 +495,8 @@ class _AlamatPageState extends State<AlamatPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          Text(label,
+              style: const TextStyle(color: Colors.white70, fontSize: 14)),
           const SizedBox(height: 8),
           TextFormField(
             controller: controller,
@@ -475,7 +507,7 @@ class _AlamatPageState extends State<AlamatPage> {
               // Basic validation, allow empty if not critical, but typically fields are required
               // For now, let's say only Nama and Email are strictly required for demo or all are required?
               // Assuming all text fields are required for simplicity as per form logic usually
-              // But modifying to be lenient or strict based on requirement. 
+              // But modifying to be lenient or strict based on requirement.
               // Let's make it simple: required.
               if (value == null || value.isEmpty) {
                 return '$label tidak boleh kosong';
@@ -499,13 +531,15 @@ class _AlamatPageState extends State<AlamatPage> {
     );
   }
 
-  Widget _buildDropdown(String label, List<String> items, String? currentValue, Function(String?) onChanged) {
+  Widget _buildDropdown(String label, List<String> items, String? currentValue,
+      Function(String?) onChanged) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.black, fontSize: 14)),
+          Text(label,
+              style: const TextStyle(color: Colors.black, fontSize: 14)),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -515,16 +549,19 @@ class _AlamatPageState extends State<AlamatPage> {
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButtonFormField<String>(
-              initialValue: items.contains(currentValue) ? currentValue : null,
-              isExpanded: true,
-              hint: Text('- Pilih -', style: TextStyle(color: Colors.grey[400])),
-              icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
-              items: items.toSet().map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: TextStyle(color: Colors.grey[800])),
-                );
-              }).toList(),
+                initialValue:
+                    items.contains(currentValue) ? currentValue : null,
+                isExpanded: true,
+                hint: Text('- Pilih -',
+                    style: TextStyle(color: Colors.grey[400])),
+                icon: const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                items: items.toSet().map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child:
+                        Text(value, style: TextStyle(color: Colors.grey[800])),
+                  );
+                }).toList(),
                 onChanged: onChanged,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -544,93 +581,101 @@ class _AlamatPageState extends State<AlamatPage> {
     );
   }
 
-  Widget listAlamat(String id, String nama, String telepon, String alamat1, String alamat2, String prim_address) {
+  Widget listAlamat(String id, String nama, String telepon, String alamat1,
+      String alamat2, String prim_address) {
     return GestureDetector(
-      onTap: () {
-        
-      },
+      onTap: () {},
       child: Container(
         margin: const EdgeInsets.only(bottom: 16.0),
-        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(8.0)),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(8.0)),
         padding: const EdgeInsets.all(16),
-        child: BootstrapContainer(
-            fluid: true,
+        child: BootstrapContainer(fluid: true, children: [
+          BootstrapRow(
+            // height: 60,
             children: [
-              BootstrapRow(
-                // height: 60,
-                children: [
-                  BootstrapCol(
-                    sizes: 'col-12',
-                    child: Row(
-                      children: [
-                        Text(nama.toUpperCase(), 
-                        style: TextStyle( color: Colors.grey[800],fontWeight: FontWeight.w700,fontSize: 16)),
-                        const SizedBox(width: 5),
-                        Text(telepon,
-                          style: TextStyle(
+              BootstrapCol(
+                sizes: 'col-12',
+                child: Row(
+                  children: [
+                    Text(nama.toUpperCase(),
+                        style: TextStyle(
                             color: Colors.grey[800],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              BootstrapRow(
-                // height: 60,
-                children: [
-                  BootstrapCol(
-                    sizes: 'col-12',
-                    child: Text(alamat1,
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 16,
-                          ),
-                        ),
-                  ),
-                ],
-              ),
-              BootstrapRow(
-                // height: 60,
-                children: [
-                  BootstrapCol(
-                    sizes: 'col-12',
-                    child: Text(alamat2,
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 16,
-                          ),
-                        ),
-                  ),
-                ],
-              ),
-              BootstrapRow(
-                // height: 60,
-                children: [
-                  BootstrapCol(
-                    sizes: 'col-2',
-                    child: prim_address != 'Utama' ? const Text('') : Container(
-                      margin: const EdgeInsets.only(top: 8.0),
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all( color: Colors.orangeAccent.shade700, width: 1.0),
-                      ),
-                      child: Text('Utama', style: TextStyle(
-                          color: Colors.orangeAccent.shade700,
-                          fontSize: 16,
-                        ),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16)),
+                    const SizedBox(width: 5),
+                    Text(
+                      telepon,
+                      style: TextStyle(
+                        color: Colors.grey[800],
+                        fontSize: 14,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ]
+            ],
           ),
+          BootstrapRow(
+            // height: 60,
+            children: [
+              BootstrapCol(
+                sizes: 'col-12',
+                child: Text(
+                  alamat1,
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          BootstrapRow(
+            // height: 60,
+            children: [
+              BootstrapCol(
+                sizes: 'col-12',
+                child: Text(
+                  alamat2,
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          BootstrapRow(
+            // height: 60,
+            children: [
+              BootstrapCol(
+                sizes: 'col-2',
+                child: prim_address != 'Utama'
+                    ? const Text('')
+                    : Container(
+                        margin: const EdgeInsets.only(top: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 2.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4.0),
+                          border: Border.all(
+                              color: Colors.orangeAccent.shade700, width: 1.0),
+                        ),
+                        child: Text(
+                          'Utama',
+                          style: TextStyle(
+                            color: Colors.orangeAccent.shade700,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+              ),
+            ],
+          ),
+        ]),
       ),
     );
   }
 }
-
