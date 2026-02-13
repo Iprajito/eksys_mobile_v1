@@ -68,4 +68,37 @@ class UserController {
       return null;
     }
   }
+
+  Future<bool> updateAlamatPelanggan(Map<String, dynamic> data) async {
+    late final Options options =
+        Options(headers: {"Content-Type": "application/json"});
+    try {
+      final response = await dio.post('$baseUrl/master/updatealamatpelanggan',
+          options: options, data: jsonEncode(data));
+      if (response.data['status'] == 'success') {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("Error updating alamat: $e");
+      return false;
+    }
+  }
+
+  Future<bool> deleteAlamatPelanggan(String idEncrypt) async {
+    late final Options options =
+        Options(headers: {"Content-Type": "application/json"});
+    try {
+      final response = await dio.get(
+          '$baseUrl/master/deletealamatpelanggan/$idEncrypt',
+          options: options);
+      if (response.data['status'] == 'success') {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("Error deleting alamat: $e");
+      return false;
+    }
+  }
 }

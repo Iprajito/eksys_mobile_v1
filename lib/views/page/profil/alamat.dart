@@ -5,6 +5,7 @@ import 'package:Eksys/functions/global_functions.dart';
 import 'package:Eksys/models/master_model.dart';
 import 'package:Eksys/services/api_service.dart';
 import 'package:Eksys/services/localstorage_service.dart';
+import 'package:Eksys/views/page/profil/edit_alamat.dart';
 import 'package:Eksys/views/page/profil/tambah_alamat.dart';
 import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _AlamatPageState extends State<AlamatPage> {
   PelangganAlamatModel? _pelangganAlamatModel;
 
   String userId = "", userToken = "";
+  String _selectedAlamatId = "";
 
   bool isLoading = true;
 
@@ -350,6 +352,7 @@ class _AlamatPageState extends State<AlamatPage> {
               itemCount: _pelangganAlamatModel!.data.length,
               itemBuilder: (context, index) {
                 final item = _pelangganAlamatModel!.data[index];
+                print("item.id_encrypt: " + item.id_encrypt.toString());
                 return listAlamat(
                   item.id.toString(),
                   item.nama_penerima.toString(),
@@ -357,6 +360,7 @@ class _AlamatPageState extends State<AlamatPage> {
                   item.alamat_kirim1.toString(),
                   item.alamat_kirim2.toString(),
                   item.prim_address.toString(),
+                  item.id_encrypt.toString(),
                 );
               },
             ),
@@ -582,9 +586,18 @@ class _AlamatPageState extends State<AlamatPage> {
   }
 
   Widget listAlamat(String id, String nama, String telepon, String alamat1,
-      String alamat2, String prim_address) {
+      String alamat2, String prim_address, String id_encrypt) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () async {
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EditAlamatPage(
+                      idEncrypt: id_encrypt,
+                      userId: userId,
+                    )));
+        _dataUser();
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16.0),
         decoration: BoxDecoration(

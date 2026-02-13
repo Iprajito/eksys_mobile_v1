@@ -37,7 +37,8 @@ class PelangganAlamatModel {
   factory PelangganAlamatModel.fromJson(Map<String, dynamic> json) {
     var datas = json['data'] as List;
 
-    List<PelangganAlamat> data = datas.map((i) => PelangganAlamat.fromJsson(i)).toList();
+    List<PelangganAlamat> data =
+        datas.map((i) => PelangganAlamat.fromJsson(i)).toList();
     return PelangganAlamatModel(data: data);
   }
 
@@ -227,8 +228,7 @@ class Pelanggan {
       this.telepon_penerima,
       this.alamat_kirim1,
       this.alamat_kirim2,
-      this.anggota
-  });
+      this.anggota});
 
   factory Pelanggan.fromJsson(Map<String, dynamic> json) {
     return Pelanggan(
@@ -260,8 +260,7 @@ class Pelanggan {
         telepon_penerima: json['telepon_penerima'],
         alamat_kirim1: json['alamat_kirim1'],
         alamat_kirim2: json['alamat_kirim2'],
-        anggota: json['anggota']
-    );
+        anggota: json['anggota']);
   }
 
   @override
@@ -272,17 +271,31 @@ class Pelanggan {
 
 class PelangganAlamat {
   String? id;
+  String? id_encrypt;
   String? nama_penerima;
   String? telepon_penerima;
   String? alamat_kirim1;
   String? alamat_kirim2;
   String? prim_address;
 
-  PelangganAlamat({this.id, this.nama_penerima, this.telepon_penerima, this.alamat_kirim1, this.alamat_kirim2, this.prim_address});
+  PelangganAlamat(
+      {this.id,
+      this.nama_penerima,
+      this.telepon_penerima,
+      this.alamat_kirim1,
+      this.alamat_kirim2,
+      this.prim_address,
+      this.id_encrypt});
 
   factory PelangganAlamat.fromJsson(Map<String, dynamic> json) {
     return PelangganAlamat(
-        id: json['id'], nama_penerima: json['nama_penerima'], telepon_penerima: json['telepon_penerima'], alamat_kirim1: json['alamat_kirim1'], alamat_kirim2: json['alamat_kirim2'], prim_address: json['prim_address']);
+        id: json['id'],
+        nama_penerima: json['nama_penerima'],
+        telepon_penerima: json['telepon_penerima'],
+        alamat_kirim1: json['alamat_kirim1'],
+        alamat_kirim2: json['alamat_kirim2'],
+        prim_address: json['prim_address'],
+        id_encrypt: json['id_encrypt']);
   }
 }
 
@@ -317,17 +330,17 @@ class Produk {
   String? hrg_nonmember;
   String? image;
 
-  Produk(
-      {this.id,
-      this.namaproduk,
-      this.hargabeli,
-      this.satuan,
-      this.transaksi_fee,
-      this.hrg_distributor,
-      this.hrg_agen,
-      this.hrg_reseller,
-      this.hrg_nonmember,
-      this.image,
+  Produk({
+    this.id,
+    this.namaproduk,
+    this.hargabeli,
+    this.satuan,
+    this.transaksi_fee,
+    this.hrg_distributor,
+    this.hrg_agen,
+    this.hrg_reseller,
+    this.hrg_nonmember,
+    this.image,
   });
 
   factory Produk.fromJsson(Map<String, dynamic> json) {
@@ -385,17 +398,22 @@ class Subscribe {
   String? expr;
   String? unit;
 
-  Subscribe({this.id, this.id_encrypt, this.subscribe, this.harga, this.expr, this.unit});
+  Subscribe(
+      {this.id,
+      this.id_encrypt,
+      this.subscribe,
+      this.harga,
+      this.expr,
+      this.unit});
 
   factory Subscribe.fromJsson(Map<String, dynamic> json) {
     return Subscribe(
-      id: json['id'], 
-      id_encrypt: json['id_encrypt'],
-      subscribe: json['subscribe'], 
-      harga: json['harga'],
-      expr: json['expr'],
-      unit: json['unit']
-    );
+        id: json['id'],
+        id_encrypt: json['id_encrypt'],
+        subscribe: json['subscribe'],
+        harga: json['harga'],
+        expr: json['expr'],
+        unit: json['unit']);
   }
 }
 
@@ -425,6 +443,7 @@ class Provinsi {
     );
   }
 }
+
 class KabKotaModel {
   final List<KabKota> data;
 
@@ -453,6 +472,7 @@ class KabKota {
     );
   }
 }
+
 class KecamatanModel {
   final List<Kecamatan> data;
 
@@ -481,6 +501,7 @@ class Kecamatan {
     );
   }
 }
+
 class KelurahanModel {
   final List<Kelurahan> data;
 
@@ -509,6 +530,7 @@ class Kelurahan {
     );
   }
 }
+
 class KodePosModel {
   final List<KodePos> data;
 
@@ -530,6 +552,107 @@ class KodePos {
   factory KodePos.fromJson(Map<String, dynamic> json) {
     return KodePos(
       kodePos: json['kodepos'],
+    );
+  }
+}
+
+class PelangganAlamatDetailModel {
+  String status;
+  String message;
+  List<PelangganAlamatDetail> data;
+
+  PelangganAlamatDetailModel({
+    required this.status,
+    required this.message,
+    required this.data,
+  });
+
+  factory PelangganAlamatDetailModel.fromJson(Map<String, dynamic> json) {
+    var list = json['data'] as List? ?? [];
+    List<PelangganAlamatDetail> dataList =
+        list.map((i) => PelangganAlamatDetail.fromJson(i)).toList();
+
+    return PelangganAlamatDetailModel(
+      status: json['status'],
+      message: json['message'],
+      data: dataList,
+    );
+  }
+}
+
+class PelangganAlamatDetail {
+  String? id;
+  String? idEncrypt;
+  String? pelangganId;
+  String? alamatPengiriman;
+  String? alamatProvinsi;
+  String? alamatKota;
+  String? alamatKecamatan;
+  String? alamatKelurahan;
+  String? alamatRt;
+  String? alamatRw;
+  String? alamatNo;
+  String? alamatKodepos;
+  String? alamatDetailLain;
+  String? namaPenerima;
+  String? teleponPenerima;
+  String? isDefault;
+  String? createdAt;
+  String? createdUser;
+  String? updatedAt;
+  String? updatedUser;
+  String? deletedAt;
+  String? deletedUser;
+
+  PelangganAlamatDetail({
+    this.id,
+    this.idEncrypt,
+    this.pelangganId,
+    this.alamatPengiriman,
+    this.alamatProvinsi,
+    this.alamatKota,
+    this.alamatKecamatan,
+    this.alamatKelurahan,
+    this.alamatRt,
+    this.alamatRw,
+    this.alamatNo,
+    this.alamatKodepos,
+    this.alamatDetailLain,
+    this.namaPenerima,
+    this.teleponPenerima,
+    this.isDefault,
+    this.createdAt,
+    this.createdUser,
+    this.updatedAt,
+    this.updatedUser,
+    this.deletedAt,
+    this.deletedUser,
+  });
+
+  factory PelangganAlamatDetail.fromJson(Map<String, dynamic> json) {
+    return PelangganAlamatDetail(
+      id: json['id'],
+      idEncrypt: json['id_encrypt'],
+      pelangganId: json['pelanggan_id'],
+      alamatPengiriman: json['alamat_pengiriman'],
+      alamatProvinsi: json['alamat_provinsi'],
+      alamatKota: json['alamat_kota'],
+      alamatKecamatan: json['alamat_kecamatan'],
+      alamatKelurahan: json['alamat_kelurahan'],
+      alamatRt: json['alamat_rt'],
+      alamatRw: json['alamat_rw'],
+      alamatNo: json['alamat_no'],
+      alamatKodepos: json['alamat_kodepos'],
+      alamatDetailLain: json['alamat_detail_lain'],
+      namaPenerima: json['nama_penerima'],
+      teleponPenerima: json['telepon_penerima'],
+      isDefault: json['is_default'],
+      createdAt: json['created_at'],
+      createdUser: json['created_user'],
+      updatedAt: json['updated_at'],
+      updatedUser: json['updated_user'],
+      deletedAt: json['deleted_at'],
+      deletedUser: json['deleted_user'],
     );
   }
 }

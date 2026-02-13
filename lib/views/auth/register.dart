@@ -28,6 +28,14 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _teleponController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
+
+  final TextEditingController _detailAlamatController = TextEditingController();
+  final TextEditingController _namaPenerimaController = TextEditingController();
+  final TextEditingController _noTelpController = TextEditingController();
+  final TextEditingController _noRumahController = TextEditingController();
+  final TextEditingController _rtController = TextEditingController();
+  final TextEditingController _rwController = TextEditingController();
+
   final TextEditingController _kodeReferralController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -448,6 +456,27 @@ class _RegisterPageState extends State<RegisterPage> {
                   });
                 }),
               ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildTextField("RT", _rtController, maxLines: 1),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _buildTextField("RW", _rwController, maxLines: 1),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: _buildTextField('No Rumah / Gedung', _noRumahController,
+                    maxLines: 1),
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: _buildDropdown(
@@ -458,6 +487,14 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(width: 10),
             ],
           ),
+          const SizedBox(height: 10),
+          _buildTextField('Detail Alamat Lainnya', _detailAlamatController,
+              maxLines: 3),
+          const SizedBox(height: 10),
+          _buildTextField('Nama Penerima', _namaPenerimaController,
+              maxLines: 1),
+          const SizedBox(height: 10),
+          _buildTextField('Telepon Penerima', _noTelpController, maxLines: 1),
           const SizedBox(height: 20),
           const Divider(
             color: Colors.grey, // Warna garis
@@ -533,9 +570,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     "alamat_kota": kotaId ?? "",
                     "alamat_kecamatan": kecamatanId ?? "",
                     "alamat_kelurahan": kelurahanId ?? "",
-                    "alamat_rt": "1",
-                    "alamat_rw": "1",
-                    "alamat_no": "1",
+                    "alamat_rt": _rtController.text,
+                    "alamat_rw": _rwController.text,
+                    "alamat_no": _noRumahController.text,
                     "alamat_kodepos": _selectedKodePos ?? "",
                     "alamat_detail_lain": "",
                     "password": _passwordController.text

@@ -59,7 +59,7 @@ class _DashboardPusatPageState extends State<DashboardPusatPage> {
   void initState() {
     super.initState();
     _checkToken();
-    _checkButtonEnabled();
+    // _checkButtonEnabled();
   }
 
   @override
@@ -83,7 +83,9 @@ class _DashboardPusatPageState extends State<DashboardPusatPage> {
   Future<void> _checkButtonEnabled() async {
     final pb = PocketBase('https://pb.pemapi.com');
 
-    final record = await pb.collection('config').getFirstListItem('config_name="dashboardPusatButton"');
+    final record = await pb
+        .collection('config')
+        .getFirstListItem('config_name="dashboardPusatButton"');
 
     final isEnabled = record.getBoolValue('active');
 
@@ -339,9 +341,11 @@ class _DashboardPusatPageState extends State<DashboardPusatPage> {
                                 width: 200,
                                 child: ListMenuShimmer(
                                     total: 1, circular: 4, height: 16))
-                        : Text(_pelangganModel!.data[0].kode_pelanggan.toString(),
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 14)),
+                            : Text(
+                                _pelangganModel!.data[0].kode_pelanggan
+                                    .toString(),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 14)),
                       ],
                     ),
                   ],
@@ -455,41 +459,40 @@ class _DashboardPusatPageState extends State<DashboardPusatPage> {
                               //             fontWeight: FontWeight.bold,
                               //             fontSize: 17)),
                               const SizedBox(height: 20),
-                               Align(
-                                alignment: Alignment.centerRight,
-                                child: 
-                                    _pelangganModel == null
-                                    ?  const ListMenuShimmer(
-                                        total: 1, circular: 4, height: 32)
-                                    : Text('Rp ${_pelangganModel!.data[0].saldo}',
-                                            style: const TextStyle(
-                                                color: Colors.amber,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 27)
-                                    )
-                                    //     ? Container()
-                                        // Container(
-                                        //     decoration: BoxDecoration(
-                                        //       color: const Color(0xFFFFB902),
-                                        //       border: Border.all(
-                                        //           color:
-                                        //               const Color(0xFFFFB902)),
-                                        //       borderRadius:
-                                        //           BorderRadius.circular(15),
-                                        //     ),
-                                        //     padding: const EdgeInsets.only(
-                                        //         left: 16,
-                                        //         right: 16,
-                                        //         top: 8,
-                                        //         bottom: 8),
-                                        //     child: const Text('Daftar Sekarang',
-                                        //         style: TextStyle(
-                                        //             fontWeight:
-                                        //                 FontWeight.bold)),
-                                        //   )
-                                        // : 
-                                        // ? ),
-                              )
+                              Align(
+                                  alignment: Alignment.centerRight,
+                                  child: _pelangganModel == null
+                                      ? const ListMenuShimmer(
+                                          total: 1, circular: 4, height: 32)
+                                      : Text(
+                                          'Rp ${_pelangganModel!.data[0].saldo}',
+                                          style: const TextStyle(
+                                              color: Colors.amber,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 27))
+                                  //     ? Container()
+                                  // Container(
+                                  //     decoration: BoxDecoration(
+                                  //       color: const Color(0xFFFFB902),
+                                  //       border: Border.all(
+                                  //           color:
+                                  //               const Color(0xFFFFB902)),
+                                  //       borderRadius:
+                                  //           BorderRadius.circular(15),
+                                  //     ),
+                                  //     padding: const EdgeInsets.only(
+                                  //         left: 16,
+                                  //         right: 16,
+                                  //         top: 8,
+                                  //         bottom: 8),
+                                  //     child: const Text('Daftar Sekarang',
+                                  //         style: TextStyle(
+                                  //             fontWeight:
+                                  //                 FontWeight.bold)),
+                                  //   )
+                                  // :
+                                  // ? ),
+                                  )
                             ],
                           ),
                         ),
@@ -499,21 +502,28 @@ class _DashboardPusatPageState extends State<DashboardPusatPage> {
                             children: [
                               Flexible(
                                 child: GestureDetector(
-                                  onTap: () => !buttonEnabled ? _showComingSoonDialog(context) : null,
+                                  onTap: () => !buttonEnabled
+                                      ? _showComingSoonDialog(context)
+                                      : null,
                                   child: Container(
                                     padding: const EdgeInsets.only(
-                                        top: 10, left: 10, bottom: 10, right: 10),
+                                        top: 10,
+                                        left: 10,
+                                        bottom: 10,
+                                        right: 10),
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(20)),
                                       color: Colors.grey.shade200,
-                                      border: Border.all(color: Colors.grey.shade200),
+                                      border: Border.all(
+                                          color: Colors.grey.shade200),
                                     ),
                                     // alignment: Alignment.bottomCenter,
                                     height: 60,
                                     width: double.infinity,
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         // Icon(Icons.account_balance_wallet,color: Color(0xFFFFB902), size: 40),
                                         Container(
@@ -548,21 +558,28 @@ class _DashboardPusatPageState extends State<DashboardPusatPage> {
                               const SizedBox(width: 10),
                               Flexible(
                                 child: GestureDetector(
-                                  onTap: () => !buttonEnabled ? _showComingSoonDialog(context) : null,
+                                  onTap: () => !buttonEnabled
+                                      ? _showComingSoonDialog(context)
+                                      : null,
                                   child: Container(
                                     padding: const EdgeInsets.only(
-                                        top: 10, left: 10, bottom: 10, right: 10),
+                                        top: 10,
+                                        left: 10,
+                                        bottom: 10,
+                                        right: 10),
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.all(
                                           Radius.circular(20)),
                                       color: Colors.grey.shade200,
-                                      border: Border.all(color: Colors.grey.shade200),
+                                      border: Border.all(
+                                          color: Colors.grey.shade200),
                                     ),
                                     // alignment: Alignment.bottomCenter,
                                     height: 60,
                                     width: double.infinity,
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         // Icon(Icons.account_balance_wallet,color: Color(0xFFFFB902), size: 40),
                                         Container(

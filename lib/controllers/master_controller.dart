@@ -309,6 +309,25 @@ class MasterController {
     }
   }
 
+  Future<PelangganAlamatDetailModel?> getPelangganAlamatByEncryptId(
+      String idEncrypt) async {
+    late final Options options =
+        Options(headers: {"Content-Type": "application/json"});
+    try {
+      final response = await dio.get(
+          '$baseUrl/master/getpelangganalamatbyencryptid/$idEncrypt',
+          options: options);
+      if (response.data['status'] == 'success') {
+        final data = json.decode(response.toString());
+        return PelangganAlamatDetailModel.fromJson(data);
+      }
+      return null;
+    } catch (e) {
+      print("Error getting address details: $e");
+      return null;
+    }
+  }
+
   Future<Map<String, dynamic>?> checkRegister(
       String kodeReferral, String email, String telepon) async {
     late final Options options =
