@@ -9,7 +9,7 @@ import 'package:Eksys/models/master_model.dart';
 import 'package:Eksys/models/pembelian_model.dart';
 import 'package:Eksys/services/api_service.dart';
 import 'package:Eksys/services/localstorage_service.dart';
-import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaran.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaranVA.dart';
 import 'package:Eksys/views/page/purchaseorder/penerimaan/tambah.dart';
 import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
@@ -125,13 +125,13 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
     super.dispose();
   }
 
-  Future<void> navigateToPembayaranPage() async {
+  Future<void> navigateToPembayaranVAPage() async {
     final result = await Navigator.pushReplacement(
         context,
         PageRouteBuilder(
           pageBuilder:
               (context, animation, secondaryAnimation) => //DrawerExample(),
-                  PembelianPembayaranPage(token: widget.token, userid: widget.userid, idencrypt: widget.idencrypt),
+                  PembelianPembayaranVAPage(token: widget.token, userid: widget.userid, idencrypt: widget.idencrypt),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0); // Slide from right
             const end = Offset.zero;
@@ -190,42 +190,86 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
   }
 
   void _pembayaran() async{
-    showLoadingDialog(context: context);
-    var response = await purchaseorderController.savePembelianVA(widget.token.toString(), widget.userid.toString(), widget.idencrypt.toString(),'Beli');
-    if (response) {
-      hideLoadingDialog(context);
-      // Navigator.pop(context, 'refresh');
-      Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder:
-              (context, animation, secondaryAnimation) => //DrawerExample(),
-                  PembelianPembayaranPage(token: widget.token.toString(), userid: widget.userid.toString(), idencrypt: widget.idencrypt.toString()),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0); // Slide from right
-            const end = Offset.zero;
-            const curve = Curves.ease;
+    String metode_bayar = _pembelianModel?.data[0].metode_bayar ?? "";
+    if (metode_bayar == 'Saldo') {
+      
+    } else if (metode_bayar == 'Transfer Bank') {
+      showLoadingDialog(context: context);
+      var response = await purchaseorderController.savePembelianTF(widget.token.toString(), widget.userid.toString(), widget.idencrypt.toString());
+      print(response);
+      if (response) {
+        hideLoadingDialog(context);
+        // Navigator.pop(context, 'refresh');
+        // Navigator.pushReplacement(
+        //   context,
+        //   PageRouteBuilder(
+        //     pageBuilder:
+        //         (context, animation, secondaryAnimation) => //DrawerExample(),
+        //             PembelianPembayaranPage(token: widget.token.toString(), userid: widget.userid.toString(), idencrypt: widget.idencrypt.toString()),
+        //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        //       const begin = Offset(1.0, 0.0); // Slide from right
+        //       const end = Offset.zero;
+        //       const curve = Curves.ease;
 
-            final tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            final offsetAnimation = animation.drive(tween);
+        //       final tween =
+        //           Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        //       final offsetAnimation = animation.drive(tween);
 
-            return SlideTransition(
-              position: offsetAnimation,
-              child: child,
-            );
-          },
-        ));
+        //       return SlideTransition(
+        //         position: offsetAnimation,
+        //         child: child,
+        //       );
+        //     },
+        //   ));
+      } else {
+        hideLoadingDialog(context);
+        Fluttertoast.showToast(
+            msg: "Gagal melakukan pembayaran",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            // backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     } else {
-      hideLoadingDialog(context);
-      Fluttertoast.showToast(
-          msg: "Gagal melakukan pembayaran",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          // backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      showLoadingDialog(context: context);
+      var response = await purchaseorderController.savePembelianVA(widget.token.toString(), widget.userid.toString(), widget.idencrypt.toString(),'Beli');
+      if (response) {
+        hideLoadingDialog(context);
+        // Navigator.pop(context, 'refresh');
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder:
+                (context, animation, secondaryAnimation) => //DrawerExample(),
+                    PembelianPembayaranVAPage(token: widget.token.toString(), userid: widget.userid.toString(), idencrypt: widget.idencrypt.toString()),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = Offset(1.0, 0.0); // Slide from right
+              const end = Offset.zero;
+              const curve = Curves.ease;
+
+              final tween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              final offsetAnimation = animation.drive(tween);
+
+              return SlideTransition(
+                position: offsetAnimation,
+                child: child,
+              );
+            },
+          ));
+      } else {
+        hideLoadingDialog(context);
+        Fluttertoast.showToast(
+            msg: "Gagal melakukan pembayaran",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            // backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
     }
   }
 
@@ -244,7 +288,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     String formatDate(String dateStr) {
-      if (dateStr == '' || dateStr == '0000-00-00') {
+      if (dateStr == '' || dateStr == '0000-00-00' || dateStr == 'null') {
         return '-';
       } else {
         DateTime date = DateTime.parse(dateStr);
@@ -395,7 +439,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                                     ),
                                   ],
                                 ),
-                                Divider(color: Colors.grey[200]),
+                                // Divider(color: Colors.grey[200]),
                                 // ANIMASI
                                 ExpandableSection(
                                   expand: showAll,
@@ -422,26 +466,26 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                                           ),
                                         ],
                                       ),
-                                      BootstrapRow(
-                                        height: 25,
-                                        children: [
-                                          BootstrapCol(
-                                            sizes: 'col-6',
-                                            child: Text("Tgl. Pembayaran DP",
-                                                style: TextStyle(
-                                                    color: Colors.grey[800],fontSize: 16)),
-                                          ),
-                                          BootstrapCol(
-                                            sizes: 'col-6',
-                                            child: Align(
-                                              alignment: Alignment.bottomRight,
-                                              child: _pembelianModel == null
-                                              ? const ListMenuShimmer(total: 1, circular: 4, height: 16)
-                                              : Text(formatDate(_pembelianModel!.data[0].tgl_dp.toString()), style: TextStyle(color: Colors.grey[800],fontSize: 16)),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      // BootstrapRow(
+                                      //   height: 25,
+                                      //   children: [
+                                      //     BootstrapCol(
+                                      //       sizes: 'col-6',
+                                      //       child: Text("Tgl. Pembayaran DP",
+                                      //           style: TextStyle(
+                                      //               color: Colors.grey[800],fontSize: 16)),
+                                      //     ),
+                                      //     BootstrapCol(
+                                      //       sizes: 'col-6',
+                                      //       child: Align(
+                                      //         alignment: Alignment.bottomRight,
+                                      //         child: _pembelianModel == null
+                                      //         ? const ListMenuShimmer(total: 1, circular: 4, height: 16)
+                                      //         : Text(formatDate(_pembelianModel!.data[0].tgl_dp.toString()), style: TextStyle(color: Colors.grey[800],fontSize: 16)),
+                                      //       ),
+                                      //     ),
+                                      //   ],
+                                      // ),
                                       // BootstrapRow(
                                       //   height: 25,
                                       //   children: [
@@ -645,8 +689,9 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    _pembelianModel == null ? const Text('Total 0 Produk, 0 Karton')
-                                    : Text('Total ${CurrencyFormat.convertNumber((int.parse(_pembelianModel!.data[0].item.toString())),0)} Produk, ${CurrencyFormat.convertNumber((int.parse(_pembelianModel!.data[0].qty.toString())),0)} Karton'),
+                                    _pembelianModel == null ? const Text('Total 0 Produk')
+                                    : Text('Total ${CurrencyFormat.convertNumber((int.parse(_pembelianModel!.data[0].item.toString())),0)} Produk',
+                                        style: TextStyle(fontSize: 16)),
                                     
                                     Row(
                                       mainAxisAlignment:
@@ -690,7 +735,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                         BootstrapCol(
                           sizes: 'col-12',
                           child: const Text(
-                            'Keterangan Pembelian',
+                            'Pesan untuk Penjual',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
@@ -698,7 +743,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                       ],
                     ),
                     BootstrapRow(
-                      height: 40,
+                      // height: 40,
                       children: [
                         BootstrapCol(
                           sizes: 'col-12',
@@ -706,7 +751,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
                             ? const ListMenuShimmer(total: 1, circular: 4, height: 16)
                             : Text(
                               _pembelianModel!.data[0].keterangan.toString(),
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                              style: const TextStyle(fontSize: 15),
                             ),
                         ),
                       ],
@@ -792,7 +837,7 @@ class _PembelianDetailPageState extends State<PembelianDetailPage> {
 
       case "Tunggu Pembayaran":
         actionButton = ElevatedButton(
-          onPressed: () => navigateToPembayaranPage(),
+          onPressed: () => navigateToPembayaranVAPage(),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.all(8),
             backgroundColor:

@@ -170,37 +170,37 @@ class PurchaseorderController {
       return null;
     }
   }
-
   Future<String> savePembelian(
       String token,
       String userid,
-      String nopo,
-      String supplier_id,
+      String metodeBayar,
+      String supplierTipe,
+      String supplierId,
+      String customerAlamatId,
       String tanggal,
       String keterangan,
       String subtotal,
       String transaksifee,
       String grandtotal,
-      String jumlahdp,
-      String metodetipe,
-      String channel) async {
+      String jumlahdp
+    ) async {
     late final Options _options = Options(headers: {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token",
     });
-
+    
     final body = jsonEncode({
       'userid': userid,
-      'nopo': nopo,
-      'supplier_id': supplier_id,
+      'metode_bayar': metodeBayar,
+      'supplier_tipe': supplierTipe,
+      'supplier_id': supplierId,
+      'pelangganalamat_id': customerAlamatId,
       'tanggal': tanggal,
       'keterangan': keterangan,
       'subtotal': subtotal,
       'transaksifee': transaksifee,
       'grandtotal': grandtotal,
-      'jumlahdp': jumlahdp,
-      'metode_bayar': metodetipe,
-      'channel': channel
+      'jumlahdp': jumlahdp
     });
     print("Body : $body");
     try {
@@ -323,6 +323,81 @@ class PurchaseorderController {
     }
   }
 
+  Future<bool> savePembelianTF(String token,String userid,String id_encrypt) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+
+    final body = jsonEncode({'userid': userid,'id_encrypt': id_encrypt});
+    print("Body : $body");
+    try {
+      final response = await dio.post('$baseUrl/purchaseorder/savepembeliantf',options: _options, data: body);
+      if (response.data['status'] == 'success') {
+        // print(inspect(response.data['message']));
+        print('Form saved successfully');
+        return true;
+      } else {
+        print('Failed to save form: $response');
+        return false;
+      }
+    } catch (error) {
+      print('Error: $error');
+      return false;
+    }
+  }
+
+  Future<dynamic> uploadImage(String token, FormData image) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+
+    // final body = jsonEncode({'id': id, 'metodeId': metodeId, 'image': image});
+    try {
+      final response = await dio.post('$baseUrl/purchaseorder/uploadpenjualan',
+          options: _options, data: image);
+
+      if (response.statusCode == 200) {
+        // print(inspect(response.data));
+        print('Form saved successfully');
+        return response.data['path'];
+      } else {
+        print('Failed to save form: $response');
+        return 'error';
+      }
+    } catch (error) {
+      print('Error: $error');
+      return 'error';
+    }
+  }
+
+  Future<bool> deleteImageUpload(String token, String id) async {
+    late final Options _options = Options(headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    });
+
+    final body = jsonEncode({'id': id});
+    print(body);
+    try {
+      final response = await dio.post('$baseUrl/purchaseorder/deleteimageupload',
+          options: _options, data: body);
+
+      if (response.data['status'] == 'success') {
+        // print(inspect(response.data['message']));
+        print('Form saved successfully');
+        return true;
+      } else {
+        print('Failed to save form: $response');
+        return true;
+      }
+    } catch (error) {
+      print('Error: $error');
+      return true;
+    }
+  }
+  
   Future<bool> savePembelianVA(String token,String userid,String id_encrypt, String tipe) async {
     late final Options _options = Options(headers: {
       "Content-Type": "application/json",

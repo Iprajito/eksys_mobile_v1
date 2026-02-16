@@ -11,7 +11,7 @@ import 'package:Eksys/models/pembelian_model.dart';
 import 'package:Eksys/models/penjualan_model.dart';
 import 'package:Eksys/services/api_service.dart';
 import 'package:Eksys/services/localstorage_service.dart';
-import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaran.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaranVA.dart';
 import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bootstrap/flutter_bootstrap.dart';
@@ -130,7 +130,7 @@ class _PenjualanDetailPageState extends State<PenjualanDetailPage> {
         PageRouteBuilder(
           pageBuilder:
               (context, animation, secondaryAnimation) => //DrawerExample(),
-                  PembelianPembayaranPage(token: widget.token, userid: widget.userid, idencrypt: widget.idencrypt),
+                  PembelianPembayaranVAPage(token: widget.token, userid: widget.userid, idencrypt: widget.idencrypt),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0); // Slide from right
             const end = Offset.zero;

@@ -6,7 +6,7 @@ import 'package:Eksys/models/pembelian_model.dart';
 import 'package:Eksys/services/api_service.dart';
 import 'package:Eksys/services/localstorage_service.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
-import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaran.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaranVA.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/tambah.dart';
 import 'package:Eksys/views/page/purchaseorder/penerimaan/tambah.dart';
 import 'package:Eksys/views/page/purchaseorder/pengiriman/detail.dart';

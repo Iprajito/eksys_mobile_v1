@@ -113,24 +113,30 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
   late SetorSaldoController setorSaldoController;
 
   final _formKey = GlobalKey<FormState>();
-  String nopo = '';
   String saldo = '0';
   String tanggal = '';
   String keterangan = '';
 
-  String? supplier_id;
-  String? supplier_nama;
-  String? supplier_tipeppn;
-  String? supplier_syaratbayar;
-  String? supplier_telepon;
-  String? supplier_alamat;
+  String? supplierId;
+  String? supplierNama;
+  String? supplierTipePpn;
+  String? supplierSyaratBayar;
+  String? supplierTelepon;
+  String? supplierAlamat;
+  String? supplierTipe;
+
+  String? customerAlamatId;
+  String? customerNamaPenerima;
+  String? customerTeleponPenerima;
+  String? customerAlamatKirim1;
+  String? customerAlamatKirim2;
 
   int? _selectedMetodeBayar = 2;
 
-  String? metode_id;
-  String? metode_channel;
-  String? metode_institusi = "BCA Syariah";
-  String? metode_tipe = "virtual_account";
+  String? metodeId;
+  String? metodeChanel;
+  String? metodeInstitusi = "BCA Syariah";
+  String? metodeTipe = "virtual_account";
 
   @override
   void initState() {
@@ -181,12 +187,13 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
     if (mounted) {
       setState(() {
         _supplierModel = data;
-        supplier_id = _supplierModel!.data[0].id.toString();
-        supplier_nama = _supplierModel!.data[0].supplier.toString();
-        supplier_tipeppn = _supplierModel!.data[0].tipe_ppn.toString();
-        supplier_syaratbayar = _supplierModel!.data[0].syaratbayar.toString();
-        supplier_telepon = _supplierModel!.data[0].telepon.toString();
-        supplier_alamat = _supplierModel!.data[0].alamat.toString();
+        supplierId = _supplierModel!.data[0].id.toString();
+        supplierNama = _supplierModel!.data[0].supplier.toString();
+        supplierTipePpn = _supplierModel!.data[0].tipe_ppn.toString();
+        supplierSyaratBayar = _supplierModel!.data[0].syaratbayar.toString();
+        supplierTelepon = _supplierModel!.data[0].telepon.toString();
+        supplierAlamat = _supplierModel!.data[0].alamat.toString();
+        supplierTipe = _supplierModel!.data[0].tipe_supplier.toString();
       });
     }
   }
@@ -197,6 +204,12 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
     if (mounted) {
       setState(() {
         _pelangganModel = dataPelanggan;
+        customerAlamatId = _pelangganModel!.data[0].id.toString();
+        customerNamaPenerima = _pelangganModel!.data[0].nama_penerima.toString();
+        customerTeleponPenerima = _pelangganModel!.data[0].telepon_penerima.toString();
+        customerAlamatKirim1 = _pelangganModel!.data[0].alamat_kirim1.toString();
+        customerAlamatKirim2 = _pelangganModel!.data[0].alamat_kirim2.toString();
+        saldo = _pelangganModel!.data[0].saldo .toString();
       });
     }
   }
@@ -250,7 +263,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       tanggal = DateFormat('yyyy-MM-dd').format(_selectedDate);
-      if (supplier_id == null) {
+      if (supplierId == null) {
         shoMyBadDialog(
             context: context,
             title: "Pembelian",
@@ -264,70 +277,57 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
       } else {
         print("Metode Bayar: $_selectedMetodeBayar");
         // ignore: unrelated_type_equality_checks
-        if (_selectedMetodeBayar == 1) {
-          if (saldo ==  '0' || double.parse(saldo) < double.parse(smGrandtotal.toString())) {
-            shoMyBadDialog(
-                context: context,
-                title: "Pembelian",
-                message: "Saldo tidak mencukupi!");
-          } else {
-            String grandtotal = smGrandtotal.toString();
-            String jumlah_dp = (isSwitched == true) ? smNominalDp.toString() : '0';
-            print("Januck $nopo - $supplier_id - $tanggal - $keterangan - $smSubtotal - $smBiayaLayanan - $grandtotal - $jumlah_dp - $saldo");
-          }
+        String grandtotal = smGrandtotal.toString();
+        String jumlah_dp = (isSwitched == true) ? smNominalDp.toString() : '0';
+        String metodeBayar = (_selectedMetodeBayar == 1) ? 'Saldo' : 'Transfer Bank';
+        
+        if (metodeBayar == 'Saldo' && (saldo ==  '0' || double.parse(saldo) < double.parse(smGrandtotal.toString()))) {
+          shoMyBadDialog(
+              context: context,
+              title: "Pembelian",
+              message: "Saldo tidak mencukupi!");
         } else {
-          // if (metode_id == null) {
-          //   shoMyBadDialog(
-          //       context: context,
-          //       title: "Pembelian",
-          //       message: "Metode Pembayaran tidak boleh kosong!");
-          // } else {
-            // String grandtotal = (isSwitched == true) ? smGrandtotalNonDp.toString() : smGrandtotal.toString();
-            String grandtotal = smGrandtotal.toString();
-            String jumlah_dp = (isSwitched == true) ? smNominalDp.toString() : '0';
-            print("$nopo - $supplier_id - $tanggal - $keterangan - $smSubtotal - $smBiayaLayanan - $grandtotal - $jumlah_dp - $saldo");
-            // showLoadingDialog(context: context);
-            // purchaseorderController = PurchaseorderController();
-            // var response = await purchaseorderController.savePembelian(
-            //   widget.token.toString(),
-            //   widget.userid.toString(),
-            //   nopo,
-            //   supplier_id!,
-            //   tanggal,
-            //   keterangan,
-            //   smSubtotal.toString(),
-            //   smBiayaLayanan.toString(),
-            //   grandtotal,
-            //   jumlah_dp,
-            //   metode_tipe.toString(),
-            //   metode_channel.toString()
-            // );
-            // if (response.toString() != '0') {
-            //   hideLoadingDialog(context);
-            //   // Navigator.pop(context, 'refresh');
-            //   Navigator.pushReplacement(
-            //     context,
-            //     PageRouteBuilder(
-            //       pageBuilder:
-            //           (context, animation, secondaryAnimation) => //DrawerExample(),
-            //               PembelianDetailPage(token: widget.token.toString(), userid: widget.userid.toString(), idencrypt: response.toString()),
-            //       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            //         const begin = Offset(1.0, 0.0); // Slide from right
-            //         const end = Offset.zero;
-            //         const curve = Curves.ease;
+          // print("$metodeBayar - $supplierTipe - $supplierId - $customerAlamatId - $tanggal - $keterangan - $smSubtotal - $smBiayaLayanan - $grandtotal - $jumlah_dp");
+          showLoadingDialog(context: context);
+          purchaseorderController = PurchaseorderController();
+          var response = await purchaseorderController.savePembelian(
+            widget.token.toString(),
+            widget.userid.toString(),
+            metodeBayar.toString(),
+            supplierTipe!,
+            supplierId!,
+            customerAlamatId!,
+            tanggal,
+            keterangan,
+            smSubtotal.toString(),
+            smBiayaLayanan.toString(),
+            grandtotal,
+            jumlah_dp
+          );
+          if (response.toString() != '0') {
+            hideLoadingDialog(context);
+            // Navigator.pop(context, 'refresh');
+            Navigator.pushReplacement(context,
+              PageRouteBuilder(
+                pageBuilder:
+                    (context, animation, secondaryAnimation) => //DrawerExample(),
+                        PembelianDetailPage(token: widget.token.toString(), userid: widget.userid.toString(), idencrypt: response.toString()),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(1.0, 0.0); // Slide from right
+                  const end = Offset.zero;
+                  const curve = Curves.ease;
 
-            //         final tween =
-            //             Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            //         final offsetAnimation = animation.drive(tween);
+                  final tween =
+                      Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                  final offsetAnimation = animation.drive(tween);
 
-            //         return SlideTransition(
-            //           position: offsetAnimation,
-            //           child: child,
-            //         );
-            //       },
-            //     ));
-            // }
-          // }
+                  return SlideTransition(
+                    position: offsetAnimation,
+                    child: child,
+                  );
+                },
+              ));
+          }
         }
       }
     }
@@ -383,26 +383,24 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
     if (result != null) {
       setState(() {
         // misal tampilkan nama supplier yang dipilih
-        supplier_id = result["id"];
-        supplier_nama = result["nama"];
-        supplier_tipeppn = result["tipeppn"];
-        supplier_syaratbayar = result["id_syaratbayar"];
-        supplier_telepon = result["telepon"];
-        supplier_alamat = result["alamat"];
+        supplierId = result["id"];
+        supplierNama = result["nama"];
+        supplierTipePpn = result["tipeppn"];
+        supplierSyaratBayar = result["id_syaratbayar"];
+        supplierTelepon = result["telepon"];
+        supplierAlamat = result["alamat"];
+        supplierTipe = result["tipe_supplier"];
       });
     }
   }
 
-  Future<void> navigateToMetodeBayarPage() async {
+  Future<void> navigateToPenerimaPage() async {
     final result = await Navigator.push(
         context,
         PageRouteBuilder(
           pageBuilder:
               (context, animation, secondaryAnimation) => //DrawerExample(),
-                  MetodeBayarPage(
-                      token: widget.token,
-                      userid: widget.userid,
-                      metodeId: metode_id),
+                  PenerimaPage(token: widget.token, userid: widget.userid),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0); // Slide from right
             const end = Offset.zero;
@@ -423,10 +421,49 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
     if (result != null) {
       setState(() {
         // misal tampilkan nama supplier yang dipilih
-        metode_id = result["metode_id"];
-        metode_channel = result["metode_channel"];
-        metode_institusi = result["metode_institusi"];
-        metode_tipe = result["metode_tipe"];
+        customerAlamatId = result["id"];
+        customerNamaPenerima = result["nama_penerima"];
+        customerTeleponPenerima = result["telepon_penerima"];
+        customerAlamatKirim1 = result["alamat1"];
+        customerAlamatKirim2 = result["alamat2"];
+      });
+    }
+  }
+
+  Future<void> navigateToMetodeBayarPage() async {
+    final result = await Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder:
+              (context, animation, secondaryAnimation) => //DrawerExample(),
+                  MetodeBayarPage(
+                      token: widget.token,
+                      userid: widget.userid,
+                      metodeId: metodeId),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0); // Slide from right
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            final tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            final offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ));
+
+    // Run this code after the child page is closed
+    if (result != null) {
+      setState(() {
+        // misal tampilkan nama supplier yang dipilih
+        metodeId = result["metodeId"];
+        metodeChanel = result["metodeChanel"];
+        metodeInstitusi = result["metodeInstitusi"];
+        metodeTipe = result["metodeTipe"];
       });
     }
   }
@@ -525,20 +562,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
               }
             },
           ),
-          // actions: [
-          //   // 🔹 kanan
-          //   IconButton(
-          //     icon: const Icon(Icons.search, color: Colors.white),
-          //     onPressed: () {},
-          //   ),
-          //   IconButton(
-          //     icon: const Icon(Icons.menu_book, color: Colors.white),
-          //     onPressed: () => navigateToProdukPage(),
-          //   ),
-          // ],
-          title: const Text("Tambah Pembelian",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+          title: const Text("Tambah Pembelian", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
           backgroundColor: const Color.fromARGB(255, 0, 48, 47),
         ),
         backgroundColor: const Color(0xFFF5F5F5),
@@ -549,90 +573,8 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
               key: _formKey,
               child: Column(
                 children: [
-                  Visibility(
-                    visible: false,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8.0)),
-                      padding: const EdgeInsets.all(16),
-                      child: BootstrapContainer(
-                        fluid: true,
-                        children: [
-                          BootstrapRow(
-                            height: 60,
-                            children: [
-                              BootstrapCol(
-                                fit: FlexFit.tight,
-                                sizes: 'col-md-12',
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: TextFormField(
-                                    controller: TextEditingController(
-                                        text: _pembelianNopoModel == null
-                                            ? ''
-                                            : _pembelianNopoModel!.data[0].nopo
-                                                .toString()),
-                                    decoration: InputDecoration(
-                                        labelText: 'Nomor PO',
-                                        labelStyle:
-                                            const TextStyle(color: Colors.grey),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          borderSide: const BorderSide(
-                                              color: Colors.grey),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: Colors.grey),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        )),
-                                    enabled: false,
-                                    onSaved: (value) {
-                                      nopo = value!;
-                                    },
-                                  ),
-                                ),
-                              ),
-                              BootstrapCol(
-                                fit: FlexFit.tight,
-                                sizes: 'col-md-12',
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: TextFormField(
-                                    controller: TextEditingController(
-                                        text: _pelangganModel == null ? '' : _pelangganModel!.data[0].saldo .toString()),
-                                    decoration: InputDecoration(
-                                        labelText: 'Saldo',
-                                        labelStyle:
-                                            const TextStyle(color: Colors.grey),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          borderSide: const BorderSide(
-                                              color: Colors.grey),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: const BorderSide(
-                                              color: Colors.grey),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        )),
-                                    enabled: false,
-                                    onSaved: (value) {
-                                      saldo = value!;
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => navigateToPenerimaPage(),
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white,
@@ -657,11 +599,11 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                       sizes: 'col-11',
                                       child: Row(
                                         children: [
-                                          Text(_pelangganModel!.data[0].nama_penerima.toString().toUpperCase(), 
+                                          Text(customerNamaPenerima.toString().toUpperCase(), 
                                           style: TextStyle( color: Colors.grey[800],fontWeight: FontWeight.w700,fontSize: 16)),
                                           const SizedBox(width: 5),
                                           Text(
-                                            _pelangganModel!.data[0].telepon_penerima.toString(),
+                                            customerTeleponPenerima.toString(),
                                             style: TextStyle(
                                               color: Colors.grey[800],
                                               fontSize: 14,
@@ -681,7 +623,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                     ),
                                     BootstrapCol(
                                       sizes: 'col-11',
-                                      child: Text(_pelangganModel!.data[0].alamat_kirim1.toString(),
+                                      child: Text(customerAlamatKirim1.toString(),
                                             style: TextStyle(
                                               color: Colors.grey[800],
                                               fontSize: 16,
@@ -699,7 +641,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                     ),
                                     BootstrapCol(
                                       sizes: 'col-11',
-                                      child: Text(_pelangganModel!.data[0].alamat_kirim2.toString(),
+                                      child: Text(customerAlamatKirim2.toString(),
                                             style: TextStyle(
                                               color: Colors.grey[800],
                                               fontSize: 16,
@@ -741,11 +683,11 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                       sizes: 'col-11',
                                       child: Row(
                                         children: [
-                                          Text(supplier_nama.toString().toUpperCase(), 
+                                          Text(supplierNama.toString().toUpperCase(), 
                                           style: TextStyle( color: Colors.grey[800],fontWeight: FontWeight.w700,fontSize: 16)),
                                           const SizedBox(width: 5),
                                           Text(
-                                            supplier_telepon.toString(),
+                                            supplierTelepon.toString(),
                                             style: TextStyle(
                                               color: Colors.grey[800],
                                               fontSize: 14,
@@ -765,7 +707,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                     ),
                                     BootstrapCol(
                                       sizes: 'col-11',
-                                      child: Text(supplier_alamat.toString(),
+                                      child: Text(supplierAlamat.toString(),
                                             style: TextStyle(
                                               color: Colors.grey[800],
                                               fontSize: 16,
@@ -952,12 +894,16 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                     )),
                                     Divider(height: 1, color: Colors.grey[200]),
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 8),
+                                      padding: const EdgeInsets.only(top: 16),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           // Text('Total $smItem Produk, $smQty Karton'),
+                                          Text('Total $smItem Produk',
+                                              style: TextStyle(
+                                                  color: Colors.grey[800],
+                                                  fontSize: 18)),
                                           const Text(''),
                                           Text(
                                               CurrencyFormat.convertToIdr(
@@ -1112,10 +1058,10 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                         Divider(height: 16,color: Colors.grey[300]),
                                         _buildPaymentOption(
                                             2,
-                                            (metode_tipe == 'virtual_account')
+                                            (metodeTipe == 'virtual_account')
                                                 ? "Transfer Bank"
                                                 : "Bayar Tunai di Mitra/Agen",
-                                            metode_institusi.toString(),
+                                            metodeInstitusi.toString(),
                                             FontAwesomeIcons.rightLeft),
                                       ],
                                     ),
@@ -1229,8 +1175,8 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                const Text('Subtotal Pembelian'),
-                                                Text(CurrencyFormat.convertToIdr((int.parse(smSubtotal.toString())),0)),
+                                                const Text('Subtotal Pembelian', style: TextStyle(fontSize: 15)),
+                                                Text(CurrencyFormat.convertToIdr((int.parse(smSubtotal.toString())),0), style: TextStyle(fontSize: 15)),
                                               ],
                                             ),
                                             const SizedBox(height: 8),
@@ -1257,8 +1203,8 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                const Text('Subtotal Pengiriman'),
-                                                Text('Dibayar oleh Penerima'),
+                                                const Text('Subtotal Pengiriman', style: TextStyle(fontSize: 15)),
+                                                Text('Dibayar oleh Penerima', style: TextStyle(fontSize: 15)),
                                               ],
                                             ),
                                             const SizedBox(height: 8),
@@ -1267,13 +1213,13 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                const Text('Biaya Layanan'),
+                                                const Text('Biaya Layanan', style: TextStyle(fontSize: 15)),
                                                 Text(
                                                     CurrencyFormat.convertToIdr(
                                                         (int.parse(
                                                             smBiayaLayanan
                                                                 .toString())),
-                                                        0)),
+                                                        0), style: TextStyle(fontSize: 15)),
                                               ],
                                             ),
                                             const SizedBox(height: 8),
@@ -1285,7 +1231,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
                                               child: Row(
                                                 mainAxisAlignment:MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  const Text('Total Pembayaran'),
+                                                  const Text('Total Pembayaran', style: TextStyle(fontSize: 15)),
                                                   Text(
                                                       (isSwitched == true)
                                                           ? CurrencyFormat.convertToIdr(
@@ -1736,7 +1682,7 @@ class _TambahPembelianPageState extends State<TambahPembelianPage> {
               ),
             ),
             _selectedMetodeBayar == value
-                ? Icon(Icons.check_circle, color: Colors.amber, size: 20)
+                ? const Icon(Icons.check_circle, color: Colors.amber, size: 20)
                 : Icon(Icons.circle, color: Colors.grey[300], size: 20)
             // Transform.scale(
             //   scale: 0.8,
@@ -1869,8 +1815,8 @@ class _SupplierPageState extends State<SupplierPage> {
                           var alamat = _supplierModel!.data[index].alamat.toString();
                           var tipeppn = _supplierModel!.data[index].tipeppn.toString();
                           var id_syaratbayar = _supplierModel!.data[index].id_syaratbayar.toString();
-                          return listSupplier(id, nama, telepon, alamat,
-                              tipeppn, id_syaratbayar);
+                          var tipe_supplier = _supplierModel!.data[index].tipe_supplier.toString();
+                          return listSupplier(id, nama, telepon, alamat, tipeppn, id_syaratbayar, tipe_supplier);
                         }),
               ),
             ),
@@ -1880,7 +1826,7 @@ class _SupplierPageState extends State<SupplierPage> {
         ));
   }
 
-  Widget listSupplier(String id, String nama, String telepon, String alamat, String tipeppn, String id_syaratbayar) {
+  Widget listSupplier(String id, String nama, String telepon, String alamat, String tipeppn, String id_syaratbayar, String tipe_supplier) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -1892,6 +1838,7 @@ class _SupplierPageState extends State<SupplierPage> {
             "id_syaratbayar": id_syaratbayar,
             "telepon": telepon,
             "alamat": alamat,
+            "tipe_supplier": tipe_supplier,
           });
         });
       },
@@ -1950,6 +1897,246 @@ class _SupplierPageState extends State<SupplierPage> {
                             fontSize: 16,
                           ),
                         ),
+                  ),
+                ],
+              ),
+            ]
+          ),
+      ),
+    );
+  }
+}
+
+class PenerimaPage extends StatefulWidget {
+  final String? token;
+  final String? userid;
+  const PenerimaPage({super.key, this.token, this.userid});
+
+  @override
+  State<PenerimaPage> createState() => _PenerimaPageState();
+}
+
+class _PenerimaPageState extends State<PenerimaPage> {
+  final _formKey = GlobalKey<FormState>();
+  // final FormPembelianDetailManager _entryManager = FormPembelianDetailManager();
+
+  late MasterController masterController;
+  PelangganAlamatModel? _pelangganAlamatModel;
+  final userController = UserController(StorageService());
+
+  @override
+  void initState() {
+    super.initState();
+    masterController = MasterController();
+    _dataPelangganAlamat(widget.token!, widget.userid!);
+  }
+
+  @override
+  void dispose() {
+    // Dispose resources
+    super.dispose();
+  }
+
+  void _dataPelangganAlamat(String token, String id) async {
+    masterController = MasterController();
+    PelangganAlamatModel? data = await masterController.getpelangganalamatbyuserid(token, id);
+    if (mounted) {
+      setState(() {
+        _pelangganAlamatModel = data;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text("Pilih Alamat",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        backgroundColor: const Color.fromARGB(255, 0, 48, 47),
+      ),
+      backgroundColor: const Color(0xFFF5F5F5),
+      body: dataPelangganAlamat(),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Colors.grey[300]!,
+                blurRadius: 1.0,
+                spreadRadius: 2 //, offset: Offset(0, -3)
+                )
+          ],
+        ),
+        child: Container(
+          height: 65,
+          // width: (screenWidth/2),
+          // margin: const EdgeInsets.only(left: 0.0, right: 1.0),
+          padding: const EdgeInsets.all(8),
+          decoration: const BoxDecoration(
+            // border: Border.all(color: Colors.white),
+            color: Colors.white,
+            // borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: (screenWidth) - 16,
+                    child: ElevatedButton(
+                      onPressed: () {}, //_saveProduks
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(8),
+                        backgroundColor: const Color.fromARGB(255, 254, 185, 3),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Tambah Alamat Baru',
+                        style: TextStyle(
+                            color: Colors.grey[800], fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ))
+    );
+  }
+
+  Widget dataPelangganAlamat() {
+    return Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            // Item List
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: _pelangganAlamatModel == null
+                    ? const ListMenuShimmer(total: 5)
+                    : ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: _pelangganAlamatModel!.data.length,
+                        itemBuilder: (context, index) {
+                          var id = _pelangganAlamatModel!.data[index].id.toString();
+                          var nama = _pelangganAlamatModel!.data[index].nama_penerima.toString();
+                          var telepon = _pelangganAlamatModel!.data[index].telepon_penerima.toString();
+                          var alamat1 = _pelangganAlamatModel!.data[index].alamat_kirim1.toString();
+                          var alamat2 = _pelangganAlamatModel!.data[index].alamat_kirim2.toString();
+                          var prim_address = _pelangganAlamatModel!.data[index].prim_address.toString();
+                          return listPenerima(id, nama, telepon, alamat1, alamat2, prim_address);
+                        }),
+              ),
+            ),
+            // const SizedBox(height: 20),
+            // Text('Entries: ${_entryManager.entries.length}'),
+          ],
+        ));
+  }
+
+  Widget listPenerima(String id, String nama, String telepon, String alamat1, String alamat2, String prim_address) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          Navigator.pop(context, {
+            "id": id,
+            "nama_penerima": nama,
+            "telepon_penerima": telepon,
+            "alamat1": alamat1,
+            "alamat2": alamat2,
+          });
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16.0),
+        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(8.0)),
+        padding: const EdgeInsets.all(16),
+        child: BootstrapContainer(
+            fluid: true,
+            children: [
+              BootstrapRow(
+                // height: 60,
+                children: [
+                  BootstrapCol(
+                    sizes: 'col-12',
+                    child: Row(
+                      children: [
+                        Text(nama.toUpperCase(), 
+                        style: TextStyle( color: Colors.grey[800],fontWeight: FontWeight.w700,fontSize: 16)),
+                        const SizedBox(width: 5),
+                        Text(telepon,
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              BootstrapRow(
+                // height: 60,
+                children: [
+                  BootstrapCol(
+                    sizes: 'col-12',
+                    child: Text(alamat1,
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 16,
+                          ),
+                        ),
+                  ),
+                ],
+              ),
+              BootstrapRow(
+                // height: 60,
+                children: [
+                  BootstrapCol(
+                    sizes: 'col-12',
+                    child: Text(alamat2,
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 16,
+                          ),
+                        ),
+                  ),
+                ],
+              ),
+              BootstrapRow(
+                // height: 60,
+                children: [
+                  BootstrapCol(
+                    sizes: 'col-2',
+                    child: prim_address != 'Utama' ? const Text('') : Container(
+                      margin: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4.0),
+                        border: Border.all( color: Colors.orangeAccent.shade700, width: 1.0),
+                      ),
+                      child: Text('Utama', style: TextStyle(
+                          color: Colors.orangeAccent.shade700,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -2076,10 +2263,10 @@ class _MetodeBayarPageState extends State<MetodeBayarPage> {
                           onPressed: () {
                             setState(() {
                               Navigator.pop(context, {
-                                "metode_id": _selectedMetodeId,
-                                "metode_channel": _selectedMetodeChannel,
-                                "metode_institusi": _selectedMetodeInstitusi,
-                                "metode_tipe": _selectedMetodeTipe,
+                                "metodeId": _selectedMetodeId,
+                                "metodeChanel": _selectedMetodeChannel,
+                                "metodeInstitusi": _selectedMetodeInstitusi,
+                                "metodeTipe": _selectedMetodeTipe,
                               });
                             });
                           }, //_saveProduks

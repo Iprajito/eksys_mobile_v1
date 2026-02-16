@@ -142,6 +142,7 @@ class Supplier {
   String? tipe_ppn;
   String? id_syaratbayar;
   String? syaratbayar;
+  String? tipe_supplier;
 
   Supplier(
       {this.id,
@@ -152,7 +153,9 @@ class Supplier {
       this.tipeppn,
       this.tipe_ppn,
       this.id_syaratbayar,
-      this.syaratbayar});
+      this.syaratbayar,
+      this.tipe_supplier
+    });
 
   factory Supplier.fromJsson(Map<String, dynamic> json) {
     return Supplier(
@@ -164,7 +167,9 @@ class Supplier {
         tipeppn: json['tipeppn'],
         tipe_ppn: json['tipe_ppn'],
         id_syaratbayar: json['id_syaratbayar'],
-        syaratbayar: json['syaratbayar']);
+        syaratbayar: json['syaratbayar'],
+        tipe_supplier: json['tipe_pelanggan']
+      );
   }
 }
 

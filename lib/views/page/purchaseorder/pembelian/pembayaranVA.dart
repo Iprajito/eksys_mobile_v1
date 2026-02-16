@@ -13,18 +13,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bootstrap/flutter_bootstrap.dart';
 import 'package:pocketbase/pocketbase.dart';
 
-class PembelianPembayaranPage extends StatefulWidget {
+class PembelianPembayaranVAPage extends StatefulWidget {
   final String? token;
   final String? userid;
   final String? idencrypt;
   
-  const PembelianPembayaranPage({super.key, this.token, this.userid, this.idencrypt});
+  const PembelianPembayaranVAPage({super.key, this.token, this.userid, this.idencrypt});
 
   @override
-  State<PembelianPembayaranPage> createState() => _PembelianPembayaranPageState();
+  State<PembelianPembayaranVAPage> createState() => _PembelianPembayaranVAPageState();
 }
 
-class _PembelianPembayaranPageState extends State<PembelianPembayaranPage> {
+class _PembelianPembayaranVAPageState extends State<PembelianPembayaranVAPage> {
   late DateTime targetDateTime;
   Duration remaining = Duration.zero;
   Timer? timer;

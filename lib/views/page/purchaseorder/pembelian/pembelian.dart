@@ -6,7 +6,8 @@ import 'package:Eksys/models/pembelian_model.dart';
 import 'package:Eksys/services/api_service.dart';
 import 'package:Eksys/services/localstorage_service.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/detail.dart';
-import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaran.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaranTF.dart';
+import 'package:Eksys/views/page/purchaseorder/pembelian/pembayaranVA.dart';
 import 'package:Eksys/views/page/purchaseorder/pembelian/tambah.dart';
 import 'package:Eksys/widgets/global_widget.dart';
 import 'package:flutter/material.dart';
@@ -145,13 +146,45 @@ class _PembelianPageState extends State<PembelianPage> {
     }
   }
 
-  Future<void> navigateToPembayaranPage(String token, String userid, String idencrypt) async {
+  Future<void> navigateToPembayaranTFPage(String token, String userid, String idencrypt) async {
     final result = await Navigator.push(
         context,
         PageRouteBuilder(
           pageBuilder:
               (context, animation, secondaryAnimation) => //DrawerExample(),
-                  PembelianPembayaranPage(token: token, userid: userid, idencrypt: idencrypt),
+                  PembelianPembayaranTFPage(token: token, userid: userid, idencrypt: idencrypt),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            const begin = Offset(1.0, 0.0); // Slide from right
+            const end = Offset.zero;
+            const curve = Curves.ease;
+
+            final tween =
+                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+            final offsetAnimation = animation.drive(tween);
+
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
+        ));
+
+    // Run this code after the child page is closed
+    if (result == 'refresh') {
+      setState(() {
+        purchaseorderController = PurchaseorderController();
+        _dataPesanan(widget.token, widget.userid);
+      });
+    }
+  }
+
+  Future<void> navigateToPembayaranVAPage(String token, String userid, String idencrypt) async {
+    final result = await Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder:
+              (context, animation, secondaryAnimation) => //DrawerExample(),
+                  PembelianPembayaranVAPage(token: token, userid: userid, idencrypt: idencrypt),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             const begin = Offset(1.0, 0.0); // Slide from right
             const end = Offset.zero;
@@ -189,6 +222,7 @@ class _PembelianPageState extends State<PembelianPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: const Color(0xFFF5F5F5),
         body: RefreshIndicator(
@@ -198,10 +232,9 @@ class _PembelianPageState extends State<PembelianPage> {
           child: Column(
             children: [
               Expanded(
-                  child: Padding(
+                child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: _pembelianModel == null
-                    ? const ListMenuShimmer(total: 5)
+                child: _pembelianModel == null ? const ListMenuShimmer(total: 5)
                     : _pembelianModel!.data.length == 0
                         ? const Center(child: Text('Belum ada pesanan'))
                         : ListView.builder(
@@ -209,29 +242,19 @@ class _PembelianPageState extends State<PembelianPage> {
                             itemCount: _pembelianModel!.data.length,
                             itemBuilder: (context, index) {
                               var id = _pembelianModel!.data[index].id.toString();
-                              var idencrypt = _pembelianModel!
-                                  .data[index].idencrypt
-                                  .toString();
-                              var nopo =
-                                  _pembelianModel!.data[index].nopo.toString();
-                              var tglpo =
-                                  _pembelianModel!.data[index].tglpo.toString();
-                              var supplier = _pembelianModel!.data[index].supplier
-                                  .toString();
-                              var subtotal = _pembelianModel!.data[index].subtotal
-                                  .toString();
-                              var status =
-                                  _pembelianModel!.data[index].status.toString();
-                              var grandtotal = _pembelianModel!
-                                  .data[index].grandtotal
-                                  .toString();
-                              var keterangan = _pembelianModel!
-                                  .data[index].keterangan
-                                  .toString();
+                              var idencrypt = _pembelianModel!.data[index].idencrypt.toString();
+                              var nopo =_pembelianModel!.data[index].nopo.toString();
+                              var tglpo =_pembelianModel!.data[index].tglpo.toString();
+                              var supplier = _pembelianModel!.data[index].supplier.toString();
+                              var subtotal = _pembelianModel!.data[index].subtotal.toString();
+                              var status =_pembelianModel!.data[index].status.toString();
+                              var grandtotal = _pembelianModel!.data[index].grandtotal.toString();
+                              var keterangan = _pembelianModel!.data[index].keterangan.toString();
                               var ispu = _pembelianModel!.data[index].ispu.toString();
                               var item = _pembelianModel!.data[index].item.toString();
                               var qty = _pembelianModel!.data[index].qty.toString();
                               var product = _pembelianModel!.data[index].product;
+                              var metode_bayar = _pembelianModel!.data[index].metode_bayar.toString();
                               return orderItem(
                                   id,
                                   idencrypt,
@@ -242,7 +265,7 @@ class _PembelianPageState extends State<PembelianPage> {
                                   status,
                                   int.parse(grandtotal),
                                   keterangan,
-                                  ispu,item,qty,product!);
+                                  ispu,item,qty,product!,metode_bayar);
                             }),
               ))
             ],
@@ -264,7 +287,7 @@ class _PembelianPageState extends State<PembelianPage> {
       String status,
       int grandtotal,
       String keterangan,
-      String ispu, String item, String qty, List product) {
+      String ispu, String item, String qty, List product, String metode_bayar) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     String formatDate(String dateStr) {
@@ -297,7 +320,7 @@ class _PembelianPageState extends State<PembelianPage> {
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
-                        'Belum Bayar',
+                        status,
                         style: TextStyle(fontSize: 14, color: Colors.amber[900]),
                       )
                       // Text(
@@ -348,7 +371,11 @@ class _PembelianPageState extends State<PembelianPage> {
             )),
         onTap: () {
           if (status == 'Tunggu Pembayaran') {
-            navigateToPembayaranPage(widget.token.toString(), widget.userid.toString(), idencrypt);
+            if (metode_bayar == 'Transfer Bank') {
+              navigateToPembayaranTFPage(widget.token.toString(), widget.userid.toString(), idencrypt);
+            } else if (metode_bayar == 'Virtual Account') {
+              navigateToPembayaranVAPage(widget.token.toString(), widget.userid.toString(), idencrypt);
+            }
           } else {
             toDetailPesananPage(widget.token.toString(), widget.userid.toString(), idencrypt);
           }

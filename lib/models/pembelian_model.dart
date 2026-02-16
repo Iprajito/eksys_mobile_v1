@@ -130,6 +130,10 @@ class Pembelian {
   String? tgl_pu;
   String? nomor_si;
   String? nomor_sj;
+  String? nama_bank;
+  String? norekening;
+  String? norek_nama;
+  String? bukti_transfer;
   List<PembelianProduct>? product;
 
   Pembelian(
@@ -160,6 +164,10 @@ class Pembelian {
       this.tgl_pu,
       this.nomor_si,
       this.nomor_sj,
+      this.nama_bank,
+      this.norekening,
+      this.norek_nama,
+      this.bukti_transfer,
       this.product
     });
 
@@ -192,6 +200,10 @@ class Pembelian {
         tgl_pu: json['tgl_pu'],
         nomor_si: json['nomor_si'],
         nomor_sj: json['nomor_sj'],
+        nama_bank: json['nama_bank'],
+        norekening: json['norekening'],
+        norek_nama: json['norek_nama'],
+        bukti_transfer: json['bukti_transfer'],
         product: (json['product'] as List<dynamic>?)?.map((e) => PembelianProduct.fromJsson(e)).toList() ??[],
     );
   }
